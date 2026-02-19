@@ -1,5 +1,5 @@
 ---
-title: "9. 百花齐放：使用不同风味的 PG 内核分支"
+title: "9. 巧夺天工：索引设计与维护策略"
 weight: 900
 math: true
 breadcrumbs: false
@@ -338,7 +338,7 @@ PostgreSQL 生态系统不仅仅是一个数据库，而是一个庞大的"数�
 
 ### Pigsty 相关资源
 1. **Pigsty 官方文档** - https://pigsty.io/docs/
-2. **Pigsty 内核支持** - http://doc.pgsty.com/pgsql/kernel
+2. **Pigsty 内核支持** - https://pigsty.cc/docs/pgsql/kernel
 3. **Pigsty 中文文档** - http://www.pigsty.cc/
 4. **Pigsty GitHub** - https://github.com/pgsty/pigsty
 5. **Pigsty v3.4 发布：支持 MySQL 兼容** - https://www.postgresql.org/about/news/pigsty-v34-released-pg-rds-with-mysql-compatibility-3052/

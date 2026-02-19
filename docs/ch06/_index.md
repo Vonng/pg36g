@@ -1,5 +1,5 @@
 ---
-title: "6. 最佳实践：PostgreSQL开发规约"
+title: "6. 立木取信：开发规约与评审清单"
 weight: 600
 math: true
 breadcrumbs: false

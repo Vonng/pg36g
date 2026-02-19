@@ -1,5 +1,5 @@
 ---
-title: "16. 纤毫毕现：监控，安全，复制类扩展"
+title: "16. 合纵连横：分布式与分析计算扩展"
 weight: 1600
 math: true
 breadcrumbs: false

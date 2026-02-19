@@ -1,5 +1,5 @@
 ---
-title: "2. 盲人摸象：基本概念与快速上手"
+title: "2. 盲人摸象：建立 PostgreSQL 全局认知"
 weight: 200
 math: true
 breadcrumbs: false

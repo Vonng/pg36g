@@ -1,5 +1,5 @@
 ---
-title: "3. 手到擒来：用案例贯通核心工具"
+title: "3. 手到擒来：掌握 psql 与核心工具链"
 weight: 300
 math: true
 breadcrumbs: false

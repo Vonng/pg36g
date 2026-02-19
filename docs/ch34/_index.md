@@ -1,5 +1,5 @@
 ---
-title: "34. 李代桃僵：负载均衡与流量控制"
+title: "34. 李代桃僵：流量调度与降级止血"
 weight: 3400
 math: true
 breadcrumbs: false

@@ -1,5 +1,5 @@
 ---
-title: "32. 妙手回春：时间点恢复与延迟从库"
+title: "32. 妙手回春：PITR 与误操作恢复"
 weight: 3200
 math: true
 breadcrumbs: false

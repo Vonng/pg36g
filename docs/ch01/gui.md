@@ -24,7 +24,7 @@ Intellij IDEA 全家桶的 Database Tool 还是在很多任务上省掉老冯不
 如果你想要使用不收费的工具，pgAdmin 是 PostgreSQL “官方” 开发的图形化客户端管理工具，你可以使用 Docker 拉起它，并且从浏览器中访问。
 Pigsty 自带了 pgAdmin 的模板，通常在 Pigsty 中只需要两行命令就可以把它拉起来。
 
-Pigsty: [pgAdmin 教程](https://doc.pgsty.com/app/pgadmin/)
+Pigsty: [pgAdmin 教程](https://pigsty.cc/docs/app/pgadmin/)
 
 ```bash
 cd ~/pigsty

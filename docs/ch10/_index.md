@@ -1,5 +1,5 @@
 ---
-title: "10. 巧夺天工：PostgreSQL高级特性实战"
+title: "10. 顾此失彼：并发控制与隔离异常"
 weight: 1000
 math: true
 breadcrumbs: false
@@ -632,7 +632,7 @@ PostgreSQL 不仅是一个关系数据库，更是一个强大的数据平台。
 10. **PostgreSQL JIT Compilation** - https://www.postgresql.org/docs/current/jit-reason.html
 
 ### Pigsty 相关资源
-11. **Pigsty Extension List** - https://ext.pigsty.io/
+11. **Pigsty Extension List** - https://pgext.cloud/
 12. **Pigsty Documentation** - https://pigsty.io/docs/
 13. **Pigsty Extension Usage** - https://pigsty.io/docs/pgsql/extension/
 14. **PostgreSQL Extension Installation** - https://pigsty.io/blog/pg/pg-ext-repo/

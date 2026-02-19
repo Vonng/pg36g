@@ -1,5 +1,5 @@
 ---
-title: "24. 纲举目张：制度设计与管理体系"
+title: "24. 纲举目张：SLA、SOP 与组织治理"
 weight: 2400
 math: true
 breadcrumbs: false

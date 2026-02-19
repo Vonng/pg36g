@@ -1,5 +1,5 @@
 ---
-title: "29. 除旧布新：膨胀治理与垃圾回收"
+title: "29. 移花接木：复制、迁移与异构同步"
 weight: 2900
 math: true
 breadcrumbs: false

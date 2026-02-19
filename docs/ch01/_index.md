@@ -1,5 +1,5 @@
 ---
-title: "1. 扬帆起航：搭建你的数据库沙箱"
+title: "1. 扬帆起航：搭建 PostgreSQL 实战沙箱"
 weight: 100
 math: true
 breadcrumbs: false
@@ -91,8 +91,8 @@ Cloudfalre 支持银联卡付款，银联信用卡可以直接用，如果你是
 
 不过，整服务器这种事，不是本教程要介绍的重点，所以老冯现在就先不展开了，后面再补上这两个 IaC 神器的使用教程。
 
-- TODO： [Vagrant 使用教程](https://doc.pgsty.com/zh/prepare/vagrant/)
-- TODO： [Terraform 使用教程](https://doc.pgsty.com/zh/prepare/terraform/)
+- TODO： [Vagrant 使用教程](https://pigsty.cc/docs/zh/prepare/vagrant/)
+- TODO： [Terraform 使用教程](https://pigsty.cc/docs/zh/prepare/terraform/)
 
 
 

@@ -1,5 +1,5 @@
 ---
-title: "13. 经天纬地：地理时序扩展插件"
+title: "13. 博采众长：内核分支与扩展生态"
 weight: 1300
 math: true
 breadcrumbs: false

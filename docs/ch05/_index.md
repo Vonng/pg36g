@@ -1,5 +1,5 @@
 ---
-title: "5. 运筹帷幄：掌握查询，事务，锁"
+title: "5. 运筹帷幄：查询优化、事务与锁机制"
 weight: 500
 math: true
 breadcrumbs: false

@@ -1,5 +1,5 @@
 ---
-title: "26. 胸有成竹：数据库集群管理SOP"
+title: "26. 胸有成竹：容量规划与压测基线"
 weight: 2600
 math: true
 breadcrumbs: false

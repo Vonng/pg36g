@@ -1,5 +1,5 @@
 ---
-title: "11. 他山之石：拉起使用 PG 的企业软件"
+title: "11. 守正出奇：模式变更与发布策略"
 weight: 1100
 math: true
 breadcrumbs: false

@@ -1,5 +1,5 @@
 ---
-title: "12. 一气呵成：自建 Supabase 后端全家桶"
+title: "12. 一气呵成：从数据库到后端服务"
 weight: 1200
 math: true
 breadcrumbs: false
@@ -324,7 +324,7 @@ vi pigsty.yml              # 编辑域名、密码、密钥
 ### Pigsty 官方资源
 1. [Pigsty 官方文档](https://pigsty.io/docs/)
 2. [Self-Hosting Supabase on PostgreSQL - Pigsty Blog](https://pigsty.io/blog/db/supabase/)
-3. [Pigsty PostgreSQL 扩展目录](https://ext.pigsty.io/)
+3. [Pigsty PostgreSQL 扩展目录](https://pgext.cloud/)
 4. [Pigsty 监控系统文档](https://pigsty.io/docs/pgsql/monitor/)
 5. [Pigsty 备份恢复 PITR 指南](https://pigsty.io/docs/pgsql/pitr/)
 6. [Pigsty v3.4 发布说明](https://pigsty.io/blog/releases/v3.4.0/)

@@ -1,5 +1,5 @@
 ---
-title: "8. 博采众长：扩展的安装，使用与管理"
+title: "8. 抽丝剥茧：慢 SQL 诊断方法论"
 weight: 800
 math: true
 breadcrumbs: false
@@ -287,8 +287,8 @@ breadcrumbs: false
 16. [PostgreSQL Wiki - PGXN v2/Architecture](https://wiki.postgresql.org/wiki/PGXN_v2/Architecture)
 
 ### Pigsty 和 Vonng.com 资源
-17. [Pigsty Extension Documentation](https://doc.pgsty.com/pgsql/extension/)
-18. [Pigsty Extension Catalog](https://ext.pgsty.com/)
+17. [Pigsty Extension Documentation](https://pigsty.cc/docs/pgsql/extension/)
+18. [Pigsty Extension Catalog](https://pgext.cloud/)
 19. [PGSQL x Pigsty: 数据库全能王](http://vonng.com/cn/blog/db/pgsql-x-pigsty/)
 20. [pg_stat_statements 宏观查询优化](http://vonng.com/cn/blog/db/pgss/)
 21. [展望PostgreSQL的2024](https://vonng.com/cn/blog/db/pg-in-2024/)
