@@ -1,0 +1,58 @@
+# Generated from plan/book-outline-final.md by bin/scaffold_book.rb.
+---
+title: PostgreSQL 36 计
+subtitle: 从 SQL 到生产：PostgreSQL 与 Pigsty 实战
+status: scaffold
+source_outline: plan/book-outline-final.md
+navigation: flat-chapters-with-volume-overviews
+volume_hierarchy: false
+volume_overview_pages: true
+volumes:
+- id: volume-1
+  slug: upper-volume
+  number: 1
+  title: 上卷：应用开发
+  subtitle: 从 PostgreSQL 工程认知到应用交付与能力扩展
+  summary: 上卷面向应用开发者与数据库工程实践者，沿着“认识系统—可靠建模—正确查询—性能与并发—安全交付—能力扩展”的路径，建立从 PostgreSQL
+    原理到 Pigsty 实验闭环的完整开发能力。
+  weight: 100
+  aliases:
+  - "/volume-1/"
+  - "/dev/"
+- id: volume-2
+  slug: lower-volume
+  number: 2
+  title: 下卷：运维管理
+  subtitle: 从生产服务规划到日常运营、事故恢复与改进
+  summary: 下卷面向 DBA、平台工程师与生产负责人，沿着“规划交付—高可用与备份—安全接入—可观测运营—迁移升级—事故恢复与复盘”的路径，把 PostgreSQL
+    知识转化为可持续运行的数据库服务能力。
+  weight: 285
+  aliases:
+  - "/volume-2/"
+  - "/ops/"
+  - "/dba/"
+parts:
+- id: part-1
+  number: 1
+  title: 第一篇：筑基——建立 PostgreSQL 工程认知
+  short_title: 筑基
+- id: part-2
+  number: 2
+  title: 第二篇：应用——从 SQL 正确走向稳定交付
+  short_title: 应用
+- id: part-3
+  number: 3
+  title: 第三篇：扩展——扩大 PostgreSQL 的能力边界
+  short_title: 扩展
+- id: part-4
+  number: 4
+  title: 第四篇：规划——建设可交付的 PostgreSQL 服务
+  short_title: 规划
+- id: part-5
+  number: 5
+  title: 第五篇：运营——用证据驱动日常维护与演进
+  short_title: 运营
+- id: part-6
+  number: 6
+  title: 第六篇：出山——按响应目标演练恢复与改进
+  short_title: 出山

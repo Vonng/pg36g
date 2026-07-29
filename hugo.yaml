@@ -93,7 +93,7 @@ menu:
 
 
 params:
-  description: 关于 PostgreSQL 生产落地的实战教程，36计！
+  description: 从 SQL 到生产：PostgreSQL 与 Pigsty 实战
 
   navbar:
     displayTitle: true
@@ -137,7 +137,7 @@ params:
 
   editURL:
     enable: true
-    base: "https://github.com/Vonng/pg36g/edit/main/content"
+    base: "https://github.com/Vonng/pg36g/edit/main"
 
   toc:
     displayTags: true

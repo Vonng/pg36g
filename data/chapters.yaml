@@ -1,0 +1,4552 @@
+# Generated from plan/book-outline-final.md by bin/scaffold_book.rb.
+---
+- id: ch01
+  number: 1
+  title: 盲人摸象：PostgreSQL 与 Pigsty 全局地图
+  idiom: 盲人摸象
+  functional_title: PostgreSQL 与 Pigsty 全局地图
+  slug: postgresql-pigsty-map
+  goal: 回答“我连到了什么、数据对象在哪里、一次查询经过什么、Pigsty 又管理了什么”，并固化后续章节共同使用的实验基线。
+  sections:
+  - id: ch01-s01
+    number: '1.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 从连接串识别操作落点
+    items:
+    - id: item-1-1-1
+      number: 1.1.1
+      title: 主机、端口、服务、数据库与角色
+    - id: item-1-1-2
+      number: 1.1.2
+      title: "`current_database()`、`current_user` 与 `search_path`"
+    - id: item-1-1-3
+      number: 1.1.3
+      title: 实例端点、服务端点与只读端点
+  - id: ch01-s02
+    number: '1.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: PostgreSQL 对象与术语坐标
+    items:
+    - id: item-1-2-1
+      number: 1.2.1
+      title: 实例、数据库、模式与关系对象
+    - id: item-1-2-2
+      number: 1.2.2
+      title: 角色为何跨数据库存在
+    - id: item-1-2-3
+      number: 1.2.3
+      title: 表、索引、序列、视图、函数与扩展
+    - id: item-1-2-4
+      number: 1.2.4
+      title: PostgreSQL “database cluster”的特殊含义
+  - id: ch01-s03
+    number: '1.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 一条查询经过了什么
+    items:
+    - id: item-1-3-1
+      number: 1.3.1
+      title: 客户端、后端进程与会话
+    - id: item-1-3-2
+      number: 1.3.2
+      title: 共享内存、数据文件与 WAL
+    - id: item-1-3-3
+      number: 1.3.3
+      title: 系统目录与统计视图如何描述自身
+  - id: ch01-s04
+    number: '1.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: 从数据库实例到数据库服务
+    items:
+    - id: item-1-4-1
+      number: 1.4.1
+      title: 单实例、复制组、服务入口与控制面
+    - id: item-1-4-2
+      number: 1.4.2
+      title: 计算、存储、网络、配置与可观测职责
+    - id: item-1-4-3
+      number: 1.4.3
+      title: PostgreSQL 原生能力与平台组合能力的边界
+  - id: ch01-s05
+    number: '1.5'
+    index: 5
+    slug: '05'
+    capability: Pigsty
+    title: Pigsty 的资源模型
+    items:
+    - id: item-1-5-1
+      number: 1.5.1
+      title: 节点、集群、实例与服务
+    - id: item-1-5-2
+      number: 1.5.2
+      title: PostgreSQL、Patroni、PgBouncer 与 HAProxy 的职责
+    - id: item-1-5-3
+      number: 1.5.3
+      title: 配置清单、运行状态与监控事实分别来自哪里
+  - id: ch01-s06
+    number: '1.6'
+    index: 6
+    slug: '06'
+    capability: PG
+    title: 最小 psql 生存卡
+    items:
+    - id: item-1-6-1
+      number: 1.6.1
+      title: 用 URI 连接，用 `\l`、`\dn`、`\d` 看对象
+    - id: item-1-6-2
+      number: 1.6.2
+      title: 用 `\c` 切库，用 `-c` 与 `-f` 执行
+    - id: item-1-6-3
+      number: 1.6.3
+      title: 用 `\o` 或 `-A -t` 保存输出
+    - id: item-1-6-4
+      number: 1.6.4
+      title: 用 `\q`、`Ctrl-C` 安全退出与中断
+  - id: ch01-s07
+    number: '1.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：建立 `pg36_shop` 地图与实验基线
+    items:
+    - id: item-1-7-1
+      number: 1.7.1
+      title: 创建数据库、业务模式和最小角色
+    - id: item-1-7-2
+      number: 1.7.2
+      title: 生成连接快照、对象树、服务拓扑与环境清单
+    - id: item-1-7-3
+      number: 1.7.3
+      title: 建立 `verify:state` 与三档 `reset`
+    - id: item-1-7-4
+      number: 1.7.4
+      title: 验收：从 SQL 与 Pigsty 两侧指认同一对象
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-1
+  part_title: 第一篇：筑基——建立 PostgreSQL 工程认知
+  aliases:
+  - "/ch01/"
+  - "/volume-1/postgresql-pigsty-map/"
+- id: ch02
+  number: 2
+  title: 手到擒来：psql 与可复现工作流
+  idiom: 手到擒来
+  functional_title: psql 与可复现工作流
+  slug: psql-workflow
+  goal: 掌握后续 34 章反复使用的最小工具链，把临时手工操作变成可审查、可验证、可重跑的任务。
+  sections:
+  - id: ch02-s01
+    number: '2.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 可靠连接与上下文保护
+    items:
+    - id: item-2-1-1
+      number: 2.1.1
+      title: 连接 URI、服务文件与环境变量
+    - id: item-2-1-2
+      number: 2.1.2
+      title: "`application_name`、提示符与上下文快照"
+    - id: item-2-1-3
+      number: 2.1.3
+      title: 防止连错库、用错角色和改错模式
+  - id: ch02-s02
+    number: '2.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 用 psql 探索与取证
+    items:
+    - id: item-2-2-1
+      number: 2.2.1
+      title: 对象、权限和会话元命令
+    - id: item-2-2-2
+      number: 2.2.2
+      title: 扩展显示、分页、计时与查询缓冲区
+    - id: item-2-2-3
+      number: 2.2.3
+      title: 元命令与系统目录查询互相验证
+  - id: ch02-s03
+    number: '2.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 编写可靠 SQL 脚本
+    items:
+    - id: item-2-3-1
+      number: 2.3.1
+      title: "`ON_ERROR_STOP`、退出码与失败即停"
+    - id: item-2-3-2
+      number: 2.3.2
+      title: 变量、条件、包含文件与事务包装
+    - id: item-2-3-3
+      number: 2.3.3
+      title: 幂等、重入与执行前预览
+    - id: item-2-3-4
+      number: 2.3.4
+      title: 日志、清单与机器可读结果
+  - id: ch02-s04
+    number: '2.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 输入、输出与确定性数据
+    items:
+    - id: item-2-4-1
+      number: 2.4.1
+      title: "`COPY` 与 `\\copy` 的权限和执行边界"
+    - id: item-2-4-2
+      number: 2.4.2
+      title: CSV、文本与错误隔离
+    - id: item-2-4-3
+      number: 2.4.3
+      title: 固定随机种子、规模档位与校验和
+  - id: ch02-s05
+    number: '2.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 最小 pgbench 工作负载
+    items:
+    - id: item-2-5-1
+      number: 2.5.1
+      title: 初始化自定义脚本与参数
+    - id: item-2-5-2
+      number: 2.5.2
+      title: 区分吞吐、延迟、错误与环境噪声
+    - id: item-2-5-3
+      number: 2.5.3
+      title: 本节只建立可复现基线，不做性能结论
+  - id: ch02-s06
+    number: '2.6'
+    index: 6
+    slug: '06'
+    capability: PG
+    title: 最小逻辑备份闭环
+    items:
+    - id: item-2-6-1
+      number: 2.6.1
+      title: "`pg_dump` 的对象、模式与自定义格式"
+    - id: item-2-6-2
+      number: 2.6.2
+      title: "`pg_restore` 的清单、选择性恢复与验证"
+    - id: item-2-6-3
+      number: 2.6.3
+      title: 与 ch21《未雨绸缪：备份体系与恢复演练》的边界
+  - id: ch02-s07
+    number: '2.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：把人工操作变成可重跑任务
+    items:
+    - id: item-2-7-1
+      number: 2.7.1
+      title: 生成 `pg36_shop` 初始数据与校验摘要
+    - id: item-2-7-2
+      number: 2.7.2
+      title: 从 Pigsty 服务端点执行并保存证据
+    - id: item-2-7-3
+      number: 2.7.3
+      title: 注入脚本错误，验证停止、修复与复位
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-1
+  part_title: 第一篇：筑基——建立 PostgreSQL 工程认知
+  aliases:
+  - "/ch02/"
+  - "/volume-1/psql-workflow/"
+- id: ch03
+  number: 3
+  title: 正本清源：从业务规则到关系模型
+  idiom: 正本清源
+  functional_title: 从业务规则到关系模型
+  slug: logical-data-model
+  goal: 先表达业务事实、不变量与所有权，再把逻辑模型 v0 跑进真实数据库；本章模式是过渡版本，可靠物理模式在 ch04 闭合。
+  sections:
+  - id: ch03-s01
+    number: '3.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 从业务语言提取数据库事实
+    items:
+    - id: item-3-1-1
+      number: 3.1.1
+      title: 实体、事件、状态与业务不变量
+    - id: item-3-1-2
+      number: 3.1.2
+      title: 命令模型、查询模型与数据所有权
+    - id: item-3-1-3
+      number: 3.1.3
+      title: 哪些规则必须由数据库兜底
+  - id: ch03-s02
+    number: '3.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 标识、主键与业务键
+    items:
+    - id: item-3-2-1
+      number: 3.2.1
+      title: 自然键、代理键与外部标识
+    - id: item-3-2-2
+      number: 3.2.2
+      title: 主键稳定性、键宽度与传播范围
+    - id: item-3-2-3
+      number: 3.2.3
+      title: 幂等键、去重键与审计标识
+  - id: ch03-s03
+    number: '3.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 关系与引用完整性
+    items:
+    - id: item-3-3-1
+      number: 3.3.1
+      title: 一对一、一对多与多对多
+    - id: item-3-3-2
+      number: 3.3.2
+      title: 外键动作与生命周期
+    - id: item-3-3-3
+      number: 3.3.3
+      title: 聚合边界与跨表不变量
+  - id: ch03-s04
+    number: '3.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 模式、所有权与对象边界
+    items:
+    - id: item-3-4-1
+      number: 3.4.1
+      title: 业务模式、接口模式与内部模式
+    - id: item-3-4-2
+      number: 3.4.2
+      title: 对象所有者与运行角色分离
+    - id: item-3-4-3
+      number: 3.4.3
+      title: 避免依赖不受控的 `search_path`
+  - id: ch03-s05
+    number: '3.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 规范化与有意识的冗余
+    items:
+    - id: item-3-5-1
+      number: 3.5.1
+      title: 函数依赖与重复事实
+    - id: item-3-5-2
+      number: 3.5.2
+      title: 派生数据、快照数据与缓存列
+    - id: item-3-5-3
+      number: 3.5.3
+      title: 接受冗余前先定义一致性责任
+  - id: ch03-s06
+    number: '3.6'
+    index: 6
+    slug: '06'
+    capability: PG
+    title: 实战：建立逻辑模型 v0
+    items:
+    - id: item-3-6-1
+      number: 3.6.1
+      title: 用户、商品、订单、订单项与支付
+    - id: item-3-6-2
+      number: 3.6.2
+      title: 在 Pigsty L1 的真实数据库中部署并用样例规则审查
+    - id: item-3-6-3
+      number: 3.6.3
+      title: 产出金额、时间、状态、标识四项未决清单
+    - id: item-3-6-4
+      number: 3.6.4
+      title: 生成逻辑关系图并链接 ch04 的可靠版本
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-1
+  part_title: 第一篇：筑基——建立 PostgreSQL 工程认知
+  aliases:
+  - "/ch03/"
+  - "/volume-1/logical-data-model/"
+- id: ch04
+  number: 4
+  title: 量体裁衣：数据类型、约束与可靠数据表达
+  idiom: 量体裁衣
+  functional_title: 数据类型、约束与可靠数据表达
+  slug: data-types-constraints
+  goal: 利用 PostgreSQL 类型系统、约束与分区决策，把 ch03 的逻辑模型逐项落成可靠物理模式。
+  sections:
+  - id: ch04-s01
+    number: '4.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 金额、文本与时间
+    items:
+    - id: item-4-1-1
+      number: 4.1.1
+      title: 整数、`numeric` 与金额精度
+    - id: item-4-1-2
+      number: 4.1.2
+      title: "`text`、排序规则与大小写语义"
+    - id: item-4-1-3
+      number: 4.1.3
+      title: "`date`、`timestamptz`、时区与业务时间"
+  - id: ch04-s02
+    number: '4.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 标识、状态与半结构化数据
+    items:
+    - id: item-4-2-1
+      number: 4.2.1
+      title: "`bigint`、UUID 与标识生成"
+    - id: item-4-2-2
+      number: 4.2.2
+      title: 布尔、枚举、查找表与状态机
+    - id: item-4-2-3
+      number: 4.2.3
+      title: 数组、范围、JSONB 与拆表边界
+  - id: ch04-s03
+    number: '4.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: NULL、默认值与生成值
+    items:
+    - id: item-4-3-1
+      number: 4.3.1
+      title: "“未知”“不存在”与空值语义"
+    - id: item-4-3-2
+      number: 4.3.2
+      title: 默认值、身份列与序列
+    - id: item-4-3-3
+      number: 4.3.3
+      title: 生成列与数据库派生事实
+  - id: ch04-s04
+    number: '4.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 用约束表达不变量
+    items:
+    - id: item-4-4-1
+      number: 4.4.1
+      title: 主键、唯一、外键与检查约束
+    - id: item-4-4-2
+      number: 4.4.2
+      title: 排他约束与 `btree_gist` 的适用条件
+    - id: item-4-4-3
+      number: 4.4.3
+      title: 仅对支持类型使用 DEFERRABLE，并说明事务末校验代价
+  - id: ch04-s05
+    number: '4.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 类型与约束的物理代价
+    items:
+    - id: item-4-5-1
+      number: 4.5.1
+      title: 行宽、对齐、TOAST 与更新成本
+    - id: item-4-5-2
+      number: 4.5.2
+      title: 隐式转换、操作符与索引可用性
+    - id: item-4-5-3
+      number: 4.5.3
+      title: 约束、索引与写放大的关系
+  - id: ch04-s06
+    number: '4.6'
+    index: 6
+    slug: '06'
+    capability: PG
+    title: 分区决策门
+    items:
+    - id: item-4-6-1
+      number: 4.6.1
+      title: 先证明生命周期、体量或裁剪需求再决定分区
+    - id: item-4-6-2
+      number: 4.6.2
+      title: 分区键与主键、唯一约束必须共同设计
+    - id: item-4-6-3
+      number: 4.6.3
+      title: 外键、引用方式与未来在线改造代价
+    - id: item-4-6-4
+      number: 4.6.4
+      title: 产出“现在分区 / 暂不分区”的可复查 ADR
+  - id: ch04-s07
+    number: '4.7'
+    index: 7
+    slug: '07'
+    capability: PG
+    title: 实战：把逻辑模型落成可靠物理模式
+    items:
+    - id: item-4-7-1
+      number: 4.7.1
+      title: 闭合金额与时间表达
+    - id: item-4-7-2
+      number: 4.7.2
+      title: 闭合状态与标识生成
+    - id: item-4-7-3
+      number: 4.7.3
+      title: 用反例验证类型、约束与错误语义
+    - id: item-4-7-4
+      number: 4.7.4
+      title: 在 Pigsty L1 输出可靠 DDL、分区决策与 `verify:state`
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-1
+  part_title: 第一篇：筑基——建立 PostgreSQL 工程认知
+  aliases:
+  - "/ch04/"
+  - "/volume-1/data-types-constraints/"
+- id: ch05
+  number: 5
+  title: 运筹帷幄：查询、事务与锁的核心心智模型
+  idiom: 运筹帷幄
+  functional_title: 查询、事务与锁的核心心智模型
+  slug: query-transaction-locks
+  goal: 建立执行计划、并发控制和故障诊断共同依赖的原理地图，不在本章穷举后续专题。
+  sections:
+  - id: ch05-s01
+    number: '5.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: SQL 从文本到结果
+    items:
+    - id: item-5-1-1
+      number: 5.1.1
+      title: 解析、重写、规划与执行
+    - id: item-5-1-2
+      number: 5.1.2
+      title: 关系代数直觉与执行节点
+    - id: item-5-1-3
+      number: 5.1.3
+      title: 优化器为什么做估算而不是预言
+  - id: ch05-s02
+    number: '5.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: MVCC 与可见性
+    items:
+    - id: item-5-2-1
+      number: 5.2.1
+      title: 元组版本、事务 ID 与快照
+    - id: item-5-2-2
+      number: 5.2.2
+      title: 活跃、提交、中止与可见性判断
+    - id: item-5-2-3
+      number: 5.2.3
+      title: 读不阻塞写的条件与代价
+  - id: ch05-s03
+    number: '5.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 事务边界与失败语义
+    items:
+    - id: item-5-3-1
+      number: 5.3.1
+      title: 自动提交、显式事务与中止状态
+    - id: item-5-3-2
+      number: 5.3.2
+      title: 原子性、持久性与 WAL
+    - id: item-5-3-3
+      number: 5.3.3
+      title: 保存点、重试边界与外部副作用
+  - id: ch05-s04
+    number: '5.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 锁与等待
+    items:
+    - id: item-5-4-1
+      number: 5.4.1
+      title: 表锁、行锁与轻量级锁的职责
+    - id: item-5-4-2
+      number: 5.4.2
+      title: 等待图、阻塞链与死锁检测
+    - id: item-5-4-3
+      number: 5.4.3
+      title: 锁模式名称不等于业务影响
+  - id: ch05-s05
+    number: '5.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 隔离现象与后续路线
+    items:
+    - id: item-5-5-1
+      number: 5.5.1
+      title: 脏读、不可重复读、幻读与序列化异常
+    - id: item-5-5-2
+      number: 5.5.2
+      title: lost update 必须绑定具体隔离级别与写法
+    - id: item-5-5-3
+      number: 5.5.3
+      title: ch07–ch10 如何分别展开计划与并发
+  - id: ch05-s06
+    number: '5.6'
+    index: 6
+    slug: '06'
+    capability: 平台
+    title: 实战：观察一笔订单事务
+    items:
+    - id: item-5-6-1
+      number: 5.6.1
+      title: 从 SQL 观察会话、快照、锁和 WAL 位置
+    - id: item-5-6-2
+      number: 5.6.2
+      title: 从 Pigsty 观察连接、事务与等待指标
+    - id: item-5-6-3
+      number: 5.6.3
+      title: 注入阻塞并解释“现象—证据—原理”
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-1
+  part_title: 第一篇：筑基——建立 PostgreSQL 工程认知
+  aliases:
+  - "/ch05/"
+  - "/volume-1/query-transaction-locks/"
+- id: ch06
+  number: 6
+  title: 立木取信：开发规约与交付基线
+  idiom: 立木取信
+  functional_title: 开发规约与交付基线
+  slug: development-standards
+  goal: 不提前宣判“最佳实践”，而是建立“候选规则—证据—适用范围—例外—验证”的规约生成方法，产出 baseline v0.1。
+  sections:
+  - id: ch06-s01
+    number: '6.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 规约不是口号
+    items:
+    - id: item-6-1-1
+      number: 6.1.1
+      title: 从事故、评审和测量中形成规则
+    - id: item-6-1-2
+      number: 6.1.2
+      title: 每条规则记录动机、证据、例外和检查方式
+    - id: item-6-1-3
+      number: 6.1.3
+      title: 区分安全底线、团队默认与场景偏好
+  - id: ch06-s02
+    number: '6.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 连接与会话候选规则
+    items:
+    - id: item-6-2-1
+      number: 6.2.1
+      title: 连接上下文、超时与 `application_name`
+    - id: item-6-2-2
+      number: 6.2.2
+      title: 时区、编码、`search_path` 与会话状态
+    - id: item-6-2-3
+      number: 6.2.3
+      title: 用错误连接案例验证规则价值
+  - id: ch06-s03
+    number: '6.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 模式与 DDL 候选规则
+    items:
+    - id: item-6-3-1
+      number: 6.3.1
+      title: 命名、所有权、注释与对象边界
+    - id: item-6-3-2
+      number: 6.3.2
+      title: 类型、约束和默认值的审查问题
+    - id: item-6-3-3
+      number: 6.3.3
+      title: 可逆迁移与版本化 DDL
+  - id: ch06-s04
+    number: '6.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 查询与事务候选规则
+    items:
+    - id: item-6-4-1
+      number: 6.4.1
+      title: 明确列、稳定排序与分页语义
+    - id: item-6-4-2
+      number: 6.4.2
+      title: 事务大小、超时、重试与幂等
+    - id: item-6-4-3
+      number: 6.4.3
+      title: CTE、窗口函数与 `LATERAL` 的可读性门槛
+  - id: ch06-s05
+    number: '6.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 交付物与质量门
+    items:
+    - id: item-6-5-1
+      number: 6.5.1
+      title: DDL、迁移、数据生成与回滚
+    - id: item-6-5-2
+      number: 6.5.2
+      title: 自动测试、静态检查与计划证据
+    - id: item-6-5-3
+      number: 6.5.3
+      title: 变更说明、所有者与风险等级
+  - id: ch06-s06
+    number: '6.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 将规约接入统一实验环境
+    items:
+    - id: item-6-6-1
+      number: 6.6.1
+      title: 角色、数据库与服务声明
+    - id: item-6-6-2
+      number: 6.6.2
+      title: 初始化、验证与重置入口
+    - id: item-6-6-3
+      number: 6.6.3
+      title: 配置事实与运行事实分开审查
+  - id: ch06-s07
+    number: '6.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：发布规约 baseline v0.1
+    items:
+    - id: item-6-7-1
+      number: 6.7.1
+      title: 审查 ch01–ch05 已出现的候选规则
+    - id: item-6-7-2
+      number: 6.7.2
+      title: 为 `pg36_shop` 建立最小质量门
+    - id: item-6-7-3
+      number: 6.7.3
+      title: 预留 ch07–ch11 的证据追加区
+    - id: item-6-7-4
+      number: 6.7.4
+      title: 在 ch12 汇总为 v1.0 的验收条件
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-1
+  part_title: 第一篇：筑基——建立 PostgreSQL 工程认知
+  aliases:
+  - "/ch06/"
+  - "/volume-1/development-standards/"
+- id: ch07
+  number: 7
+  title: 追本溯源：执行计划与统计信息
+  idiom: 追本溯源
+  functional_title: 执行计划与统计信息
+  slug: query-plans-statistics
+  goal: 学会读计划、验证估算、解释计划变化，并建立分区裁剪和自动计划采样的正确边界。
+  sections:
+  - id: ch07-s01
+    number: '7.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 优化器如何选择路径
+    items:
+    - id: item-7-1-1
+      number: 7.1.1
+      title: 扫描、连接、排序、聚合与物化节点
+    - id: item-7-1-2
+      number: 7.1.2
+      title: 成本、选择率、行数与路径竞争
+    - id: item-7-1-3
+      number: 7.1.3
+      title: 计划树的阅读顺序与数据流
+  - id: ch07-s02
+    number: '7.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 正确使用 EXPLAIN
+    items:
+    - id: item-7-2-1
+      number: 7.2.1
+      title: "`EXPLAIN`、`ANALYZE`、`BUFFERS`、`WAL`"
+    - id: item-7-2-2
+      number: 7.2.2
+      title: 规划时间、执行时间与客户端时间
+    - id: item-7-2-3
+      number: 7.2.3
+      title: 对写语句使用 `ANALYZE` 的事务保护
+  - id: ch07-s03
+    number: '7.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 统计信息与估算偏差
+    items:
+    - id: item-7-3-1
+      number: 7.3.1
+      title: 直方图、高频值、空值率与相关性
+    - id: item-7-3-2
+      number: 7.3.2
+      title: 扩展统计解决跨列相关
+    - id: item-7-3-3
+      number: 7.3.3
+      title: 数据倾斜、陈旧统计与采样误差
+  - id: ch07-s04
+    number: '7.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 分区裁剪的两种时机
+    items:
+    - id: item-7-4-1
+      number: 7.4.1
+      title: 规划时裁剪与常量条件
+    - id: item-7-4-2
+      number: 7.4.2
+      title: 执行时裁剪、参数化节点与通用计划
+    - id: item-7-4-3
+      number: 7.4.3
+      title: 分区父表统计需要显式 `ANALYZE`
+    - id: item-7-4-4
+      number: 7.4.4
+      title: 产出裁剪生效与失效的计划对照
+  - id: ch07-s05
+    number: '7.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 参数、缓存计划与计划漂移
+    items:
+    - id: item-7-5-1
+      number: 7.5.1
+      title: 自定义计划与通用计划
+    - id: item-7-5-2
+      number: 7.5.2
+      title: 预备语句、数据倾斜与参数敏感
+    - id: item-7-5-3
+      number: 7.5.3
+      title: 计划变化是症状，不自动等于回归
+  - id: ch07-s06
+    number: '7.6'
+    index: 6
+    slug: '06'
+    capability: 平台
+    title: 建立计划证据基线
+    items:
+    - id: item-7-6-1
+      number: 7.6.1
+      title: "`pg_stat_statements` 的归一化视角"
+    - id: item-7-6-2
+      number: 7.6.2
+      title: "`auto_explain` 的阈值、采样与日志成本"
+    - id: item-7-6-3
+      number: 7.6.3
+      title: 从 Pigsty 时间窗保存 SQL、参数、统计、计划与环境上下文
+  - id: ch07-s07
+    number: '7.7'
+    index: 7
+    slug: '07'
+    capability: PG
+    title: 实战：解释订单查询的计划变化
+    items:
+    - id: item-7-7-1
+      number: 7.7.1
+      title: 用固定数据种子制造估算偏差
+    - id: item-7-7-2
+      number: 7.7.2
+      title: 修复统计与条件表达后重新比较
+    - id: item-7-7-3
+      number: 7.7.3
+      title: 把一条有证据的计划规则追加到规约
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-2
+  part_title: 第二篇：应用——从 SQL 正确走向稳定交付
+  aliases:
+  - "/ch07/"
+  - "/volume-1/query-plans-statistics/"
+- id: ch08
+  number: 8
+  title: 抽丝剥茧：慢 SQL 诊断方法论
+  idiom: 抽丝剥茧
+  functional_title: 慢 SQL 诊断方法论
+  slug: slow-query-diagnosis
+  goal: 从“用户说慢”出发，建立从范围界定、证据收集、假设排序到受控验证的诊断闭环。本章同时作为全书方法型样章。
+  sections:
+  - id: ch08-s01
+    number: '8.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 先定义“慢”
+    items:
+    - id: item-8-1-1
+      number: 8.1.1
+      title: 延迟分位数、吞吐、并发与错误率
+    - id: item-8-1-2
+      number: 8.1.2
+      title: 单次慢、持续慢与整体退化
+    - id: item-8-1-3
+      number: 8.1.3
+      title: 应用时间、排队时间与数据库时间
+  - id: ch08-s02
+    number: '8.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 从会话到语句定位范围
+    items:
+    - id: item-8-2-1
+      number: 8.2.1
+      title: 活跃、等待、阻塞与空闲事务
+    - id: item-8-2-2
+      number: 8.2.2
+      title: 按调用、总时长、均值和尾延迟排序
+    - id: item-8-2-3
+      number: 8.2.3
+      title: 查询指纹、参数与时间窗口
+  - id: ch08-s03
+    number: '8.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: 关联日志、指标与计划
+    items:
+    - id: item-8-3-1
+      number: 8.3.1
+      title: 日志最小基线与慢语句记录
+    - id: item-8-3-2
+      number: 8.3.2
+      title: SQL 指标、主机资源与部署事件
+    - id: item-8-3-3
+      number: 8.3.3
+      title: 用同一时间轴排除巧合
+  - id: ch08-s04
+    number: '8.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 建立而不是猜测假设
+    items:
+    - id: item-8-4-1
+      number: 8.4.1
+      title: 计划与估算问题
+    - id: item-8-4-2
+      number: 8.4.2
+      title: 锁、I/O、CPU、内存与临时文件
+    - id: item-8-4-3
+      number: 8.4.3
+      title: 客户端取数、网络与连接池排队
+  - id: ch08-s05
+    number: '8.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 设计受控实验
+    items:
+    - id: item-8-5-1
+      number: 8.5.1
+      title: 每次只改变一个解释变量
+    - id: item-8-5-2
+      number: 8.5.2
+      title: 冷热缓存、参数与数据规模控制
+    - id: item-8-5-3
+      number: 8.5.3
+      title: 反证、回退与副作用观察
+  - id: ch08-s06
+    number: '8.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 从可观测面板回到原生证据
+    items:
+    - id: item-8-6-1
+      number: 8.6.1
+      title: 用指标语义定位时间、实例与查询
+    - id: item-8-6-2
+      number: 8.6.2
+      title: 用 SQL、日志和计划复核面板判断
+    - id: item-8-6-3
+      number: 8.6.3
+      title: 不把截图、颜色或当前点击路径当作知识
+  - id: ch08-s07
+    number: '8.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：三种“慢”只修真正瓶颈
+    items:
+    - id: item-8-7-1
+      number: 8.7.1
+      title: 估算错误、锁等待与客户端慢消费
+    - id: item-8-7-2
+      number: 8.7.2
+      title: 随机隐藏一种根因，先独立诊断再揭晓
+    - id: item-8-7-3
+      number: 8.7.3
+      title: 输出证据包、假设树、修复前后对照与复位结果
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-2
+  part_title: 第二篇：应用——从 SQL 正确走向稳定交付
+  aliases:
+  - "/ch08/"
+  - "/volume-1/slow-query-diagnosis/"
+- id: ch09
+  number: 9
+  title: 巧夺天工：索引设计与效果验证
+  idiom: 巧夺天工
+  functional_title: 索引设计与效果验证
+  slug: index-design
+  goal: 从访问模式而不是字段直觉设计索引，并用读取收益、写入代价与维护成本共同验收。
+  sections:
+  - id: ch09-s01
+    number: '9.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 索引方法与操作符类
+    items:
+    - id: item-9-1-1
+      number: 9.1.1
+      title: B-tree 与 Hash 的适用查询
+    - id: item-9-1-2
+      number: 9.1.2
+      title: GiST、SP-GiST 与空间、范围、近邻问题
+    - id: item-9-1-3
+      number: 9.1.3
+      title: GIN 与数组、JSONB、文本检索
+    - id: item-9-1-4
+      number: 9.1.4
+      title: BRIN 与物理相关的大表；Bloom 的扩展边界
+  - id: ch09-s02
+    number: '9.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 从谓词、连接与排序推导索引
+    items:
+    - id: item-9-2-1
+      number: 9.2.1
+      title: 等值、范围与多列顺序
+    - id: item-9-2-2
+      number: 9.2.2
+      title: 连接键、排序、分组与 Top-N
+    - id: item-9-2-3
+      number: 9.2.3
+      title: 选择率、相关性与访问路径
+  - id: ch09-s03
+    number: '9.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 表达式、部分与覆盖索引
+    items:
+    - id: item-9-3-1
+      number: 9.3.1
+      title: 表达式必须与查询语义一致
+    - id: item-9-3-2
+      number: 9.3.2
+      title: 部分索引的谓词蕴含与参数陷阱
+    - id: item-9-3-3
+      number: 9.3.3
+      title: "`INCLUDE`、index-only scan 与可见性图"
+  - id: ch09-s04
+    number: '9.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 索引也有写入和生命周期成本
+    items:
+    - id: item-9-4-1
+      number: 9.4.1
+      title: 写放大、缓存占用与 WAL
+    - id: item-9-4-2
+      number: 9.4.2
+      title: HOT 更新、页分裂与填充因子
+    - id: item-9-4-3
+      number: 9.4.3
+      title: 重复、未使用与失效索引的判断
+  - id: ch09-s05
+    number: '9.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 验证而不是“加完就快”
+    items:
+    - id: item-9-5-1
+      number: 9.5.1
+      title: 计划、缓冲区、延迟分布与写入代价
+    - id: item-9-5-2
+      number: 9.5.2
+      title: 数据规模和缓存状态一致的 A/B 对照
+    - id: item-9-5-3
+      number: 9.5.3
+      title: 线上创建、失败回收与监控窗口
+  - id: ch09-s06
+    number: '9.6'
+    index: 6
+    slug: '06'
+    capability: PG
+    title: 实战：为订单、库存与搜索入口设计索引
+    items:
+    - id: item-9-6-1
+      number: 9.6.1
+      title: 从真实查询清单提出候选索引
+    - id: item-9-6-2
+      number: 9.6.2
+      title: 在 Pigsty L1 保留、合并或拒绝并记录证据
+    - id: item-9-6-3
+      number: 9.6.3
+      title: 将索引审查规则追加到规约
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-2
+  part_title: 第二篇：应用——从 SQL 正确走向稳定交付
+  aliases:
+  - "/ch09/"
+  - "/volume-1/index-design/"
+- id: ch10
+  number: 10
+  title: 顾此失彼：并发控制与隔离异常
+  idiom: 顾此失彼
+  functional_title: 并发控制与隔离异常
+  slug: concurrency-isolation
+  goal: 在明确隔离级别和业务不变量的前提下重现并发异常，选择锁、条件更新、重试与幂等策略。
+  sections:
+  - id: ch10-s01
+    number: '10.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 隔离级别与可观察现象
+    items:
+    - id: item-10-1-1
+      number: 10.1.1
+      title: Read Committed 的语句快照
+    - id: item-10-1-2
+      number: 10.1.2
+      title: Repeatable Read 的事务快照与写冲突
+    - id: item-10-1-3
+      number: 10.1.3
+      title: Serializable、谓词冲突与序列化失败
+  - id: ch10-s02
+    number: '10.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: Lost update 不是一句口号
+    items:
+    - id: item-10-2-1
+      number: 10.2.1
+      title: 读—算—写在 Read Committed 下如何丢更新
+    - id: item-10-2-2
+      number: 10.2.2
+      title: 原子更新与带版本条件的更新
+    - id: item-10-2-3
+      number: 10.2.3
+      title: 更高隔离级别何时拒绝而不是静默覆盖
+  - id: ch10-s03
+    number: '10.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 悲观锁与锁队列
+    items:
+    - id: item-10-3-1
+      number: 10.3.1
+      title: "`FOR UPDATE`、`NO KEY UPDATE` 与引用关系"
+    - id: item-10-3-2
+      number: 10.3.2
+      title: "`NOWAIT`、`SKIP LOCKED` 与任务领取"
+    - id: item-10-3-3
+      number: 10.3.3
+      title: 锁顺序、阻塞链与死锁
+  - id: ch10-s04
+    number: '10.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 乐观控制、重试与幂等
+    items:
+    - id: item-10-4-1
+      number: 10.4.1
+      title: 版本列、唯一键与条件写入
+    - id: item-10-4-2
+      number: 10.4.2
+      title: 重试只包围可重放的事务
+    - id: item-10-4-3
+      number: 10.4.3
+      title: 支付、消息与外部副作用的边界
+  - id: ch10-s05
+    number: '10.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 咨询锁与跨行协调
+    items:
+    - id: item-10-5-1
+      number: 10.5.1
+      title: 会话级与事务级咨询锁
+    - id: item-10-5-2
+      number: 10.5.2
+      title: 键空间、碰撞与所有权
+    - id: item-10-5-3
+      number: 10.5.3
+      title: 不用咨询锁掩盖缺失的数据约束
+  - id: ch10-s06
+    number: '10.6'
+    index: 6
+    slug: '06'
+    capability: 平台
+    title: 观察与诊断并发
+    items:
+    - id: item-10-6-1
+      number: 10.6.1
+      title: "`pg_stat_activity`、`pg_locks` 与等待事件"
+    - id: item-10-6-2
+      number: 10.6.2
+      title: 从 Pigsty 定位锁等待与长事务
+    - id: item-10-6-3
+      number: 10.6.3
+      title: 保存阻塞图，而不是先杀会话
+  - id: ch10-s07
+    number: '10.7'
+    index: 7
+    slug: '07'
+    capability: PG
+    title: 实战：库存扣减与支付幂等
+    items:
+    - id: item-10-7-1
+      number: 10.7.1
+      title: 在指定隔离级别重现丢更新和死锁
+    - id: item-10-7-2
+      number: 10.7.2
+      title: 比较原子更新、行锁与可重试事务
+    - id: item-10-7-3
+      number: 10.7.3
+      title: 用并发测试验证业务不变量并追加规约
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-2
+  part_title: 第二篇：应用——从 SQL 正确走向稳定交付
+  aliases:
+  - "/ch10/"
+  - "/volume-1/concurrency-isolation/"
+- id: ch11
+  number: 11
+  title: 守正出奇：模式变更与安全发布
+  idiom: 守正出奇
+  functional_title: 模式变更与安全发布
+  slug: schema-change-release
+  goal: 先判断锁、重写、扫描和兼容性，再设计可观察、可中止、可回退的模式发布；完成分区能力的第三个触点。
+  sections:
+  - id: ch11-s01
+    number: '11.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 识别 DDL 的四类风险
+    items:
+    - id: item-11-1-1
+      number: 11.1.1
+      title: 锁等级与持锁时间
+    - id: item-11-1-2
+      number: 11.1.2
+      title: 表重写、全表扫描与 WAL 放大
+    - id: item-11-1-3
+      number: 11.1.3
+      title: 新旧应用版本的兼容窗口
+    - id: item-11-1-4
+      number: 11.1.4
+      title: 数据回填的节奏与失败恢复
+  - id: ch11-s02
+    number: '11.2'
+    index: 2
+    slug: '02'
+    capability: 平台
+    title: Expand–Migrate–Contract
+    items:
+    - id: item-11-2-1
+      number: 11.2.1
+      title: 先扩展兼容结构
+    - id: item-11-2-2
+      number: 11.2.2
+      title: 分批迁移、双读校验与切换
+    - id: item-11-2-3
+      number: 11.2.3
+      title: 观察稳定后再收缩旧结构
+  - id: ch11-s03
+    number: '11.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 索引与约束的在线化路径
+    items:
+    - id: item-11-3-1
+      number: 11.3.1
+      title: "`CREATE INDEX CONCURRENTLY` 的阶段与失败残留"
+    - id: item-11-3-2
+      number: 11.3.2
+      title: "`NOT VALID`、`VALIDATE CONSTRAINT` 与验证扫描"
+    - id: item-11-3-3
+      number: 11.3.3
+      title: 默认值、非空与类型变更的版本边界
+  - id: ch11-s04
+    number: '11.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 在线分区化
+    items:
+    - id: item-11-4-1
+      number: 11.4.1
+      title: 从 ch04 的分区 ADR 选择迁移路径
+    - id: item-11-4-2
+      number: 11.4.2
+      title: 预建约束、`ATTACH` 与扫描规避
+    - id: item-11-4-3
+      number: 11.4.3
+      title: "`DETACH`、并发能力与锁等级必须按版本说明"
+    - id: item-11-4-4
+      number: 11.4.4
+      title: 产出一次可回退的分区化发布
+  - id: ch11-s05
+    number: '11.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 数据回填与流量切换
+    items:
+    - id: item-11-5-1
+      number: 11.5.1
+      title: 批次、限速、水位与断点续跑
+    - id: item-11-5-2
+      number: 11.5.2
+      title: 影子读、双写的风险与一致性验证
+    - id: item-11-5-3
+      number: 11.5.3
+      title: 何时暂停、回退或前滚
+  - id: ch11-s06
+    number: '11.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 发布窗口中的平台观察
+    items:
+    - id: item-11-6-1
+      number: 11.6.1
+      title: 从服务入口隔离实验流量
+    - id: item-11-6-2
+      number: 11.6.2
+      title: 观察锁、复制延迟、WAL 与资源水位
+    - id: item-11-6-3
+      number: 11.6.3
+      title: 配置变更与模式变更分别留证
+  - id: ch11-s07
+    number: '11.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：无中断演进订单模式
+    items:
+    - id: item-11-7-1
+      number: 11.7.1
+      title: 加字段、回填、建约束与新旧版本共存
+    - id: item-11-7-2
+      number: 11.7.2
+      title: 注入锁等待和回填中断，验证中止与恢复
+    - id: item-11-7-3
+      number: 11.7.3
+      title: 把发布证据与新规则追加到规约
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-2
+  part_title: 第二篇：应用——从 SQL 正确走向稳定交付
+  aliases:
+  - "/ch11/"
+  - "/volume-1/schema-change-release/"
+- id: ch12
+  number: 12
+  title: 一气呵成：从数据库契约到后端服务
+  idiom: 一气呵成
+  functional_title: 从数据库契约到后端服务
+  slug: database-to-service
+  goal: 把前十一章收束成一个可运行、可观测、可部署的最小服务；后续章节不再长期维护同一套 Go 代码。
+  sections:
+  - id: ch12-s01
+    number: '12.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 数据库契约与应用边界
+    items:
+    - id: item-12-1-1
+      number: 12.1.1
+      title: 模式、查询、错误与兼容性契约
+    - id: item-12-1-2
+      number: 12.1.2
+      title: 业务不变量在应用与数据库之间分工
+    - id: item-12-1-3
+      number: 12.1.3
+      title: 迁移版本与服务发布的依赖
+  - id: ch12-s02
+    number: '12.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 为服务设计查询接口
+    items:
+    - id: item-12-2-1
+      number: 12.2.1
+      title: 参数化 SQL 与稳定结果语义
+    - id: item-12-2-2
+      number: 12.2.2
+      title: CTE、窗口函数和 `LATERAL` 的工程用法
+    - id: item-12-2-3
+      number: 12.2.3
+      title: 错误码、约束名与领域错误映射
+  - id: ch12-s03
+    number: '12.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: Go 服务中的连接与事务
+    items:
+    - id: item-12-3-1
+      number: 12.3.1
+      title: 连接池大小、超时与上下文取消
+    - id: item-12-3-2
+      number: 12.3.2
+      title: 事务函数、失败重试与外部副作用
+    - id: item-12-3-3
+      number: 12.3.3
+      title: 健康检查不等于业务可用
+  - id: ch12-s04
+    number: '12.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 会话状态与连接池陷阱
+    items:
+    - id: item-12-4-1
+      number: 12.4.1
+      title: session、transaction 与 statement pooling
+    - id: item-12-4-2
+      number: 12.4.2
+      title: 预备语句行为必须绑定 PgBouncer 与驱动版本
+    - id: item-12-4-3
+      number: 12.4.3
+      title: "`SET LOCAL`、事务边界与 RLS 上下文"
+    - id: item-12-4-4
+      number: 12.4.4
+      title: 在 ch22、ch23 分别深化池化与权限
+  - id: ch12-s05
+    number: '12.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 服务级可观测性
+    items:
+    - id: item-12-5-1
+      number: 12.5.1
+      title: 请求、事务、查询指纹与 `application_name`
+    - id: item-12-5-2
+      number: 12.5.2
+      title: 延迟、错误、连接等待和数据库等待
+    - id: item-12-5-3
+      number: 12.5.3
+      title: 从一次请求追到数据库证据
+  - id: ch12-s06
+    number: '12.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 部署与接入 `pg36_shop`
+    items:
+    - id: item-12-6-1
+      number: 12.6.1
+      title: 角色、数据库、服务与凭据声明
+    - id: item-12-6-2
+      number: 12.6.2
+      title: 通过连接池和服务端点接入
+    - id: item-12-6-3
+      number: 12.6.3
+      title: 用平台指标验证部署，而非只看进程存活
+  - id: ch12-s07
+    number: '12.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：交付应用闭环与规约 v1.0
+    items:
+    - id: item-12-7-1
+      number: 12.7.1
+      title: 跑通下单、扣库存、支付幂等与查询
+    - id: item-12-7-2
+      number: 12.7.2
+      title: 注入数据库超时、重试与连接耗尽
+    - id: item-12-7-3
+      number: 12.7.3
+      title: 汇总 ch07–ch11 的证据，发布规约 v1.0
+    - id: item-12-7-4
+      number: 12.7.4
+      title: 冻结服务样例，后续改用 SQL 与工作负载脚本
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-2
+  part_title: 第二篇：应用——从 SQL 正确走向稳定交付
+  aliases:
+  - "/ch12/"
+  - "/volume-1/database-to-service/"
+- id: ch13
+  number: 13
+  title: 言出法随：函数、触发器与存储过程
+  idiom: 言出法随
+  functional_title: 函数、触发器与存储过程
+  slug: functions-triggers-procedures
+  goal: 判断逻辑应该位于 SQL、数据库函数、触发器还是应用中，并能测试、观测和安全发布数据库端逻辑。
+  sections:
+  - id: ch13-s01
+    number: '13.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 先决定逻辑放在哪里
+    items:
+    - id: item-13-1-1
+      number: 13.1.1
+      title: 数据不变量、批处理与接口封装
+    - id: item-13-1-2
+      number: 13.1.2
+      title: 数据库内聚与应用可演进性的权衡
+    - id: item-13-1-3
+      number: 13.1.3
+      title: 不用触发器隐藏跨系统工作流
+  - id: ch13-s02
+    number: '13.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: SQL 与 PL/pgSQL 函数
+    items:
+    - id: item-13-2-1
+      number: 13.2.1
+      title: 参数、返回值、集合与多态
+    - id: item-13-2-2
+      number: 13.2.2
+      title: 波动性、严格性、并行安全与规划影响
+    - id: item-13-2-3
+      number: 13.2.3
+      title: 异常、子事务与错误契约
+  - id: ch13-s03
+    number: '13.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 触发器与约束触发器
+    items:
+    - id: item-13-3-1
+      number: 13.3.1
+      title: 行级、语句级与 transition table
+    - id: item-13-3-2
+      number: 13.3.2
+      title: BEFORE、AFTER 与 INSTEAD OF
+    - id: item-13-3-3
+      number: 13.3.3
+      title: 递归、顺序、批量写入与隐藏成本
+  - id: ch13-s04
+    number: '13.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 过程、任务与事务控制
+    items:
+    - id: item-13-4-1
+      number: 13.4.1
+      title: procedure 与 function 的边界
+    - id: item-13-4-2
+      number: 13.4.2
+      title: 批处理、维护任务与显式事务
+    - id: item-13-4-3
+      number: 13.4.3
+      title: 调度属于平台职责，不由过程本身解决
+  - id: ch13-s05
+    number: '13.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 安全、测试与观测
+    items:
+    - id: item-13-5-1
+      number: 13.5.1
+      title: "`SECURITY DEFINER`、固定 `search_path` 与最小权限"
+    - id: item-13-5-2
+      number: 13.5.2
+      title: 单元测试、属性测试与并发测试
+    - id: item-13-5-3
+      number: 13.5.3
+      title: 函数级统计、日志与慢调用定位
+  - id: ch13-s06
+    number: '13.6'
+    index: 6
+    slug: '06'
+    capability: PG
+    title: 实战：为订单状态建立数据库端护栏
+    items:
+    - id: item-13-6-1
+      number: 13.6.1
+      title: 比较约束、函数、触发器与应用实现
+    - id: item-13-6-2
+      number: 13.6.2
+      title: 注入绕过应用的错误写入
+    - id: item-13-6-3
+      number: 13.6.3
+      title: 在 Pigsty L1 输出实现选择、测试证据与回退脚本
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-3
+  part_title: 第三篇：扩展——扩大 PostgreSQL 的能力边界
+  aliases:
+  - "/ch13/"
+  - "/volume-1/functions-triggers-procedures/"
+- id: ch14
+  number: 14
+  title: 博采众长：内核分支与扩展生态
+  idiom: 博采众长
+  functional_title: 内核分支与扩展生态
+  slug: extensions-ecosystem
+  goal: 不从“能安装”推导“该使用”，建立扩展发现、选型、供应链、升级与退出的统一 ADR。
+  sections:
+  - id: ch14-s01
+    number: '14.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: PostgreSQL 扩展机制
+    items:
+    - id: item-14-1-1
+      number: 14.1.1
+      title: control、SQL 脚本、动态库与对象所有权
+    - id: item-14-1-2
+      number: 14.1.2
+      title: 普通扩展、预加载库与超级用户需求
+    - id: item-14-1-3
+      number: 14.1.3
+      title: 扩展依赖、版本与 `ALTER EXTENSION`
+  - id: ch14-s02
+    number: '14.2'
+    index: 2
+    slug: '02'
+    capability: 平台
+    title: 内核、发行版与托管服务
+    items:
+    - id: item-14-2-1
+      number: 14.2.1
+      title: 上游 PostgreSQL、补丁内核与兼容性承诺
+    - id: item-14-2-2
+      number: 14.2.2
+      title: 包仓库、容器镜像与托管白名单
+    - id: item-14-2-3
+      number: 14.2.3
+      title: "“兼容 PostgreSQL”需要逐层验证"
+  - id: ch14-s03
+    number: '14.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: 扩展选型的六个问题
+    items:
+    - id: item-14-3-1
+      number: 14.3.1
+      title: 它解决的具体问题和原生替代是什么
+    - id: item-14-3-2
+      number: 14.3.2
+      title: 数据格式是否锁定、能否导出和退出
+    - id: item-14-3-3
+      number: 14.3.3
+      title: 维护活跃度、许可证与商业连续性
+    - id: item-14-3-4
+      number: 14.3.4
+      title: 权限、崩溃面与供应链风险
+  - id: ch14-s04
+    number: '14.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 生命周期与升级耦合
+    items:
+    - id: item-14-4-1
+      number: 14.4.1
+      title: 安装版本不等于数据库对象版本
+    - id: item-14-4-2
+      number: 14.4.2
+      title: 大版本升级、备份恢复与逻辑复制兼容
+    - id: item-14-4-3
+      number: 14.4.3
+      title: 依赖扩展不可用时的降级策略
+  - id: ch14-s05
+    number: '14.5'
+    index: 5
+    slug: '05'
+    capability: Pigsty
+    title: 用 Pigsty 管理扩展可用性
+    items:
+    - id: item-14-5-1
+      number: 14.5.1
+      title: 包、仓库、模板与节点差异
+    - id: item-14-5-2
+      number: 14.5.2
+      title: 声明安装与数据库内 `CREATE EXTENSION`
+    - id: item-14-5-3
+      number: 14.5.3
+      title: 从监控和日志识别加载失败
+  - id: ch14-s06
+    number: '14.6'
+    index: 6
+    slug: '06'
+    capability: 平台
+    title: 建立可复用扩展 ADR
+    items:
+    - id: item-14-6-1
+      number: 14.6.1
+      title: 问题、候选、假设与成功标准
+    - id: item-14-6-2
+      number: 14.6.2
+      title: 最小 PoC、风险清单与退出路径
+    - id: item-14-6-3
+      number: 14.6.3
+      title: 结论的版本范围和复审触发器
+  - id: ch14-s07
+    number: '14.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：评审三个候选扩展
+    items:
+    - id: item-14-7-1
+      number: 14.7.1
+      title: 一个接受、一个试点、一个拒绝
+    - id: item-14-7-2
+      number: 14.7.2
+      title: 在 L1 安装并验证原生对象与平台状态
+    - id: item-14-7-3
+      number: 14.7.3
+      title: 产出供 ch15–ch17 复用的 ADR 模板
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-3
+  part_title: 第三篇：扩展——扩大 PostgreSQL 的能力边界
+  aliases:
+  - "/ch14/"
+  - "/volume-1/extensions-ecosystem/"
+- id: ch15
+  number: 15
+  title: 见微知著：全文、模糊与向量检索
+  idiom: 见微知著
+  functional_title: 全文、模糊与向量检索
+  slug: search
+  goal: 从检索质量与业务语义出发，完成全文、模糊、向量和混合检索的最小可复现 PoC，并知道生产代价。
+  sections:
+  - id: ch15-s01
+    number: '15.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 先定义检索任务与评估集
+    items:
+    - id: item-15-1-1
+      number: 15.1.1
+      title: 精确筛选、词法相关与语义相似
+    - id: item-15-1-2
+      number: 15.1.2
+      title: 查询、候选、排序和过滤的分层
+    - id: item-15-1-3
+      number: 15.1.3
+      title: 建立带人工相关性标签的查询集合
+  - id: ch15-s02
+    number: '15.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: PostgreSQL 全文检索
+    items:
+    - id: item-15-2-1
+      number: 15.2.1
+      title: 文档、词典、配置与 `tsvector`
+    - id: item-15-2-2
+      number: 15.2.2
+      title: 查询语法、权重与相关性排序
+    - id: item-15-2-3
+      number: 15.2.3
+      title: GIN/GiST 索引、更新与语言边界
+  - id: ch15-s03
+    number: '15.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 模糊匹配与拼写容错
+    items:
+    - id: item-15-3-1
+      number: 15.3.1
+      title: "`pg_trgm` 相似度与距离"
+    - id: item-15-3-2
+      number: 15.3.2
+      title: 前缀、包含、拼写错误与候选召回
+    - id: item-15-3-3
+      number: 15.3.3
+      title: 与全文检索的互补和重复
+  - id: ch15-s04
+    number: '15.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 可复现的向量检索
+    items:
+    - id: item-15-4-1
+      number: 15.4.1
+      title: 维度、距离度量与归一化
+    - id: item-15-4-2
+      number: 15.4.2
+      title: 精确近邻与近似索引
+    - id: item-15-4-3
+      number: 15.4.3
+      title: 索引参数、过滤条件与召回代价
+    - id: item-15-4-4
+      number: 15.4.4
+      title: 冻结文本、模型标识、许可证、向量文件与校验和
+  - id: ch15-s05
+    number: '15.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 混合检索与排序验证
+    items:
+    - id: item-15-5-1
+      number: 15.5.1
+      title: 词法、模糊和语义候选合并
+    - id: item-15-5-2
+      number: 15.5.2
+      title: 分数归一、倒数排名融合与重排
+    - id: item-15-5-3
+      number: 15.5.3
+      title: 用标注集比较质量，不用单个“好看案例”
+  - id: ch15-s06
+    number: '15.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 扩展部署与运行代价
+    items:
+    - id: item-15-6-1
+      number: 15.6.1
+      title: 安装检索扩展并核对版本
+    - id: item-15-6-2
+      number: 15.6.2
+      title: 观察索引体积、构建、查询和维护
+    - id: item-15-6-3
+      number: 15.6.3
+      title: 外部嵌入生成的权限、费用与数据边界
+  - id: ch15-s07
+    number: '15.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：`pg36_shop` 商品混合检索 PoC
+    items:
+    - id: item-15-7-1
+      number: 15.7.1
+      title: 用冻结向量离线复现实验
+    - id: item-15-7-2
+      number: 15.7.2
+      title: 比较全文、模糊、向量与混合结果
+    - id: item-15-7-3
+      number: 15.7.3
+      title: 输出 ADR、质量证据、生产代价与退出路径
+    - id: item-15-7-4
+      number: 15.7.4
+      title: 验收采用 `checklist:evidence`，不设脱离场景的性能线
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-3
+  part_title: 第三篇：扩展——扩大 PostgreSQL 的能力边界
+  aliases:
+  - "/ch15/"
+  - "/volume-1/search/"
+- id: ch16
+  number: 16
+  title: 经天纬地：时序、空间与时空查询
+  idiom: 经天纬地
+  functional_title: 时序、空间与时空查询
+  slug: spatiotemporal
+  goal: 分别建立时间与空间数据的正确模型，最终用时空联合查询证明两者为何值得在同一章出现。
+  sections:
+  - id: ch16-s01
+    number: '16.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 时间语义先于时序扩展
+    items:
+    - id: item-16-1-1
+      number: 16.1.1
+      title: 事件时间、处理时间与有效时间
+    - id: item-16-1-2
+      number: 16.1.2
+      title: 时区、迟到、乱序与重复事件
+    - id: item-16-1-3
+      number: 16.1.3
+      title: 范围类型、窗口与时间对齐
+  - id: ch16-s02
+    number: '16.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 时序表与时间分区
+    items:
+    - id: item-16-2-1
+      number: 16.2.1
+      title: 从 ch04 的分区 ADR 选择时间键
+    - id: item-16-2-2
+      number: 16.2.2
+      title: 写入模式、冷热生命周期与保留
+    - id: item-16-2-3
+      number: 16.2.3
+      title: 原生分区、聚合与可选时序扩展
+    - id: item-16-2-4
+      number: 16.2.4
+      title: 不在本章重复在线分区化和维护细节
+  - id: ch16-s03
+    number: '16.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 空间类型与坐标参考
+    items:
+    - id: item-16-3-1
+      number: 16.3.1
+      title: geometry、geography 与测量语义
+    - id: item-16-3-2
+      number: 16.3.2
+      title: SRID、投影、单位与坐标转换
+    - id: item-16-3-3
+      number: 16.3.3
+      title: 点、线、面、边界与有效几何
+  - id: ch16-s04
+    number: '16.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 空间谓词与索引
+    items:
+    - id: item-16-4-1
+      number: 16.4.1
+      title: 包含、相交、邻近与最近邻
+    - id: item-16-4-2
+      number: 16.4.2
+      title: 包围盒过滤与精确计算
+    - id: item-16-4-3
+      number: 16.4.3
+      title: GiST/SP-GiST 计划与选择率验证
+  - id: ch16-s05
+    number: '16.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 时空联合查询是本章收束目标
+    items:
+    - id: item-16-5-1
+      number: 16.5.1
+      title: 某时段、某区域内的配送事件
+    - id: item-16-5-2
+      number: 16.5.2
+      title: 轨迹、停留、地理围栏与迟到修正
+    - id: item-16-5-3
+      number: 16.5.3
+      title: 时间裁剪、空间索引与二阶段过滤
+  - id: ch16-s06
+    number: '16.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 时空扩展的交付与观察
+    items:
+    - id: item-16-6-1
+      number: 16.6.1
+      title: 安装 PostGIS 与可选时序扩展
+    - id: item-16-6-2
+      number: 16.6.2
+      title: 核对版本、依赖、备份和升级边界
+    - id: item-16-6-3
+      number: 16.6.3
+      title: 观察分区、索引、写入与聚合成本
+  - id: ch16-s07
+    number: '16.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：配送事件的时空 PoC
+    items:
+    - id: item-16-7-1
+      number: 16.7.1
+      title: 生成确定性事件与地理数据
+    - id: item-16-7-2
+      number: 16.7.2
+      title: 验证 SRID 错误、裁剪失效和空间索引
+    - id: item-16-7-3
+      number: 16.7.3
+      title: 输出 ADR、PoC 证据与生产代价清单
+    - id: item-16-7-4
+      number: 16.7.4
+      title: 超预算时先删扩展专属细节，不删基础判断力
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-3
+  part_title: 第三篇：扩展——扩大 PostgreSQL 的能力边界
+  aliases:
+  - "/ch16/"
+  - "/volume-1/spatiotemporal/"
+- id: ch17
+  number: 17
+  title: 合纵连横：分析加速与分布式选型
+  idiom: 合纵连横
+  functional_title: 分析加速与分布式选型
+  slug: analytics-distributed
+  goal: 先用证据证明单机边界，再比较单机分析加速与分布式方案，完成最小 PoC；不预演下卷的复制、路由和多集群运维。
+  sections:
+  - id: ch17-s01
+    number: '17.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 先证明单机边界
+    items:
+    - id: item-17-1-1
+      number: 17.1.1
+      title: 定义数据量、并发、延迟与新鲜度目标
+    - id: item-17-1-2
+      number: 17.1.2
+      title: 区分 CPU、I/O、内存、锁与计划瓶颈
+    - id: item-17-1-3
+      number: 17.1.3
+      title: 单机未被正确使用前不急于分布式
+  - id: ch17-s02
+    number: '17.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 单机分析能力
+    items:
+    - id: item-17-2-1
+      number: 17.2.1
+      title: 并行扫描、连接、聚合与限制
+    - id: item-17-2-2
+      number: 17.2.2
+      title: 分区、物化视图、增量汇总与批处理
+    - id: item-17-2-3
+      number: 17.2.3
+      title: 列式能力候选必须写入版本基线
+    - id: item-17-2-4
+      number: 17.2.4
+      title: OLTP 与分析负载在同机共存的代价
+  - id: ch17-s03
+    number: '17.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: 何时需要分布式
+    items:
+    - id: item-17-3-1
+      number: 17.3.1
+      title: 容量、吞吐、地域与组织边界
+    - id: item-17-3-2
+      number: 17.3.2
+      title: 分片键、数据局部性与跨分片事务
+    - id: item-17-3-3
+      number: 17.3.3
+      title: 一致性、运维复杂度与退出成本
+  - id: ch17-s04
+    number: '17.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: 比较分布式候选
+    items:
+    - id: item-17-4-1
+      number: 17.4.1
+      title: PostgreSQL 扩展、兼容数据库与专用分析系统
+    - id: item-17-4-2
+      number: 17.4.2
+      title: SQL 兼容不等于事务、扩展和运维兼容
+    - id: item-17-4-3
+      number: 17.4.3
+      title: 用同一工作负载和失败条件比较
+  - id: ch17-s05
+    number: '17.5'
+    index: 5
+    slug: '05'
+    capability: Pigsty
+    title: 部署最小分布式 PoC
+    items:
+    - id: item-17-5-1
+      number: 17.5.1
+      title: 明确 PoC 只验证一个关键假设
+    - id: item-17-5-2
+      number: 17.5.2
+      title: 记录组件、版本、拓扑和数据分布
+    - id: item-17-5-3
+      number: 17.5.3
+      title: 不把演示集群的绝对性能外推到生产
+  - id: ch17-s06
+    number: '17.6'
+    index: 6
+    slug: '06'
+    capability: 平台
+    title: 实战：从单机证据到选型 ADR
+    items:
+    - id: item-17-6-1
+      number: 17.6.1
+      title: 证明一个边界，拒绝一个伪瓶颈
+    - id: item-17-6-2
+      number: 17.6.2
+      title: 比较单机加速与一个分布式候选
+    - id: item-17-6-3
+      number: 17.6.3
+      title: 输出 ADR、PoC 证据、生产代价和撤退路线
+    - id: item-17-6-4
+      number: 17.6.4
+      title: 验收采用 `checklist:evidence`
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-3
+  part_title: 第三篇：扩展——扩大 PostgreSQL 的能力边界
+  aliases:
+  - "/ch17/"
+  - "/volume-1/analytics-distributed/"
+- id: ch18
+  number: 18
+  title: 万法归宗：PostgreSQL 数据平台与替代边界
+  idiom: 万法归宗
+  functional_title: PostgreSQL 数据平台与替代边界
+  slug: data-platform-boundaries
+  goal: 把上卷能力组合成一张数据平台地图，同时明确 PostgreSQL 不应该承担的工作，为下卷的服务建设建立边界。
+  sections:
+  - id: ch18-s01
+    number: '18.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 从数据库产品到能力组合
+    items:
+    - id: item-18-1-1
+      number: 18.1.1
+      title: 事务、检索、时空、分析与任务能力
+    - id: item-18-1-2
+      number: 18.1.2
+      title: 计算、存储、接入、控制与观察平面
+    - id: item-18-1-3
+      number: 18.1.3
+      title: 组件组合必须有统一服务目标
+  - id: ch18-s02
+    number: '18.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: PostgreSQL 的强项与代价
+    items:
+    - id: item-18-2-1
+      number: 18.2.1
+      title: 关系一致性、可扩展类型与统一查询
+    - id: item-18-2-2
+      number: 18.2.2
+      title: 通用性带来的资源竞争与维护责任
+    - id: item-18-2-3
+      number: 18.2.3
+      title: 扩展能力不自动等于生产就绪
+  - id: ch18-s03
+    number: '18.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: 明确替代边界
+    items:
+    - id: item-18-3-1
+      number: 18.3.1
+      title: 缓存、消息、对象存储与离线湖仓
+    - id: item-18-3-2
+      number: 18.3.2
+      title: 超大规模检索、流处理与专用分析
+    - id: item-18-3-3
+      number: 18.3.3
+      title: 用数据所有权、时效和一致性决定分工
+  - id: ch18-s04
+    number: '18.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: 平台服务目录与多租户
+    items:
+    - id: item-18-4-1
+      number: 18.4.1
+      title: 服务等级、规格、版本与扩展套餐
+    - id: item-18-4-2
+      number: 18.4.2
+      title: 数据库、模式、实例和集群隔离
+    - id: item-18-4-3
+      number: 18.4.3
+      title: 成本归属、配额和生命周期
+  - id: ch18-s05
+    number: '18.5'
+    index: 5
+    slug: '05'
+    capability: Pigsty
+    title: Pigsty 作为参考实现
+    items:
+    - id: item-18-5-1
+      number: 18.5.1
+      title: 把 PostgreSQL、HA、备份、接入和观察组合起来
+    - id: item-18-5-2
+      number: 18.5.2
+      title: 哪些能力开箱可用，哪些仍需组织流程
+    - id: item-18-5-3
+      number: 18.5.3
+      title: 不把参考实现冒充唯一架构
+  - id: ch18-s06
+    number: '18.6'
+    index: 6
+    slug: '06'
+    capability: 平台
+    title: 实战：设计 `pg36_shop` 生产蓝图
+    items:
+    - id: item-18-6-1
+      number: 18.6.1
+      title: 选择保留在 PostgreSQL 内的能力
+    - id: item-18-6-2
+      number: 18.6.2
+      title: 选择外置组件及其数据契约
+    - id: item-18-6-3
+      number: 18.6.3
+      title: 输出服务目录草案、架构 ADR 与下卷验收问题
+  volume: volume-1
+  volume_title: 上卷：应用开发
+  part: part-3
+  part_title: 第三篇：扩展——扩大 PostgreSQL 的能力边界
+  aliases:
+  - "/ch18/"
+  - "/volume-1/data-platform-boundaries/"
+- id: ch19
+  number: 19
+  title: 开天辟地：环境规划与部署基线
+  idiom: 开天辟地
+  functional_title: 环境规划与部署基线
+  slug: deployment-baseline
+  goal: 从工作负载、服务目标和责任边界出发，规划并验收 L2 生产仿真环境，而不是从一份默认配置开始。
+  sections:
+  - id: ch19-s01
+    number: '19.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 先写服务需求
+    items:
+    - id: item-19-1-1
+      number: 19.1.1
+      title: 业务重要性、数据分类与所有者
+    - id: item-19-1-2
+      number: 19.1.2
+      title: 负载形态、增长、峰谷和批处理窗口
+    - id: item-19-1-3
+      number: 19.1.3
+      title: 可用性、RPO、RTO 与维护窗口
+  - id: ch19-s02
+    number: '19.2'
+    index: 2
+    slug: '02'
+    capability: 平台
+    title: 计算、内存、存储与网络
+    items:
+    - id: item-19-2-1
+      number: 19.2.1
+      title: CPU 核数、频率、NUMA 与虚拟化
+    - id: item-19-2-2
+      number: 19.2.2
+      title: 内存预算、页缓存与 OOM 边界
+    - id: item-19-2-3
+      number: 19.2.3
+      title: IOPS、吞吐、时延、容量与冗余
+    - id: item-19-2-4
+      number: 19.2.4
+      title: 时钟、DNS、带宽、防火墙与故障域
+  - id: ch19-s03
+    number: '19.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: 操作系统与主机基线
+    items:
+    - id: item-19-3-1
+      number: 19.3.1
+      title: 文件系统、挂载、预读与透明大页
+    - id: item-19-3-2
+      number: 19.3.2
+      title: 用户、目录、权限、时间同步与日志
+    - id: item-19-3-3
+      number: 19.3.3
+      title: 基线检查必须记录事实而非套用调优模板
+  - id: ch19-s04
+    number: '19.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 版本与数据库初始化契约
+    items:
+    - id: item-19-4-1
+      number: 19.4.1
+      title: PostgreSQL、locale、collation、编码与 checksum
+    - id: item-19-4-2
+      number: 19.4.2
+      title: WAL、页大小、扩展与认证前提
+    - id: item-19-4-3
+      number: 19.4.3
+      title: 版本矩阵、升级窗口与勘误入口
+  - id: ch19-s05
+    number: '19.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 拓扑、命名与故障域
+    items:
+    - id: item-19-5-1
+      number: 19.5.1
+      title: 主节点、同步副本、异步副本与仲裁
+    - id: item-19-5-2
+      number: 19.5.2
+      title: 节点、实例、集群、服务的统一词表
+    - id: item-19-5-3
+      number: 19.5.3
+      title: 环境、区域、租户与业务命名
+  - id: ch19-s06
+    number: '19.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 用声明式清单交付两个服务单元
+    items:
+    - id: item-19-6-1
+      number: 19.6.1
+      title: inventory、参数模板与主机分组
+    - id: item-19-6-2
+      number: 19.6.2
+      title: 生产服务与隔离验证服务
+    - id: item-19-6-3
+      number: 19.6.3
+      title: 幂等部署、差异检查与失败重跑
+  - id: ch19-s07
+    number: '19.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：L2 部署验收
+    items:
+    - id: item-19-7-1
+      number: 19.7.1
+      title: 核对版本、拓扑、资源、端点和安全入口
+    - id: item-19-7-2
+      number: 19.7.2
+      title: 从 SQL、主机与 Pigsty 三侧验证同一事实
+    - id: item-19-7-3
+      number: 19.7.3
+      title: 产出基线清单、风险例外与 `reset:cluster`
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-4
+  part_title: 第四篇：规划——建设可交付的 PostgreSQL 服务
+  aliases:
+  - "/ch19/"
+  - "/volume-2/deployment-baseline/"
+- id: ch20
+  number: 20
+  title: 狡兔三窟：高可用拓扑与容灾目标
+  idiom: 狡兔三窟
+  functional_title: 高可用拓扑与容灾目标
+  slug: high-availability
+  goal: 把复制、选主、故障域和业务 RPO/RTO 连接起来，通过一次可重复的切换演练证明高可用。本章同时作为全书架构型样章。
+  sections:
+  - id: ch20-s01
+    number: '20.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 从失败模型设计高可用
+    items:
+    - id: item-20-1-1
+      number: 20.1.1
+      title: 进程、主机、磁盘、网络、机房与控制面故障
+    - id: item-20-1-2
+      number: 20.1.2
+      title: RPO、RTO、降级目标与数据风险
+    - id: item-20-1-3
+      number: 20.1.3
+      title: 高可用不等于备份，也不等于零数据丢失
+  - id: ch20-s02
+    number: '20.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 物理流复制
+    items:
+    - id: item-20-2-1
+      number: 20.2.1
+      title: WAL 发送、接收、重放与 LSN
+    - id: item-20-2-2
+      number: 20.2.2
+      title: timeline、恢复目标与历史分叉
+    - id: item-20-2-3
+      number: 20.2.3
+      title: 复制槽、归档与 WAL 保留
+  - id: ch20-s03
+    number: '20.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 同步策略与提交语义
+    items:
+    - id: item-20-3-1
+      number: 20.3.1
+      title: 异步、同步与远程应用确认
+    - id: item-20-3-2
+      number: 20.3.2
+      title: 多副本同步集合与退化条件
+    - id: item-20-3-3
+      number: 20.3.3
+      title: 延迟、可用性和数据保护的交换
+  - id: ch20-s04
+    number: '20.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: 选主、DCS 与防脑裂
+    items:
+    - id: item-20-4-1
+      number: 20.4.1
+      title: Patroni、租约、leader lock 与健康判断
+    - id: item-20-4-2
+      number: 20.4.2
+      title: fencing、watchdog 与旧主隔离
+    - id: item-20-4-3
+      number: 20.4.3
+      title: DCS 可用性与数据库可用性不是同一件事
+  - id: ch20-s05
+    number: '20.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 切换、故障转移与重加入
+    items:
+    - id: item-20-5-1
+      number: 20.5.1
+      title: planned switchover 与 unplanned failover
+    - id: item-20-5-2
+      number: 20.5.2
+      title: 端点切换、客户端恢复与只读窗口
+    - id: item-20-5-3
+      number: 20.5.3
+      title: "`pg_rewind`、重建与时间线验证"
+  - id: ch20-s06
+    number: '20.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 交付并观察 HA 集群
+    items:
+    - id: item-20-6-1
+      number: 20.6.1
+      title: 拓扑、同步策略与服务端点声明
+    - id: item-20-6-2
+      number: 20.6.2
+      title: 从 Patroni、SQL 和指标验证角色
+    - id: item-20-6-3
+      number: 20.6.3
+      title: 演练动作对应的 Pigsty 入口与原生证据
+  - id: ch20-s07
+    number: '20.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：一次有证据的计划切换
+    items:
+    - id: item-20-7-1
+      number: 20.7.1
+      title: 预检查、切换、客户端观察与数据核对
+    - id: item-20-7-2
+      number: 20.7.2
+      title: 测量实际 RTO、提交风险与恢复时间
+    - id: item-20-7-3
+      number: 20.7.3
+      title: 输出拓扑证据、时间线和改进项
+    - id: item-20-7-4
+      number: 20.7.4
+      title: 记录把本章迁移到新版本基线的工时
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-4
+  part_title: 第四篇：规划——建设可交付的 PostgreSQL 服务
+  aliases:
+  - "/ch20/"
+  - "/volume-2/high-availability/"
+- id: ch21
+  number: 21
+  title: 未雨绸缪：备份体系与恢复演练
+  idiom: 未雨绸缪
+  functional_title: 备份体系与恢复演练
+  slug: backup-recovery
+  goal: 从恢复目标反推备份、WAL 归档、保留和异地策略，并用隔离恢复证明备份可用。
+  sections:
+  - id: ch21-s01
+    number: '21.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 从恢复场景设计备份
+    items:
+    - id: item-21-1-1
+      number: 21.1.1
+      title: 误删、介质故障、区域故障与合规留存
+    - id: item-21-1-2
+      number: 21.1.2
+      title: RPO、RTO、恢复粒度与保留周期
+    - id: item-21-1-3
+      number: 21.1.3
+      title: 逻辑、物理、快照和副本的职责边界
+  - id: ch21-s02
+    number: '21.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 物理备份与 WAL 连续性
+    items:
+    - id: item-21-2-1
+      number: 21.2.1
+      title: 基础备份、检查点与一致性起点
+    - id: item-21-2-2
+      number: 21.2.2
+      title: 归档、timeline history 与恢复链
+    - id: item-21-2-3
+      number: 21.2.3
+      title: 复制槽、归档失败与 WAL 保留者
+  - id: ch21-s03
+    number: '21.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: 备份仓库与保留策略
+    items:
+    - id: item-21-3-1
+      number: 21.3.1
+      title: 全量、差异、增量与过期
+    - id: item-21-3-2
+      number: 21.3.2
+      title: 校验、加密、不可变与异地副本
+    - id: item-21-3-3
+      number: 21.3.3
+      title: 容量预算、失败告警与责任人
+  - id: ch21-s04
+    number: '21.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 恢复流程与验证
+    items:
+    - id: item-21-4-1
+      number: 21.4.1
+      title: 选择备份集、目标时间和恢复位置
+    - id: item-21-4-2
+      number: 21.4.2
+      title: 启动前核对时间线与 WAL 完整性
+    - id: item-21-4-3
+      number: 21.4.3
+      title: 数据库一致不等于业务数据正确
+  - id: ch21-s05
+    number: '21.5'
+    index: 5
+    slug: '05'
+    capability: Pigsty
+    title: 用 pgBackRest 交付备份策略
+    items:
+    - id: item-21-5-1
+      number: 21.5.1
+      title: 仓库、策略、调度与凭据
+    - id: item-21-5-2
+      number: 21.5.2
+      title: 备份状态、归档状态与容量观察
+    - id: item-21-5-3
+      number: 21.5.3
+      title: 在隔离目标而不是原集群上恢复
+  - id: ch21-s06
+    number: '21.6'
+    index: 6
+    slug: '06'
+    capability: 平台
+    title: 实战：完成一次隔离恢复演练
+    items:
+    - id: item-21-6-1
+      number: 21.6.1
+      title: 创建已知业务检查点并执行备份
+    - id: item-21-6-2
+      number: 21.6.2
+      title: 恢复到隔离集群，核对数据库与业务不变量
+    - id: item-21-6-3
+      number: 21.6.3
+      title: 输出 RPO/RTO 实测、证据链和失败处理 SOP
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-4
+  part_title: 第四篇：规划——建设可交付的 PostgreSQL 服务
+  aliases:
+  - "/ch21/"
+  - "/volume-2/backup-recovery/"
+- id: ch22
+  number: 22
+  title: 四通八达：服务接入、连接池与路由
+  idiom: 四通八达
+  functional_title: 服务接入、连接池与路由
+  slug: connection-pooling-routing
+  goal: 让客户端连接到“具有明确语义的服务”，而不是某台机器；掌握连接预算、池化模式、读写路由与失效行为。
+  sections:
+  - id: ch22-s01
+    number: '22.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 服务端点的语义
+    items:
+    - id: item-22-1-1
+      number: 22.1.1
+      title: 主写、只读、同步只读与直连管理端点
+    - id: item-22-1-2
+      number: 22.1.2
+      title: 复制延迟、一致性与 read-your-writes
+    - id: item-22-1-3
+      number: 22.1.3
+      title: DNS、VIP、代理与客户端发现
+  - id: ch22-s02
+    number: '22.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 连接的服务端成本
+    items:
+    - id: item-22-2-1
+      number: 22.2.1
+      title: 后端进程、内存、事务与会话状态
+    - id: item-22-2-2
+      number: 22.2.2
+      title: "`max_connections` 不是容量规划答案"
+    - id: item-22-2-3
+      number: 22.2.3
+      title: 应用池、代理池与数据库预算
+  - id: ch22-s03
+    number: '22.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: PgBouncer 池化模式
+    items:
+    - id: item-22-3-1
+      number: 22.3.1
+      title: session、transaction、statement pooling
+    - id: item-22-3-2
+      number: 22.3.2
+      title: 临时表、会话 GUC、监听与咨询锁
+    - id: item-22-3-3
+      number: 22.3.3
+      title: 预备语句支持必须绑定 PgBouncer 与驱动版本
+    - id: item-22-3-4
+      number: 22.3.4
+      title: 池等待、服务时间与背压
+  - id: ch22-s04
+    number: '22.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: 路由与故障切换
+    items:
+    - id: item-22-4-1
+      number: 22.4.1
+      title: HAProxy 健康检查与角色判断
+    - id: item-22-4-2
+      number: 22.4.2
+      title: 旧连接、重连风暴与客户端退避
+    - id: item-22-4-3
+      number: 22.4.3
+      title: 故障切换中的 DNS、连接池和事务失败
+  - id: ch22-s05
+    number: '22.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 连接预算与过载边界
+    items:
+    - id: item-22-5-1
+      number: 22.5.1
+      title: 按服务分配连接、并发与队列
+    - id: item-22-5-2
+      number: 22.5.2
+      title: 超时层级、取消传播与熔断
+    - id: item-22-5-3
+      number: 22.5.3
+      title: 为 ch34 的止血动作预留控制点
+  - id: ch22-s06
+    number: '22.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: Pigsty 服务接入层
+    items:
+    - id: item-22-6-1
+      number: 22.6.1
+      title: 服务定义、角色选择与端口
+    - id: item-22-6-2
+      number: 22.6.2
+      title: PgBouncer、HAProxy 与数据库的证据链
+    - id: item-22-6-3
+      number: 22.6.3
+      title: 配置变更、reload 与连接行为验证
+  - id: ch22-s07
+    number: '22.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：写入、只读与管理三类接入
+    items:
+    - id: item-22-7-1
+      number: 22.7.1
+      title: 为 `pg36_shop` 配置端点和连接预算
+    - id: item-22-7-2
+      number: 22.7.2
+      title: 验证会话状态、预备语句与只读一致性
+    - id: item-22-7-3
+      number: 22.7.3
+      title: 注入切换与连接风暴，观察退避和恢复
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-4
+  part_title: 第四篇：规划——建设可交付的 PostgreSQL 服务
+  aliases:
+  - "/ch22/"
+  - "/volume-2/connection-pooling-routing/"
+- id: ch23
+  number: 23
+  title: 固若金汤：认证、授权与数据安全
+  idiom: 固若金汤
+  functional_title: 认证、授权与数据安全
+  slug: authentication-authorization-security
+  goal: 从威胁模型出发建立身份、最小权限、传输保护、行级安全与审计；把连接池会话语义纳入安全设计。
+  sections:
+  - id: ch23-s01
+    number: '23.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 威胁模型与信任边界
+    items:
+    - id: item-23-1-1
+      number: 23.1.1
+      title: 用户、应用、运维、平台与第三方
+    - id: item-23-1-2
+      number: 23.1.2
+      title: 网络、凭据、SQL、备份和日志攻击面
+    - id: item-23-1-3
+      number: 23.1.3
+      title: 数据分级、租户边界与应急权限
+  - id: ch23-s02
+    number: '23.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 认证与连接准入
+    items:
+    - id: item-23-2-1
+      number: 23.2.1
+      title: "`pg_hba.conf` 的匹配顺序与证据"
+    - id: item-23-2-2
+      number: 23.2.2
+      title: SCRAM、证书与外部身份
+    - id: item-23-2-3
+      number: 23.2.3
+      title: TLS 验证、吊销与密钥轮换
+  - id: ch23-s03
+    number: '23.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 角色与最小权限
+    items:
+    - id: item-23-3-1
+      number: 23.3.1
+      title: login、group、owner 与 runtime role
+    - id: item-23-3-2
+      number: 23.3.2
+      title: schema、table、sequence、function 权限
+    - id: item-23-3-3
+      number: 23.3.3
+      title: 默认权限、所有权迁移与越权路径
+  - id: ch23-s04
+    number: '23.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 行级安全与连接池上下文
+    items:
+    - id: item-23-4-1
+      number: 23.4.1
+      title: RLS policy、owner bypass 与强制 RLS
+    - id: item-23-4-2
+      number: 23.4.2
+      title: 租户身份通过事务参数传递
+    - id: item-23-4-3
+      number: 23.4.3
+      title: transaction pooling 下使用 `SET LOCAL`
+    - id: item-23-4-4
+      number: 23.4.4
+      title: 验证复用连接不会泄漏上一个租户状态
+  - id: ch23-s05
+    number: '23.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 密钥、审计与敏感信息
+    items:
+    - id: item-23-5-1
+      number: 23.5.1
+      title: 凭据生成、存放、轮换和撤销
+    - id: item-23-5-2
+      number: 23.5.2
+      title: 审计目标、日志范围与访问控制
+    - id: item-23-5-3
+      number: 23.5.3
+      title: 参数、SQL 文本与日志脱敏
+  - id: ch23-s06
+    number: '23.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: Pigsty 安全基线
+    items:
+    - id: item-23-6-1
+      number: 23.6.1
+      title: 角色、HBA、证书与服务入口声明
+    - id: item-23-6-2
+      number: 23.6.2
+      title: 管理面、监控面和数据库面的网络边界
+    - id: item-23-6-3
+      number: 23.6.3
+      title: 从配置渲染到运行事实的差异检查
+  - id: ch23-s07
+    number: '23.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：隔离两个租户
+    items:
+    - id: item-23-7-1
+      number: 23.7.1
+      title: 建立应用角色、迁移角色和只读角色
+    - id: item-23-7-2
+      number: 23.7.2
+      title: 通过 PgBouncer 事务池验证 RLS
+    - id: item-23-7-3
+      number: 23.7.3
+      title: 注入会话状态泄漏与越权访问并修复
+    - id: item-23-7-4
+      number: 23.7.4
+      title: 输出权限矩阵、轮换证据与应急回收步骤
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-4
+  part_title: 第四篇：规划——建设可交付的 PostgreSQL 服务
+  aliases:
+  - "/ch23/"
+  - "/volume-2/authentication-authorization-security/"
+- id: ch24
+  number: 24
+  title: 纲举目张：SLO、SOP 与组织治理
+  idiom: 纲举目张
+  functional_title: SLO、SOP 与组织治理
+  slug: slo-sop-governance
+  goal: 在建设告警之前定义“什么算服务正常、谁负责、证据在哪里、发生变化如何处置”，产出 ch25 的观察与告警契约。
+  sections:
+  - id: ch24-s01
+    number: '24.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 服务目录与责任模型
+    items:
+    - id: item-24-1-1
+      number: 24.1.1
+      title: 服务所有者、数据所有者与平台所有者
+    - id: item-24-1-2
+      number: 24.1.2
+      title: 等级、规格、依赖、值班与升级路径
+    - id: item-24-1-3
+      number: 24.1.3
+      title: 实例健康不等于业务服务健康
+  - id: ch24-s02
+    number: '24.2'
+    index: 2
+    slug: '02'
+    capability: 平台
+    title: SLI、SLO 与错误预算
+    items:
+    - id: item-24-2-1
+      number: 24.2.1
+      title: 可用性、延迟、正确性与数据新鲜度
+    - id: item-24-2-2
+      number: 24.2.2
+      title: 测量点、统计窗口与排除条件
+    - id: item-24-2-3
+      number: 24.2.3
+      title: 错误预算如何约束变更速度
+  - id: ch24-s03
+    number: '24.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: SOP、Runbook 与变更治理
+    items:
+    - id: item-24-3-1
+      number: 24.3.1
+      title: 日常操作、故障处置与恢复演练
+    - id: item-24-3-2
+      number: 24.3.2
+      title: 申请、评审、执行、验证与回退
+    - id: item-24-3-3
+      number: 24.3.3
+      title: 高风险动作的双人或延迟确认
+  - id: ch24-s04
+    number: '24.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: 观察与告警契约
+    items:
+    - id: item-24-4-1
+      number: 24.4.1
+      title: 每个 SLI 的数据源、查询、维度和缺失语义
+    - id: item-24-4-2
+      number: 24.4.2
+      title: 告警必须绑定用户影响、首个安全动作和所有者
+    - id: item-24-4-3
+      number: 24.4.3
+      title: 症状告警、原因告警与容量预测分开
+    - id: item-24-4-4
+      number: 24.4.4
+      title: 产出供 ch25 实现的告警规则清单
+  - id: ch24-s05
+    number: '24.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 证据、审计与合规
+    items:
+    - id: item-24-5-1
+      number: 24.5.1
+      title: 配置、变更、访问和恢复证据
+    - id: item-24-5-2
+      number: 24.5.2
+      title: 保留、不可抵赖与隐私边界
+    - id: item-24-5-3
+      number: 24.5.3
+      title: 用自动检查减少人工表格
+  - id: ch24-s06
+    number: '24.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 实战：把 `pg36_shop` 纳入服务治理
+    items:
+    - id: item-24-6-1
+      number: 24.6.1
+      title: 发布服务卡、SLO、责任人与升级路径
+    - id: item-24-6-2
+      number: 24.6.2
+      title: 为备份、切换、权限和发布建立 SOP
+    - id: item-24-6-3
+      number: 24.6.3
+      title: 输出观察契约，并拒绝没有动作的告警候选
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-4
+  part_title: 第四篇：规划——建设可交付的 PostgreSQL 服务
+  aliases:
+  - "/ch24/"
+  - "/volume-2/slo-sop-governance/"
+- id: ch25
+  number: 25
+  title: 望闻问切：监控体系与可观测诊断
+  idiom: 望闻问切
+  functional_title: 监控体系与可观测诊断
+  slug: observability
+  goal: 实现 ch24 的观察契约，把指标、日志、SQL 统计和告警连接为可行动的诊断系统，而不是堆叠面板。
+  sections:
+  - id: ch25-s01
+    number: '25.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 从问题选择可观测信号
+    items:
+    - id: item-25-1-1
+      number: 25.1.1
+      title: 用户体验、服务入口、数据库与主机四层
+    - id: item-25-1-2
+      number: 25.1.2
+      title: 指标、日志、事件和追踪各回答什么
+    - id: item-25-1-3
+      number: 25.1.3
+      title: 标签基数、采样、保留与缺失数据
+  - id: ch25-s02
+    number: '25.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: PostgreSQL 核心运行信号
+    items:
+    - id: item-25-2-1
+      number: 25.2.1
+      title: 会话、事务、等待与锁
+    - id: item-25-2-2
+      number: 25.2.2
+      title: 缓冲、I/O、WAL、检查点与复制
+    - id: item-25-2-3
+      number: 25.2.3
+      title: vacuum、冻结、膨胀与对象增长
+  - id: ch25-s03
+    number: '25.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: SQL 可观测基线
+    items:
+    - id: item-25-3-1
+      number: 25.3.1
+      title: "`pg_stat_statements` 的统计口径与重置"
+    - id: item-25-3-2
+      number: 25.3.2
+      title: 慢语句、锁等待、临时文件与错误日志
+    - id: item-25-3-3
+      number: 25.3.3
+      title: "`auto_explain` 的采样、嵌套语句与开销"
+    - id: item-25-3-4
+      number: 25.3.4
+      title: 日志不得泄漏密码、令牌和敏感参数
+  - id: ch25-s04
+    number: '25.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: 把观察契约变成告警
+    items:
+    - id: item-25-4-1
+      number: 25.4.1
+      title: SLO 燃烧率与用户影响
+    - id: item-25-4-2
+      number: 25.4.2
+      title: 阈值、持续时间、去抖、抑制与分组
+    - id: item-25-4-3
+      number: 25.4.3
+      title: 每条告警绑定所有者、证据和首个安全动作
+    - id: item-25-4-4
+      number: 25.4.4
+      title: 用演练验证告警，而不是等生产事故
+  - id: ch25-s05
+    number: '25.5'
+    index: 5
+    slug: '05'
+    capability: Pigsty
+    title: Pigsty 可观测体系
+    items:
+    - id: item-25-5-1
+      number: 25.5.1
+      title: 采集、存储、规则、面板与通知链
+    - id: item-25-5-2
+      number: 25.5.2
+      title: 以指标语义定位集群、实例、数据库和查询
+    - id: item-25-5-3
+      number: 25.5.3
+      title: 面板结论回到 SQL、日志与主机事实复核
+  - id: ch25-s06
+    number: '25.6'
+    index: 6
+    slug: '06'
+    capability: 平台
+    title: 从告警到诊断包
+    items:
+    - id: item-25-6-1
+      number: 25.6.1
+      title: 自动保存时间窗、拓扑、变更与关键查询
+    - id: item-25-6-2
+      number: 25.6.2
+      title: 区分首发症状、伴随现象与根因证据
+    - id: item-25-6-3
+      number: 25.6.3
+      title: 证据采集本身的负载和权限边界
+  - id: ch25-s07
+    number: '25.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：实现并演练观察契约
+    items:
+    - id: item-25-7-1
+      number: 25.7.1
+      title: 为延迟、错误、复制、备份和资源建立规则
+    - id: item-25-7-2
+      number: 25.7.2
+      title: 注入可控症状，验证触发、路由、抑制和恢复
+    - id: item-25-7-3
+      number: 25.7.3
+      title: 输出告警覆盖表、盲区与 ch31 的诊断入口
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-5
+  part_title: 第五篇：运营——用证据驱动日常维护与演进
+  aliases:
+  - "/ch25/"
+  - "/volume-2/observability/"
+- id: ch26
+  number: 26
+  title: 胸有成竹：容量规划与压测基线
+  idiom: 胸有成竹
+  functional_title: 容量规划与压测基线
+  slug: capacity-benchmarking
+  goal: 用可复现工作负载测量资源需求、噪声与余量，形成容量模型；不把一次 pgbench 数字包装成普适性能。
+  sections:
+  - id: ch26-s01
+    number: '26.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 从需求建立容量模型
+    items:
+    - id: item-26-1-1
+      number: 26.1.1
+      title: 事务类型、读写比、并发和数据增长
+    - id: item-26-1-2
+      number: 26.1.2
+      title: 平均值、峰值、突发与批处理叠加
+    - id: item-26-1-3
+      number: 26.1.3
+      title: 延迟目标、错误预算与安全余量
+  - id: ch26-s02
+    number: '26.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 设计代表性工作负载
+    items:
+    - id: item-26-2-1
+      number: 26.2.1
+      title: 内置 pgbench 与业务自定义脚本
+    - id: item-26-2-2
+      number: 26.2.2
+      title: 参数分布、事务混合和数据倾斜
+    - id: item-26-2-3
+      number: 26.2.3
+      title: think time、连接方式和客户端瓶颈
+  - id: ch26-s03
+    number: '26.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: 建立可信实验
+    items:
+    - id: item-26-3-1
+      number: 26.3.1
+      title: 固定硬件、版本、配置、数据与随机种子
+    - id: item-26-3-2
+      number: 26.3.2
+      title: 预热、重复、置信区间与异常值
+    - id: item-26-3-3
+      number: 26.3.3
+      title: 冷热缓存、后台任务与邻居噪声
+    - id: item-26-3-4
+      number: 26.3.4
+      title: 绝对性能结论只适用于记录过的环境
+  - id: ch26-s04
+    number: '26.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: 找到饱和点与瓶颈
+    items:
+    - id: item-26-4-1
+      number: 26.4.1
+      title: 吞吐—延迟曲线与排队拐点
+    - id: item-26-4-2
+      number: 26.4.2
+      title: CPU、内存、I/O、WAL 与锁的证据
+    - id: item-26-4-3
+      number: 26.4.3
+      title: 连接数增加为何可能降低吞吐
+  - id: ch26-s05
+    number: '26.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 从测量推导容量与成本
+    items:
+    - id: item-26-5-1
+      number: 26.5.1
+      title: 单位业务量的资源消耗
+    - id: item-26-5-2
+      number: 26.5.2
+      title: 增长、保留、备份与维护空间
+    - id: item-26-5-3
+      number: 26.5.3
+      title: 扩容触发线、提前期与失效假设
+  - id: ch26-s06
+    number: '26.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 实战：`pg36_shop` 容量基线
+    items:
+    - id: item-26-6-1
+      number: 26.6.1
+      title: 运行三个规模和两个并发档位
+    - id: item-26-6-2
+      number: 26.6.2
+      title: 用 Pigsty 与原生视图解释饱和点
+    - id: item-26-6-3
+      number: 26.6.3
+      title: 输出可复现实验报告、容量模型和未知项
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-5
+  part_title: 第五篇：运营——用证据驱动日常维护与演进
+  aliases:
+  - "/ch26/"
+  - "/volume-2/capacity-benchmarking/"
+- id: ch27
+  number: 27
+  title: 精益求精：参数调优与资源治理
+  idiom: 精益求精
+  functional_title: 参数调优与资源治理
+  slug: configuration-tuning
+  goal: 以已证实的瓶颈为起点，理解参数的资源机制、作用域和变更风险；拒绝无上下文的“万能参数模板”。
+  sections:
+  - id: ch27-s01
+    number: '27.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 调优是一套实验方法
+    items:
+    - id: item-27-1-1
+      number: 27.1.1
+      title: 先定义目标、瓶颈和不可退化指标
+    - id: item-27-1-2
+      number: 27.1.2
+      title: 一次改变一个机制并准备回退
+    - id: item-27-1-3
+      number: 27.1.3
+      title: 参数变化不修复错误 SQL 和错误模型
+  - id: ch27-s02
+    number: '27.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 内存预算
+    items:
+    - id: item-27-2-1
+      number: 27.2.1
+      title: shared buffers、操作系统页缓存与双重缓存
+    - id: item-27-2-2
+      number: 27.2.2
+      title: "`work_mem` 按节点、并发和并行放大"
+    - id: item-27-2-3
+      number: 27.2.3
+      title: maintenance、autovacuum 与后台进程内存
+    - id: item-27-2-4
+      number: 27.2.4
+      title: OOM 风险必须用最坏并发估算
+  - id: ch27-s03
+    number: '27.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: WAL、检查点与写入平滑
+    items:
+    - id: item-27-3-1
+      number: 27.3.1
+      title: WAL 生成、刷盘与提交延迟
+    - id: item-27-3-2
+      number: 27.3.2
+      title: 检查点频率、写突发与恢复时间
+    - id: item-27-3-3
+      number: 27.3.3
+      title: 压缩、全页写与归档代价
+  - id: ch27-s04
+    number: '27.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 规划器、并行与连接参数
+    items:
+    - id: item-27-4-1
+      number: 27.4.1
+      title: 成本参数只能用硬件和计划证据校准
+    - id: item-27-4-2
+      number: 27.4.2
+      title: 并行 worker 的全局预算与退化条件
+    - id: item-27-4-3
+      number: 27.4.3
+      title: 连接上限、超时和锁等待边界
+  - id: ch27-s05
+    number: '27.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 参数作用域与变更方式
+    items:
+    - id: item-27-5-1
+      number: 27.5.1
+      title: 编译、初始化、启动、reload 与会话级
+    - id: item-27-5-2
+      number: 27.5.2
+      title: 系统、数据库、角色与事务覆盖层
+    - id: item-27-5-3
+      number: 27.5.3
+      title: 配置漂移、审计、回退和滚动风险
+  - id: ch27-s06
+    number: '27.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 模板参数与集群变更
+    items:
+    - id: item-27-6-1
+      number: 27.6.1
+      title: 从模板生成实例配置
+    - id: item-27-6-2
+      number: 27.6.2
+      title: 区分 reload、restart 与滚动执行
+    - id: item-27-6-3
+      number: 27.6.3
+      title: 用 SQL 和文件事实验证最终生效值
+  - id: ch27-s07
+    number: '27.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：只调一个已证实的瓶颈
+    items:
+    - id: item-27-7-1
+      number: 27.7.1
+      title: 从 ch26 证据提出参数假设
+    - id: item-27-7-2
+      number: 27.7.2
+      title: 比较收益、副作用和故障恢复
+    - id: item-27-7-3
+      number: 27.7.3
+      title: 输出参数 ADR、回退条件与拒绝修改项
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-5
+  part_title: 第五篇：运营——用证据驱动日常维护与演进
+  aliases:
+  - "/ch27/"
+  - "/volume-2/configuration-tuning/"
+- id: ch28
+  number: 28
+  title: 除旧布新：VACUUM、冻结与膨胀治理
+  idiom: 除旧布新
+  functional_title: VACUUM、冻结与膨胀治理
+  slug: vacuum-freeze-bloat
+  goal: 把 MVCC 留下的空间债、事务年龄和索引完整性变成可预测的维护工作，并完成分区生命周期触点。
+  sections:
+  - id: ch28-s01
+    number: '28.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 死元组与可见性
+    items:
+    - id: item-28-1-1
+      number: 28.1.1
+      title: UPDATE/DELETE 如何产生旧版本
+    - id: item-28-1-2
+      number: 28.1.2
+      title: vacuum、prune、HOT 与可见性图
+    - id: item-28-1-3
+      number: 28.1.3
+      title: 回收可重用空间不等于归还文件系统
+  - id: ch28-s02
+    number: '28.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: autovacuum 的触发与资源
+    items:
+    - id: item-28-2-1
+      number: 28.2.1
+      title: 阈值、比例、插入触发与表级覆盖
+    - id: item-28-2-2
+      number: 28.2.2
+      title: worker、cost delay、I/O 与业务竞争
+    - id: item-28-2-3
+      number: 28.2.3
+      title: 进度、阻塞与“为什么没清掉”
+  - id: ch28-s03
+    number: '28.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 冻结、XID 与保留者
+    items:
+    - id: item-28-3-1
+      number: 28.3.1
+      title: XID 年龄、冻结与回卷保护
+    - id: item-28-3-2
+      number: 28.3.2
+      title: 长事务、`backend_xmin` 与 idle in transaction
+    - id: item-28-3-3
+      number: 28.3.3
+      title: 复制槽 `xmin` 与孤儿 `pg_prepared_xacts`
+    - id: item-28-3-4
+      number: 28.3.4
+      title: 紧急态应让冻结完成，不把一般止血当修复
+  - id: ch28-s04
+    number: '28.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 膨胀与重建
+    items:
+    - id: item-28-4-1
+      number: 28.4.1
+      title: 表膨胀、索引膨胀与统计误判
+    - id: item-28-4-2
+      number: 28.4.2
+      title: "`VACUUM FULL`、在线重建与额外空间"
+    - id: item-28-4-3
+      number: 28.4.3
+      title: "`REINDEX CONCURRENTLY` 的版本和失败处理"
+  - id: ch28-s05
+    number: '28.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 分区生命周期
+    items:
+    - id: item-28-5-1
+      number: 28.5.1
+      title: 新分区预建、约束和父表显式 ANALYZE
+    - id: item-28-5-2
+      number: 28.5.2
+      title: "`DETACH`、归档、验证后删除"
+    - id: item-28-5-3
+      number: 28.5.3
+      title: 用分区退役替代大批量 `DELETE`
+    - id: item-28-5-4
+      number: 28.5.4
+      title: 将 ch04/ch07/ch11/ch16/ch28 串成能力索引
+  - id: ch28-s06
+    number: '28.6'
+    index: 6
+    slug: '06'
+    capability: PG
+    title: "`amcheck` 与例行完整性检查"
+    items:
+    - id: item-28-6-1
+      number: 28.6.1
+      title: "`bt_index_check` 与更深检查的成本"
+    - id: item-28-6-2
+      number: 28.6.2
+      title: "`heapallindexed`、锁与业务窗口"
+    - id: item-28-6-3
+      number: 28.6.3
+      title: "`amcheck` 不替代数据页 checksum 和备份恢复"
+  - id: ch28-s07
+    number: '28.7'
+    index: 7
+    slug: '07'
+    capability: Pigsty
+    title: 实战：建立维护节奏
+    items:
+    - id: item-28-7-1
+      number: 28.7.1
+      title: 制造膨胀、长事务与分区到期
+    - id: item-28-7-2
+      number: 28.7.2
+      title: 从指标与原生视图判定维护优先级
+    - id: item-28-7-3
+      number: 28.7.3
+      title: 执行清理、检查和分区退役并验证副作用
+    - id: item-28-7-4
+      number: 28.7.4
+      title: 输出维护清单及 ch34/ch35 的安全路由
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-5
+  part_title: 第五篇：运营——用证据驱动日常维护与演进
+  aliases:
+  - "/ch28/"
+  - "/volume-2/vacuum-freeze-bloat/"
+- id: ch29
+  number: 29
+  title: 移花接木：逻辑复制、迁移与异构同步
+  idiom: 移花接木
+  functional_title: 逻辑复制、迁移与异构同步
+  slug: logical-replication-migration
+  goal: 理解逻辑复制、CDC 和数据搬迁的状态机，用校验与可回退切换完成迁移，而不是把“数据能流动”误当成迁移成功。
+  sections:
+  - id: ch29-s01
+    number: '29.1'
+    index: 1
+    slug: '01'
+    capability: PG
+    title: 逻辑复制原语
+    items:
+    - id: item-29-1-1
+      number: 29.1.1
+      title: publication、subscription 与 replication slot
+    - id: item-29-1-2
+      number: 29.1.2
+      title: 初始同步、流式变更与复制身份
+    - id: item-29-1-3
+      number: 29.1.3
+      title: DDL、序列、大对象与冲突边界
+  - id: ch29-s02
+    number: '29.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: CDC 与复制槽治理
+    items:
+    - id: item-29-2-1
+      number: 29.2.1
+      title: 逻辑解码、插件与消费位点
+    - id: item-29-2-2
+      number: 29.2.2
+      title: 至少一次、重复事件与下游幂等
+    - id: item-29-2-3
+      number: 29.2.3
+      title: 槽停滞、WAL 保留与磁盘风险
+  - id: ch29-s03
+    number: '29.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 批量装载与数据校验
+    items:
+    - id: item-29-3-1
+      number: 29.3.1
+      title: "`COPY`、并行、约束和索引顺序"
+    - id: item-29-3-2
+      number: 29.3.2
+      title: 行数、摘要、分桶与业务不变量
+    - id: item-29-3-3
+      number: 29.3.3
+      title: 装载速度不能牺牲可追溯错误
+  - id: ch29-s04
+    number: '29.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: 在线迁移状态机
+    items:
+    - id: item-29-4-1
+      number: 29.4.1
+      title: 预检查、全量、增量、追平与冻结窗口
+    - id: item-29-4-2
+      number: 29.4.2
+      title: 影子读、双读、切流和观察
+    - id: item-29-4-3
+      number: 29.4.3
+      title: 回退点、前滚点与不可逆动作
+  - id: ch29-s05
+    number: '29.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 异构同步的语义损失
+    items:
+    - id: item-29-5-1
+      number: 29.5.1
+      title: 类型、精度、排序规则与时区
+    - id: item-29-5-2
+      number: 29.5.2
+      title: 约束、事务顺序与删除语义
+    - id: item-29-5-3
+      number: 29.5.3
+      title: 目标端可查询不等于语义等价
+  - id: ch29-s06
+    number: '29.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 多集群迁移环境
+    items:
+    - id: item-29-6-1
+      number: 29.6.1
+      title: 源、目标、验证端点与隔离凭据
+    - id: item-29-6-2
+      number: 29.6.2
+      title: 观察槽、WAL、延迟与切换流量
+    - id: item-29-6-3
+      number: 29.6.3
+      title: 保留源环境直到退出观察窗口
+  - id: ch29-s07
+    number: '29.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：迁移 `pg36_shop`
+    items:
+    - id: item-29-7-1
+      number: 29.7.1
+      title: 完成全量加增量同步
+    - id: item-29-7-2
+      number: 29.7.2
+      title: 注入消费者停滞与数据差异
+    - id: item-29-7-3
+      number: 29.7.3
+      title: 验证、切流、回退并输出迁移证据包
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-5
+  part_title: 第五篇：运营——用证据驱动日常维护与演进
+  aliases:
+  - "/ch29/"
+  - "/volume-2/logical-replication-migration/"
+- id: ch30
+  number: 30
+  title: 推陈出新：版本升级与回滚策略
+  idiom: 推陈出新
+  functional_title: 版本升级与回滚策略
+  slug: version-upgrade
+  goal: 把升级视为应用、数据库、扩展、排序规则和平台共同参与的迁移项目，通过彩排决定前滚或回退。
+  sections:
+  - id: ch30-s01
+    number: '30.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 先识别变化类型
+    items:
+    - id: item-30-1-1
+      number: 30.1.1
+      title: 小版本、安全修复与大版本
+    - id: item-30-1-2
+      number: 30.1.2
+      title: SQL 行为、系统目录、参数和默认值
+    - id: item-30-1-3
+      number: 30.1.3
+      title: 驱动、连接池、备份与观察组件兼容
+  - id: ch30-s02
+    number: '30.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 三类大版本升级路径
+    items:
+    - id: item-30-2-1
+      number: 30.2.1
+      title: "`pg_upgrade` 与停机窗口"
+    - id: item-30-2-2
+      number: 30.2.2
+      title: 逻辑复制与渐进切换
+    - id: item-30-2-3
+      number: 30.2.3
+      title: dump/restore 与重建机会
+    - id: item-30-2-4
+      number: 30.2.4
+      title: 没有一种路径天然“滚动无感”
+  - id: ch30-s03
+    number: '30.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 扩展与依赖升级
+    items:
+    - id: item-30-3-1
+      number: 30.3.1
+      title: 二进制包、数据库对象和预加载顺序
+    - id: item-30-3-2
+      number: 30.3.2
+      title: 扩展升级脚本与不可降级路径
+    - id: item-30-3-3
+      number: 30.3.3
+      title: 从 ch14 ADR 获取退出与兼容信息
+  - id: ch30-s04
+    number: '30.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: locale、collation 与索引风险
+    items:
+    - id: item-30-4-1
+      number: 30.4.1
+      title: libc、ICU 与排序规则版本
+    - id: item-30-4-2
+      number: 30.4.2
+      title: 排序变化对唯一性和索引顺序的影响
+    - id: item-30-4-3
+      number: 30.4.3
+      title: 识别受影响对象并规划重建
+  - id: ch30-s05
+    number: '30.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 升级前检查与业务验证
+    items:
+    - id: item-30-5-1
+      number: 30.5.1
+      title: 系统目录、无效对象与长事务
+    - id: item-30-5-2
+      number: 30.5.2
+      title: "`amcheck`、checksum 状态与备份恢复证据"
+    - id: item-30-5-3
+      number: 30.5.3
+      title: 查询结果、计划、性能和业务不变量基线
+    - id: item-30-5-4
+      number: 30.5.4
+      title: "`amcheck` 与 checksum 检测对象不同"
+  - id: ch30-s06
+    number: '30.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 用隔离环境完成升级彩排
+    items:
+    - id: item-30-6-1
+      number: 30.6.1
+      title: 克隆数据与版本化配置
+    - id: item-30-6-2
+      number: 30.6.2
+      title: 执行升级、扩展更新和服务接入验证
+    - id: item-30-6-3
+      number: 30.6.3
+      title: 比较 Pigsty 面板与原生证据的前后差异
+  - id: ch30-s07
+    number: '30.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：前滚、回退与发布决策
+    items:
+    - id: item-30-7-1
+      number: 30.7.1
+      title: 注入一个扩展或排序规则兼容问题
+    - id: item-30-7-2
+      number: 30.7.2
+      title: 在业务写入恢复前验证回退路径
+    - id: item-30-7-3
+      number: 30.7.3
+      title: 输出升级 runbook、决策门和观察窗口
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-5
+  part_title: 第五篇：运营——用证据驱动日常维护与演进
+  aliases:
+  - "/ch30/"
+  - "/volume-2/version-upgrade/"
+- id: ch31
+  number: 31
+  title: 事件分级、现场保护与应急决策——枕戈待旦
+  idiom: 枕戈待旦
+  functional_title: 事件分级、现场保护与应急决策
+  slug: incident-response
+  goal: 建立所有事故共用的指挥、保护、取证、变更与升级框架；兼顾单人值守和团队协同，并学会怀疑第一个症状。
+  sections:
+  - id: ch31-s01
+    number: '31.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 事件分级与响应目标
+    items:
+    - id: item-31-1-1
+      number: 31.1.1
+      title: 用户影响、数据风险、范围与持续时间
+    - id: item-31-1-2
+      number: 31.1.2
+      title: 恢复数据、恢复拓扑、释放流量压力、抢救完整性
+    - id: item-31-1-3
+      number: 31.1.3
+      title: 严重度决定节奏，不替代技术判型
+  - id: ch31-s02
+    number: '31.2'
+    index: 2
+    slug: '02'
+    capability: 平台
+    title: 第一原则：保护现场与可恢复性
+    items:
+    - id: item-31-2-1
+      number: 31.2.1
+      title: 暂停自动化、危险变更与证据覆盖
+    - id: item-31-2-2
+      number: 31.2.2
+      title: 记录时间、拓扑、版本、告警与最近变更
+    - id: item-31-2-3
+      number: 31.2.3
+      title: 先克隆、隔离或只读，再做破坏性尝试
+  - id: ch31-s03
+    number: '31.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: 从症状路由而不是猜根因
+    items:
+    - id: item-31-3-1
+      number: 31.3.1
+      title: 误删误改与恢复目标 → ch32《PITR 与误操作恢复》
+    - id: item-31-3-2
+      number: 31.3.2
+      title: 主节点、复制或 DCS 异常 → ch33《故障切换与集群重建》
+    - id: item-31-3-3
+      number: 31.3.3
+      title: 连接、延迟、CPU、内存、I/O 或磁盘表象 → ch34《过载保护与资源故障判型》
+    - id: item-31-3-4
+      number: 31.3.4
+      title: checksum、索引、排序或逻辑不一致 → ch35《数据抢救与工程取证》
+  - id: ch31-s04
+    number: '31.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: 决策、沟通与变更纪律
+    items:
+    - id: item-31-4-1
+      number: 31.4.1
+      title: 事实、假设、动作、预期与停止条件
+    - id: item-31-4-2
+      number: 31.4.2
+      title: 单一指挥、记录员、执行者与业务接口
+    - id: item-31-4-3
+      number: 31.4.3
+      title: 高风险动作的复核、审批与回退
+  - id: ch31-s05
+    number: '31.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 单人值守与团队响应
+    items:
+    - id: item-31-5-1
+      number: 31.5.1
+      title: 单人时先稳定、记录，再逐级升级
+    - id: item-31-5-2
+      number: 31.5.2
+      title: 团队时避免多人同时改同一系统
+    - id: item-31-5-3
+      number: 31.5.3
+      title: 何时必须请求业务、存储、安全或厂商协助
+  - id: ch31-s06
+    number: '31.6'
+    index: 6
+    slug: '06'
+    capability: 平台
+    title: 实战：盲抽症状的桌面演练
+    items:
+    - id: item-31-6-1
+      number: 31.6.1
+      title: 随机症状、误导性首发告警与缺失信息
+    - id: item-31-6-2
+      number: 31.6.2
+      title: 分别按单人和团队模式完成前十五分钟
+    - id: item-31-6-3
+      number: 31.6.3
+      title: 在 Pigsty L3 输出时间线、决策日志、证据包与路由选择
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-6
+  part_title: 第六篇：出山——按响应目标演练恢复与改进
+  aliases:
+  - "/ch31/"
+  - "/volume-2/incident-response/"
+- id: ch32
+  number: 32
+  title: PITR 与误操作恢复——妙手回春
+  idiom: 妙手回春
+  functional_title: PITR 与误操作恢复
+  slug: pitr
+  goal: 在隔离环境中确定恢复目标、执行 PITR、验证业务正确性并安全回切。本章同时作为全书事故型样章。
+  sections:
+  - id: ch32-s01
+    number: '32.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 先界定误操作
+    items:
+    - id: item-32-1-1
+      number: 32.1.1
+      title: 错误 UPDATE、DELETE、DROP 与批处理
+    - id: item-32-1-2
+      number: 32.1.2
+      title: 影响对象、开始时间、结束时间和持续写入
+    - id: item-32-1-3
+      number: 32.1.3
+      title: 逻辑补偿、对象恢复与整库 PITR 的选择
+  - id: ch32-s02
+    number: '32.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 恢复目标与时间线
+    items:
+    - id: item-32-2-1
+      number: 32.2.1
+      title: 时间、LSN、事务 ID 与命名恢复点
+    - id: item-32-2-2
+      number: 32.2.2
+      title: timeline 分叉与“恢复到刚刚之前”
+    - id: item-32-2-3
+      number: 32.2.3
+      title: 时钟、时区和证据误差
+  - id: ch32-s03
+    number: '32.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: 隔离恢复策略
+    items:
+    - id: item-32-3-1
+      number: 32.3.1
+      title: 不覆盖仍可取证的原集群
+    - id: item-32-3-2
+      number: 32.3.2
+      title: 选择备份、WAL 与目标环境
+    - id: item-32-3-3
+      number: 32.3.3
+      title: 控制网络、凭据和外部副作用
+  - id: ch32-s04
+    number: '32.4'
+    index: 4
+    slug: '04'
+    capability: Pigsty
+    title: 执行恢复并观察进度
+    items:
+    - id: item-32-4-1
+      number: 32.4.1
+      title: 从已验证备份克隆恢复目标
+    - id: item-32-4-2
+      number: 32.4.2
+      title: 监控 WAL 重放、目标达成与启动状态
+    - id: item-32-4-3
+      number: 32.4.3
+      title: 用原生文件、日志和 SQL 复核工具状态
+  - id: ch32-s05
+    number: '32.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 数据验证与安全回切
+    items:
+    - id: item-32-5-1
+      number: 32.5.1
+      title: 行数、摘要、关键交易与跨表不变量
+    - id: item-32-5-2
+      number: 32.5.2
+      title: 提取差异、逻辑补回或切换整个服务
+    - id: item-32-5-3
+      number: 32.5.3
+      title: 防止恢复环境向外重复发送消息和支付
+  - id: ch32-s06
+    number: '32.6'
+    index: 6
+    slug: '06'
+    capability: 平台
+    title: 实战：随机恢复目标演练
+    items:
+    - id: item-32-6-1
+      number: 32.6.1
+      title: 在隐藏时间窗内注入误更新
+    - id: item-32-6-2
+      number: 32.6.2
+      title: 独立定位目标、恢复、验证与回切
+    - id: item-32-6-3
+      number: 32.6.3
+      title: 测量 RPO/RTO 并记录版本迁移工时
+    - id: item-32-6-4
+      number: 32.6.4
+      title: 输出恢复证据和备份体系改进项
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-6
+  part_title: 第六篇：出山——按响应目标演练恢复与改进
+  aliases:
+  - "/ch32/"
+  - "/volume-2/pitr/"
+- id: ch33
+  number: 33
+  title: 故障切换与集群重建——力挽狂澜
+  idiom: 力挽狂澜
+  functional_title: 故障切换与集群重建
+  slug: failover-rebuild
+  goal: 区分数据库、复制、网络与 DCS 故障，选择切换或重建路径，避免脑裂和错误时间线。
+  sections:
+  - id: ch33-s01
+    number: '33.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 先识别失败域
+    items:
+    - id: item-33-1-1
+      number: 33.1.1
+      title: 进程失败、主机失败与存储失败
+    - id: item-33-1-2
+      number: 33.1.2
+      title: 网络分区、客户端不可达与代理误判
+    - id: item-33-1-3
+      number: 33.1.3
+      title: 主库失败、复制停滞与控制面失败
+  - id: ch33-s02
+    number: '33.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 复制状态与时间线证据
+    items:
+    - id: item-33-2-1
+      number: 33.2.1
+      title: 发送、接收、重放位置与延迟
+    - id: item-33-2-2
+      number: 33.2.2
+      title: timeline、历史文件与分叉
+    - id: item-33-2-3
+      number: 33.2.3
+      title: 数据最新不等于可以安全提升
+  - id: ch33-s03
+    number: '33.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: 自动故障转移的保护条件
+    items:
+    - id: item-33-3-1
+      number: 33.3.1
+      title: 候选健康、数据风险与多数判断
+    - id: item-33-3-2
+      number: 33.3.2
+      title: fencing 旧主与防止双写
+    - id: item-33-3-3
+      number: 33.3.3
+      title: 自动化不确定时何时转人工
+  - id: ch33-s04
+    number: '33.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: DCS 故障的安全处理
+    items:
+    - id: item-33-4-1
+      number: 33.4.1
+      title: DCS 不可达、失去多数与延迟
+    - id: item-33-4-2
+      number: 33.4.2
+      title: 先保护当前数据库角色，不盲目重置选举状态
+    - id: item-33-4-3
+      number: 33.4.3
+      title: 恢复控制面后核对 leader lock 与数据库事实
+  - id: ch33-s05
+    number: '33.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 旧主重加入与集群重建
+    items:
+    - id: item-33-5-1
+      number: 33.5.1
+      title: "`pg_rewind` 的前提、失败与验证"
+    - id: item-33-5-2
+      number: 33.5.2
+      title: 从备份或新基础备份重建
+    - id: item-33-5-3
+      number: 33.5.3
+      title: 复制槽、端点和客户端状态清理
+  - id: ch33-s06
+    number: '33.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 切换与重建 runbook
+    items:
+    - id: item-33-6-1
+      number: 33.6.1
+      title: 计划切换、故障切换与人工干预入口
+    - id: item-33-6-2
+      number: 33.6.2
+      title: Patroni、DCS、代理和 SQL 证据互证
+    - id: item-33-6-3
+      number: 33.6.3
+      title: 集群恢复后重新建立监控与备份健康
+  - id: ch33-s07
+    number: '33.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：主库故障与 DCS 干扰
+    items:
+    - id: item-33-7-1
+      number: 33.7.1
+      title: 随机注入主机、网络或 DCS 症状
+    - id: item-33-7-2
+      number: 33.7.2
+      title: 保护旧主、选择候选、测量 RTO/RPO
+    - id: item-33-7-3
+      number: 33.7.3
+      title: 重建旧主并验证时间线、端点和业务写入
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-6
+  part_title: 第六篇：出山——按响应目标演练恢复与改进
+  aliases:
+  - "/ch33/"
+  - "/volume-2/failover-rebuild/"
+- id: ch34
+  number: 34
+  title: 过载保护与资源故障判型——李代桃僵
+  idiom: 李代桃僵
+  functional_title: 过载保护与资源故障判型
+  slug: overload-resource-incidents
+  goal: 从资源症状进入，第一步区分流量型与保留型；只对流量型执行限流、取消、摘流和降级，对保留型实施安全保护并路由到正确章节。
+  sections:
+  - id: ch34-s01
+    number: '34.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 第一动作：流量型还是保留型
+    items:
+    - id: item-34-1-1
+      number: 34.1.1
+      title: 流量增长、慢查询、锁与连接导致的竞争
+    - id: item-34-1-2
+      number: 34.1.2
+      title: WAL、XID、复制槽、归档和长事务导致的保留
+    - id: item-34-1-3
+      number: 34.1.3
+      title: 同样表现为“磁盘满”或“延迟高”，动作可以相反
+    - id: item-34-1-4
+      number: 34.1.4
+      title: 判型不清时先停止破坏性清理
+  - id: ch34-s02
+    number: '34.2'
+    index: 2
+    slug: '02'
+    capability: 平台
+    title: 连接风暴与排队失控
+    items:
+    - id: item-34-2-1
+      number: 34.2.1
+      title: 数据库连接、代理池与应用池三层
+    - id: item-34-2-2
+      number: 34.2.2
+      title: 重试放大、健康检查和短连接
+    - id: item-34-2-3
+      number: 34.2.3
+      title: 限流、队列、连接预算与指数退避
+  - id: ch34-s03
+    number: '34.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 失控查询、锁与事务
+    items:
+    - id: item-34-3-1
+      number: 34.3.1
+      title: 识别高消耗查询和阻塞根节点
+    - id: item-34-3-2
+      number: 34.3.2
+      title: cancel、terminate 与回滚成本
+    - id: item-34-3-3
+      number: 34.3.3
+      title: 长事务和大事务结束前先评估后果
+  - id: ch34-s04
+    number: '34.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: CPU、内存、I/O 与 OOM
+    items:
+    - id: item-34-4-1
+      number: 34.4.1
+      title: 饱和、排队、抖动与抢占
+    - id: item-34-4-2
+      number: 34.4.2
+      title: 临时文件、并行、checkpoint 与后台维护
+    - id: item-34-4-3
+      number: 34.4.3
+      title: 内存最坏并发、OOM killer 与进程重启
+  - id: ch34-s05
+    number: '34.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 流量型止血动作
+    items:
+    - id: item-34-5-1
+      number: 34.5.1
+      title: 限流、熔断、摘除非关键负载
+    - id: item-34-5-2
+      number: 34.5.2
+      title: 取消查询、暂停批处理与只读降级
+    - id: item-34-5-3
+      number: 34.5.3
+      title: 每个动作写清收益、代价、停止条件和回退
+  - id: ch34-s06
+    number: '34.6'
+    index: 6
+    slug: '06'
+    capability: PG
+    title: 保留型故障的安全路由
+    items:
+    - id: item-34-6-1
+      number: 34.6.1
+      title: XID：检查 `backend_xmin`、复制槽 `xmin` 与 `pg_prepared_xacts`
+    - id: item-34-6-2
+      number: 34.6.2
+      title: WAL 撑盘：检查归档失败、复制槽和未完成备份
+    - id: item-34-6-3
+      number: 34.6.3
+      title: 绝不手工删除 `pg_wal`；保护现场后转 ch21/ch28/ch35
+    - id: item-34-6-4
+      number: 34.6.4
+      title: 本章的一般止血动作不构成保留型修复
+  - id: ch34-s07
+    number: '34.7'
+    index: 7
+    slug: '07'
+    capability: Pigsty
+    title: 平台级流量控制与证据
+    items:
+    - id: item-34-7-1
+      number: 34.7.1
+      title: 从服务端点隔离批处理和只读流量
+    - id: item-34-7-2
+      number: 34.7.2
+      title: 用连接池、代理与应用控制点逐级减压
+    - id: item-34-7-3
+      number: 34.7.3
+      title: 从面板判断范围，再用 SQL 与主机证据判型
+  - id: ch34-s08
+    number: '34.8'
+    index: 8
+    slug: '08'
+    capability: 平台
+    title: 实战：同一症状、两种成因
+    items:
+    - id: item-34-8-1
+      number: 34.8.1
+      title: 随机注入连接风暴或 WAL 保留
+    - id: item-34-8-2
+      number: 34.8.2
+      title: 在不知道答案时先判型，再选择动作
+    - id: item-34-8-3
+      number: 34.8.3
+      title: 对流量型恢复服务，对保留型完成安全路由
+    - id: item-34-8-4
+      number: 34.8.4
+      title: 输出动作时间线、误判代价与容量改进项
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-6
+  part_title: 第六篇：出山——按响应目标演练恢复与改进
+  aliases:
+  - "/ch34/"
+  - "/volume-2/overload-resource-incidents/"
+- id: ch35
+  number: 35
+  title: 数据抢救与工程取证——起死回生
+  idiom: 起死回生
+  functional_title: 数据抢救与工程取证
+  slug: data-rescue-forensics
+  goal: 面对页、索引、排序规则或逻辑不一致时先保护原始证据，再区分检测、修复、抽取与重建；不把危险技巧包装成常规运维。
+  sections:
+  - id: ch35-s01
+    number: '35.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 现场保护与操作边界
+    items:
+    - id: item-35-1-1
+      number: 35.1.1
+      title: 停写、只读、快照、克隆与证据哈希
+    - id: item-35-1-2
+      number: 35.1.2
+      title: 记录硬件、内核、日志、版本和最近变更
+    - id: item-35-1-3
+      number: 35.1.3
+      title: 不在唯一副本上反复试错
+    - id: item-35-1-4
+      number: 35.1.4
+      title: 绝不手工删除 `pg_wal` 或原始损坏文件
+  - id: ch35-s02
+    number: '35.2'
+    index: 2
+    slug: '02'
+    capability: PG
+    title: 先分类再抢救
+    items:
+    - id: item-35-2-1
+      number: 35.2.1
+      title: 物理页、存储与 checksum 错误
+    - id: item-35-2-2
+      number: 35.2.2
+      title: 索引、排序规则与派生结构错误
+    - id: item-35-2-3
+      number: 35.2.3
+      title: 逻辑不变量、应用写错与语义损坏
+    - id: item-35-2-4
+      number: 35.2.4
+      title: 三类问题的恢复来源不同
+  - id: ch35-s03
+    number: '35.3'
+    index: 3
+    slug: '03'
+    capability: PG
+    title: 页与 checksum 证据
+    items:
+    - id: item-35-3-1
+      number: 35.3.1
+      title: checksum 是否启用及其检测边界
+    - id: item-35-3-2
+      number: 35.3.2
+      title: 日志、块号、关系文件与物理定位
+    - id: item-35-3-3
+      number: 35.3.3
+      title: 存储故障先修基础设施，再谈数据库重建
+  - id: ch35-s04
+    number: '35.4'
+    index: 4
+    slug: '04'
+    capability: PG
+    title: 索引、collation 与 `amcheck`
+    items:
+    - id: item-35-4-1
+      number: 35.4.1
+      title: "`bt_index_check`、`heapallindexed` 与锁成本"
+    - id: item-35-4-2
+      number: 35.4.2
+      title: collation 版本变化与索引顺序异常
+    - id: item-35-4-3
+      number: 35.4.3
+      title: 索引可重建不意味着堆表数据安全
+  - id: ch35-s05
+    number: '35.5'
+    index: 5
+    slug: '05'
+    capability: PG
+    title: 抽取、跳过与重建策略
+    items:
+    - id: item-35-5-1
+      number: 35.5.1
+      title: 优先从备份、健康副本或逻辑来源恢复
+    - id: item-35-5-2
+      number: 35.5.2
+      title: 对可读数据做分段抽取和校验
+    - id: item-35-5-3
+      number: 35.5.3
+      title: 危险恢复参数只在克隆现场、明确损失下使用
+    - id: item-35-5-4
+      number: 35.5.4
+      title: 何时停止自救并升级到专业支持
+  - id: ch35-s06
+    number: '35.6'
+    index: 6
+    slug: '06'
+    capability: 平台
+    title: 工程取证与业务验证
+    items:
+    - id: item-35-6-1
+      number: 35.6.1
+      title: 保留原始证据、操作副本和完整时间线
+    - id: item-35-6-2
+      number: 35.6.2
+      title: 区分“数据库能启动”与“业务数据可信”
+    - id: item-35-6-3
+      number: 35.6.3
+      title: 记录不可恢复范围与合规沟通
+  - id: ch35-s07
+    number: '35.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：在克隆环境分类并恢复
+    items:
+    - id: item-35-7-1
+      number: 35.7.1
+      title: 仅在启用 checksum 的专用镜像注入可控页异常
+    - id: item-35-7-2
+      number: 35.7.2
+      title: 另设索引或 collation 异常，随机隐藏故障类型
+    - id: item-35-7-3
+      number: 35.7.3
+      title: 用备份、重建或抽取恢复并验证不变量
+    - id: item-35-7-4
+      number: 35.7.4
+      title: 用 `reset:host` 重建 Pigsty L3，不复用损坏现场
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-6
+  part_title: 第六篇：出山——按响应目标演练恢复与改进
+  aliases:
+  - "/ch35/"
+  - "/volume-2/data-rescue-forensics/"
+- id: ch36
+  number: 36
+  title: 事故复盘、控制固化与平台演进——举一反三
+  idiom: 举一反三
+  functional_title: 事故复盘、控制固化与平台演进
+  slug: postmortem-platform-improvement
+  goal: 把一次恢复变成长期能力：解释因果链、修复控制缺口、验证改进，并为下一轮架构和版本演进建立优先级。
+  sections:
+  - id: ch36-s01
+    number: '36.1'
+    index: 1
+    slug: '01'
+    capability: 平台
+    title: 服务恢复不等于事件结束
+    items:
+    - id: item-36-1-1
+      number: 36.1.1
+      title: 恢复用户影响、数据正确性与运行余量
+    - id: item-36-1-2
+      number: 36.1.2
+      title: 清理临时降级、应急权限和旁路配置
+    - id: item-36-1-3
+      number: 36.1.3
+      title: 通知、观察窗口与正式结案条件
+  - id: ch36-s02
+    number: '36.2'
+    index: 2
+    slug: '02'
+    capability: 平台
+    title: 从时间线建立因果链
+    items:
+    - id: item-36-2-1
+      number: 36.2.1
+      title: 触发条件、放大机制与失效防线
+    - id: item-36-2-2
+      number: 36.2.2
+      title: 技术、流程、组织与认知因素
+    - id: item-36-2-3
+      number: 36.2.3
+      title: 避免单一根因和个人归罪
+  - id: ch36-s03
+    number: '36.3'
+    index: 3
+    slug: '03'
+    capability: 平台
+    title: 证据质量与决策复盘
+    items:
+    - id: item-36-3-1
+      number: 36.3.1
+      title: 哪些事实当时可见，哪些后来才知道
+    - id: item-36-3-2
+      number: 36.3.2
+      title: 哪些假设被验证，哪些动作靠运气
+    - id: item-36-3-3
+      number: 36.3.3
+      title: 告警、日志和时间同步缺口
+  - id: ch36-s04
+    number: '36.4'
+    index: 4
+    slug: '04'
+    capability: 平台
+    title: 把行动项变成控制
+    items:
+    - id: item-36-4-1
+      number: 36.4.1
+      title: 所有者、截止时间、验证方法与失效条件
+    - id: item-36-4-2
+      number: 36.4.2
+      title: 自动检查、发布门、容量线与恢复演练
+    - id: item-36-4-3
+      number: 36.4.3
+      title: 不能验证的“加强意识”不是合格行动项
+  - id: ch36-s05
+    number: '36.5'
+    index: 5
+    slug: '05'
+    capability: 平台
+    title: 回写 SLO、SOP 与架构 ADR
+    items:
+    - id: item-36-5-1
+      number: 36.5.1
+      title: 更新观察契约、告警规则与 runbook
+    - id: item-36-5-2
+      number: 36.5.2
+      title: 修正 RPO/RTO、容量和安全假设
+    - id: item-36-5-3
+      number: 36.5.3
+      title: 将必要变更纳入服务目录与版本路线
+  - id: ch36-s06
+    number: '36.6'
+    index: 6
+    slug: '06'
+    capability: Pigsty
+    title: 将控制固化到平台
+    items:
+    - id: item-36-6-1
+      number: 36.6.1
+      title: 配置模板、验证脚本与策略即代码
+    - id: item-36-6-2
+      number: 36.6.2
+      title: 备份、切换、容量和维护的周期演练
+    - id: item-36-6-3
+      number: 36.6.3
+      title: 从单个补丁升级为默认护栏
+  - id: ch36-s07
+    number: '36.7'
+    index: 7
+    slug: '07'
+    capability: 平台
+    title: 实战：复盘四类事故并完成全书结业
+    items:
+    - id: item-36-7-1
+      number: 36.7.1
+      title: 汇总 ch32–ch35 的证据、决策与用户影响
+    - id: item-36-7-2
+      number: 36.7.2
+      title: 找出跨事故重复出现的控制缺口
+    - id: item-36-7-3
+      number: 36.7.3
+      title: 输出 90 天改进路线、平台 backlog 与复验计划
+    - id: item-36-7-4
+      number: 36.7.4
+      title: 回看从 SQL 到生产的能力地图
+  volume: volume-2
+  volume_title: 下卷：运维管理
+  part: part-6
+  part_title: 第六篇：出山——按响应目标演练恢复与改进
+  aliases:
+  - "/ch36/"
+  - "/volume-2/postmortem-platform-improvement/"

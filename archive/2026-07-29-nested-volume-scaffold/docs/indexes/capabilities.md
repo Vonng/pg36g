@@ -1,0 +1,262 @@
+---
+title: 按能力归属查找
+linkTitle: 按能力归属查找
+weight: 30
+type: docs
+breadcrumbs: true
+comments: false
+book_kind: index
+---
+
+> 按二级小节的主要责任归属索引。混合小节只标主责，具体正文仍需说明边界。
+
+## [PG] PostgreSQL 原生能力
+
+- [1.1 从连接串识别操作落点](/volume-1/postgresql-pigsty-map/01/) — ch01 PostgreSQL 与 Pigsty 全局地图
+- [1.2 PostgreSQL 对象与术语坐标](/volume-1/postgresql-pigsty-map/02/) — ch01 PostgreSQL 与 Pigsty 全局地图
+- [1.3 一条查询经过了什么](/volume-1/postgresql-pigsty-map/03/) — ch01 PostgreSQL 与 Pigsty 全局地图
+- [1.6 最小 psql 生存卡](/volume-1/postgresql-pigsty-map/06/) — ch01 PostgreSQL 与 Pigsty 全局地图
+- [2.1 可靠连接与上下文保护](/volume-1/psql-workflow/01/) — ch02 psql 与可复现工作流
+- [2.2 用 psql 探索与取证](/volume-1/psql-workflow/02/) — ch02 psql 与可复现工作流
+- [2.3 编写可靠 SQL 脚本](/volume-1/psql-workflow/03/) — ch02 psql 与可复现工作流
+- [2.4 输入、输出与确定性数据](/volume-1/psql-workflow/04/) — ch02 psql 与可复现工作流
+- [2.5 最小 pgbench 工作负载](/volume-1/psql-workflow/05/) — ch02 psql 与可复现工作流
+- [2.6 最小逻辑备份闭环](/volume-1/psql-workflow/06/) — ch02 psql 与可复现工作流
+- [3.1 从业务语言提取数据库事实](/volume-1/logical-data-model/01/) — ch03 从业务规则到关系模型
+- [3.2 标识、主键与业务键](/volume-1/logical-data-model/02/) — ch03 从业务规则到关系模型
+- [3.3 关系与引用完整性](/volume-1/logical-data-model/03/) — ch03 从业务规则到关系模型
+- [3.4 模式、所有权与对象边界](/volume-1/logical-data-model/04/) — ch03 从业务规则到关系模型
+- [3.5 规范化与有意识的冗余](/volume-1/logical-data-model/05/) — ch03 从业务规则到关系模型
+- [3.6 实战：建立逻辑模型 v0](/volume-1/logical-data-model/06/) — ch03 从业务规则到关系模型
+- [4.1 金额、文本与时间](/volume-1/data-types-constraints/01/) — ch04 数据类型、约束与可靠数据表达
+- [4.2 标识、状态与半结构化数据](/volume-1/data-types-constraints/02/) — ch04 数据类型、约束与可靠数据表达
+- [4.3 NULL、默认值与生成值](/volume-1/data-types-constraints/03/) — ch04 数据类型、约束与可靠数据表达
+- [4.4 用约束表达不变量](/volume-1/data-types-constraints/04/) — ch04 数据类型、约束与可靠数据表达
+- [4.5 类型与约束的物理代价](/volume-1/data-types-constraints/05/) — ch04 数据类型、约束与可靠数据表达
+- [4.6 分区决策门](/volume-1/data-types-constraints/06/) — ch04 数据类型、约束与可靠数据表达
+- [4.7 实战：把逻辑模型落成可靠物理模式](/volume-1/data-types-constraints/07/) — ch04 数据类型、约束与可靠数据表达
+- [5.1 SQL 从文本到结果](/volume-1/query-transaction-locks/01/) — ch05 查询、事务与锁的核心心智模型
+- [5.2 MVCC 与可见性](/volume-1/query-transaction-locks/02/) — ch05 查询、事务与锁的核心心智模型
+- [5.3 事务边界与失败语义](/volume-1/query-transaction-locks/03/) — ch05 查询、事务与锁的核心心智模型
+- [5.4 锁与等待](/volume-1/query-transaction-locks/04/) — ch05 查询、事务与锁的核心心智模型
+- [5.5 隔离现象与后续路线](/volume-1/query-transaction-locks/05/) — ch05 查询、事务与锁的核心心智模型
+- [6.2 连接与会话候选规则](/volume-1/development-standards/02/) — ch06 开发规约与交付基线
+- [6.3 模式与 DDL 候选规则](/volume-1/development-standards/03/) — ch06 开发规约与交付基线
+- [6.4 查询与事务候选规则](/volume-1/development-standards/04/) — ch06 开发规约与交付基线
+- [7.1 优化器如何选择路径](/volume-1/query-plans-statistics/01/) — ch07 执行计划与统计信息
+- [7.2 正确使用 EXPLAIN](/volume-1/query-plans-statistics/02/) — ch07 执行计划与统计信息
+- [7.3 统计信息与估算偏差](/volume-1/query-plans-statistics/03/) — ch07 执行计划与统计信息
+- [7.4 分区裁剪的两种时机](/volume-1/query-plans-statistics/04/) — ch07 执行计划与统计信息
+- [7.5 参数、缓存计划与计划漂移](/volume-1/query-plans-statistics/05/) — ch07 执行计划与统计信息
+- [7.7 实战：解释订单查询的计划变化](/volume-1/query-plans-statistics/07/) — ch07 执行计划与统计信息
+- [8.2 从会话到语句定位范围](/volume-1/slow-query-diagnosis/02/) — ch08 慢 SQL 诊断方法论
+- [8.4 建立而不是猜测假设](/volume-1/slow-query-diagnosis/04/) — ch08 慢 SQL 诊断方法论
+- [8.5 设计受控实验](/volume-1/slow-query-diagnosis/05/) — ch08 慢 SQL 诊断方法论
+- [9.1 索引方法与操作符类](/volume-1/index-design/01/) — ch09 索引设计与效果验证
+- [9.2 从谓词、连接与排序推导索引](/volume-1/index-design/02/) — ch09 索引设计与效果验证
+- [9.3 表达式、部分与覆盖索引](/volume-1/index-design/03/) — ch09 索引设计与效果验证
+- [9.4 索引也有写入和生命周期成本](/volume-1/index-design/04/) — ch09 索引设计与效果验证
+- [9.6 实战：为订单、库存与搜索入口设计索引](/volume-1/index-design/06/) — ch09 索引设计与效果验证
+- [10.1 隔离级别与可观察现象](/volume-1/concurrency-isolation/01/) — ch10 并发控制与隔离异常
+- [10.2 Lost update 不是一句口号](/volume-1/concurrency-isolation/02/) — ch10 并发控制与隔离异常
+- [10.3 悲观锁与锁队列](/volume-1/concurrency-isolation/03/) — ch10 并发控制与隔离异常
+- [10.4 乐观控制、重试与幂等](/volume-1/concurrency-isolation/04/) — ch10 并发控制与隔离异常
+- [10.5 咨询锁与跨行协调](/volume-1/concurrency-isolation/05/) — ch10 并发控制与隔离异常
+- [10.7 实战：库存扣减与支付幂等](/volume-1/concurrency-isolation/07/) — ch10 并发控制与隔离异常
+- [11.1 识别 DDL 的四类风险](/volume-1/schema-change-release/01/) — ch11 模式变更与安全发布
+- [11.3 索引与约束的在线化路径](/volume-1/schema-change-release/03/) — ch11 模式变更与安全发布
+- [11.4 在线分区化](/volume-1/schema-change-release/04/) — ch11 模式变更与安全发布
+- [12.2 为服务设计查询接口](/volume-1/database-to-service/02/) — ch12 从数据库契约到后端服务
+- [12.4 会话状态与连接池陷阱](/volume-1/database-to-service/04/) — ch12 从数据库契约到后端服务
+- [13.1 先决定逻辑放在哪里](/volume-1/functions-triggers-procedures/01/) — ch13 函数、触发器与存储过程
+- [13.2 SQL 与 PL/pgSQL 函数](/volume-1/functions-triggers-procedures/02/) — ch13 函数、触发器与存储过程
+- [13.3 触发器与约束触发器](/volume-1/functions-triggers-procedures/03/) — ch13 函数、触发器与存储过程
+- [13.4 过程、任务与事务控制](/volume-1/functions-triggers-procedures/04/) — ch13 函数、触发器与存储过程
+- [13.5 安全、测试与观测](/volume-1/functions-triggers-procedures/05/) — ch13 函数、触发器与存储过程
+- [13.6 实战：为订单状态建立数据库端护栏](/volume-1/functions-triggers-procedures/06/) — ch13 函数、触发器与存储过程
+- [14.1 PostgreSQL 扩展机制](/volume-1/extensions-ecosystem/01/) — ch14 内核分支与扩展生态
+- [14.4 生命周期与升级耦合](/volume-1/extensions-ecosystem/04/) — ch14 内核分支与扩展生态
+- [15.1 先定义检索任务与评估集](/volume-1/search/01/) — ch15 全文、模糊与向量检索
+- [15.2 PostgreSQL 全文检索](/volume-1/search/02/) — ch15 全文、模糊与向量检索
+- [15.3 模糊匹配与拼写容错](/volume-1/search/03/) — ch15 全文、模糊与向量检索
+- [15.4 可复现的向量检索](/volume-1/search/04/) — ch15 全文、模糊与向量检索
+- [15.5 混合检索与排序验证](/volume-1/search/05/) — ch15 全文、模糊与向量检索
+- [16.1 时间语义先于时序扩展](/volume-1/spatiotemporal/01/) — ch16 时序、空间与时空查询
+- [16.2 时序表与时间分区](/volume-1/spatiotemporal/02/) — ch16 时序、空间与时空查询
+- [16.3 空间类型与坐标参考](/volume-1/spatiotemporal/03/) — ch16 时序、空间与时空查询
+- [16.4 空间谓词与索引](/volume-1/spatiotemporal/04/) — ch16 时序、空间与时空查询
+- [16.5 时空联合查询是本章收束目标](/volume-1/spatiotemporal/05/) — ch16 时序、空间与时空查询
+- [17.1 先证明单机边界](/volume-1/analytics-distributed/01/) — ch17 分析加速与分布式选型
+- [17.2 单机分析能力](/volume-1/analytics-distributed/02/) — ch17 分析加速与分布式选型
+- [18.2 PostgreSQL 的强项与代价](/volume-1/data-platform-boundaries/02/) — ch18 PostgreSQL 数据平台与替代边界
+- [19.4 版本与数据库初始化契约](/volume-2/deployment-baseline/04/) — ch19 环境规划与部署基线
+- [20.2 物理流复制](/volume-2/high-availability/02/) — ch20 高可用拓扑与容灾目标
+- [20.3 同步策略与提交语义](/volume-2/high-availability/03/) — ch20 高可用拓扑与容灾目标
+- [21.2 物理备份与 WAL 连续性](/volume-2/backup-recovery/02/) — ch21 备份体系与恢复演练
+- [21.4 恢复流程与验证](/volume-2/backup-recovery/04/) — ch21 备份体系与恢复演练
+- [22.2 连接的服务端成本](/volume-2/connection-pooling-routing/02/) — ch22 服务接入、连接池与路由
+- [23.2 认证与连接准入](/volume-2/authentication-authorization-security/02/) — ch23 认证、授权与数据安全
+- [23.3 角色与最小权限](/volume-2/authentication-authorization-security/03/) — ch23 认证、授权与数据安全
+- [23.4 行级安全与连接池上下文](/volume-2/authentication-authorization-security/04/) — ch23 认证、授权与数据安全
+- [25.2 PostgreSQL 核心运行信号](/volume-2/observability/02/) — ch25 监控体系与可观测诊断
+- [25.3 SQL 可观测基线](/volume-2/observability/03/) — ch25 监控体系与可观测诊断
+- [26.2 设计代表性工作负载](/volume-2/capacity-benchmarking/02/) — ch26 容量规划与压测基线
+- [27.2 内存预算](/volume-2/configuration-tuning/02/) — ch27 参数调优与资源治理
+- [27.3 WAL、检查点与写入平滑](/volume-2/configuration-tuning/03/) — ch27 参数调优与资源治理
+- [27.4 规划器、并行与连接参数](/volume-2/configuration-tuning/04/) — ch27 参数调优与资源治理
+- [28.1 死元组与可见性](/volume-2/vacuum-freeze-bloat/01/) — ch28 VACUUM、冻结与膨胀治理
+- [28.2 autovacuum 的触发与资源](/volume-2/vacuum-freeze-bloat/02/) — ch28 VACUUM、冻结与膨胀治理
+- [28.3 冻结、XID 与保留者](/volume-2/vacuum-freeze-bloat/03/) — ch28 VACUUM、冻结与膨胀治理
+- [28.4 膨胀与重建](/volume-2/vacuum-freeze-bloat/04/) — ch28 VACUUM、冻结与膨胀治理
+- [28.5 分区生命周期](/volume-2/vacuum-freeze-bloat/05/) — ch28 VACUUM、冻结与膨胀治理
+- [28.6 `amcheck` 与例行完整性检查](/volume-2/vacuum-freeze-bloat/06/) — ch28 VACUUM、冻结与膨胀治理
+- [29.1 逻辑复制原语](/volume-2/logical-replication-migration/01/) — ch29 逻辑复制、迁移与异构同步
+- [29.2 CDC 与复制槽治理](/volume-2/logical-replication-migration/02/) — ch29 逻辑复制、迁移与异构同步
+- [29.3 批量装载与数据校验](/volume-2/logical-replication-migration/03/) — ch29 逻辑复制、迁移与异构同步
+- [30.2 三类大版本升级路径](/volume-2/version-upgrade/02/) — ch30 版本升级与回滚策略
+- [30.3 扩展与依赖升级](/volume-2/version-upgrade/03/) — ch30 版本升级与回滚策略
+- [30.4 locale、collation 与索引风险](/volume-2/version-upgrade/04/) — ch30 版本升级与回滚策略
+- [30.5 升级前检查与业务验证](/volume-2/version-upgrade/05/) — ch30 版本升级与回滚策略
+- [32.2 恢复目标与时间线](/volume-2/pitr/02/) — ch32 PITR 与误操作恢复
+- [32.5 数据验证与安全回切](/volume-2/pitr/05/) — ch32 PITR 与误操作恢复
+- [33.2 复制状态与时间线证据](/volume-2/failover-rebuild/02/) — ch33 故障切换与集群重建
+- [33.5 旧主重加入与集群重建](/volume-2/failover-rebuild/05/) — ch33 故障切换与集群重建
+- [34.3 失控查询、锁与事务](/volume-2/overload-resource-incidents/03/) — ch34 过载保护与资源故障判型
+- [34.6 保留型故障的安全路由](/volume-2/overload-resource-incidents/06/) — ch34 过载保护与资源故障判型
+- [35.2 先分类再抢救](/volume-2/data-rescue-forensics/02/) — ch35 数据抢救与工程取证
+- [35.3 页与 checksum 证据](/volume-2/data-rescue-forensics/03/) — ch35 数据抢救与工程取证
+- [35.4 索引、collation 与 `amcheck`](/volume-2/data-rescue-forensics/04/) — ch35 数据抢救与工程取证
+- [35.5 抽取、跳过与重建策略](/volume-2/data-rescue-forensics/05/) — ch35 数据抢救与工程取证
+
+## [平台] 通用平台职责
+
+- [1.4 从数据库实例到数据库服务](/volume-1/postgresql-pigsty-map/04/) — ch01 PostgreSQL 与 Pigsty 全局地图
+- [1.7 实战：建立 `pg36_shop` 地图与实验基线](/volume-1/postgresql-pigsty-map/07/) — ch01 PostgreSQL 与 Pigsty 全局地图
+- [2.7 实战：把人工操作变成可重跑任务](/volume-1/psql-workflow/07/) — ch02 psql 与可复现工作流
+- [5.6 实战：观察一笔订单事务](/volume-1/query-transaction-locks/06/) — ch05 查询、事务与锁的核心心智模型
+- [6.1 规约不是口号](/volume-1/development-standards/01/) — ch06 开发规约与交付基线
+- [6.5 交付物与质量门](/volume-1/development-standards/05/) — ch06 开发规约与交付基线
+- [6.7 实战：发布规约 baseline v0.1](/volume-1/development-standards/07/) — ch06 开发规约与交付基线
+- [7.6 建立计划证据基线](/volume-1/query-plans-statistics/06/) — ch07 执行计划与统计信息
+- [8.1 先定义“慢”](/volume-1/slow-query-diagnosis/01/) — ch08 慢 SQL 诊断方法论
+- [8.3 关联日志、指标与计划](/volume-1/slow-query-diagnosis/03/) — ch08 慢 SQL 诊断方法论
+- [8.7 实战：三种“慢”只修真正瓶颈](/volume-1/slow-query-diagnosis/07/) — ch08 慢 SQL 诊断方法论
+- [9.5 验证而不是“加完就快”](/volume-1/index-design/05/) — ch09 索引设计与效果验证
+- [10.6 观察与诊断并发](/volume-1/concurrency-isolation/06/) — ch10 并发控制与隔离异常
+- [11.2 Expand–Migrate–Contract](/volume-1/schema-change-release/02/) — ch11 模式变更与安全发布
+- [11.5 数据回填与流量切换](/volume-1/schema-change-release/05/) — ch11 模式变更与安全发布
+- [11.7 实战：无中断演进订单模式](/volume-1/schema-change-release/07/) — ch11 模式变更与安全发布
+- [12.1 数据库契约与应用边界](/volume-1/database-to-service/01/) — ch12 从数据库契约到后端服务
+- [12.3 Go 服务中的连接与事务](/volume-1/database-to-service/03/) — ch12 从数据库契约到后端服务
+- [12.5 服务级可观测性](/volume-1/database-to-service/05/) — ch12 从数据库契约到后端服务
+- [12.7 实战：交付应用闭环与规约 v1.0](/volume-1/database-to-service/07/) — ch12 从数据库契约到后端服务
+- [14.2 内核、发行版与托管服务](/volume-1/extensions-ecosystem/02/) — ch14 内核分支与扩展生态
+- [14.3 扩展选型的六个问题](/volume-1/extensions-ecosystem/03/) — ch14 内核分支与扩展生态
+- [14.6 建立可复用扩展 ADR](/volume-1/extensions-ecosystem/06/) — ch14 内核分支与扩展生态
+- [14.7 实战：评审三个候选扩展](/volume-1/extensions-ecosystem/07/) — ch14 内核分支与扩展生态
+- [15.7 实战：`pg36_shop` 商品混合检索 PoC](/volume-1/search/07/) — ch15 全文、模糊与向量检索
+- [16.7 实战：配送事件的时空 PoC](/volume-1/spatiotemporal/07/) — ch16 时序、空间与时空查询
+- [17.3 何时需要分布式](/volume-1/analytics-distributed/03/) — ch17 分析加速与分布式选型
+- [17.4 比较分布式候选](/volume-1/analytics-distributed/04/) — ch17 分析加速与分布式选型
+- [17.6 实战：从单机证据到选型 ADR](/volume-1/analytics-distributed/06/) — ch17 分析加速与分布式选型
+- [18.1 从数据库产品到能力组合](/volume-1/data-platform-boundaries/01/) — ch18 PostgreSQL 数据平台与替代边界
+- [18.3 明确替代边界](/volume-1/data-platform-boundaries/03/) — ch18 PostgreSQL 数据平台与替代边界
+- [18.4 平台服务目录与多租户](/volume-1/data-platform-boundaries/04/) — ch18 PostgreSQL 数据平台与替代边界
+- [18.6 实战：设计 `pg36_shop` 生产蓝图](/volume-1/data-platform-boundaries/06/) — ch18 PostgreSQL 数据平台与替代边界
+- [19.1 先写服务需求](/volume-2/deployment-baseline/01/) — ch19 环境规划与部署基线
+- [19.2 计算、内存、存储与网络](/volume-2/deployment-baseline/02/) — ch19 环境规划与部署基线
+- [19.3 操作系统与主机基线](/volume-2/deployment-baseline/03/) — ch19 环境规划与部署基线
+- [19.5 拓扑、命名与故障域](/volume-2/deployment-baseline/05/) — ch19 环境规划与部署基线
+- [19.7 实战：L2 部署验收](/volume-2/deployment-baseline/07/) — ch19 环境规划与部署基线
+- [20.1 从失败模型设计高可用](/volume-2/high-availability/01/) — ch20 高可用拓扑与容灾目标
+- [20.4 选主、DCS 与防脑裂](/volume-2/high-availability/04/) — ch20 高可用拓扑与容灾目标
+- [20.5 切换、故障转移与重加入](/volume-2/high-availability/05/) — ch20 高可用拓扑与容灾目标
+- [20.7 实战：一次有证据的计划切换](/volume-2/high-availability/07/) — ch20 高可用拓扑与容灾目标
+- [21.1 从恢复场景设计备份](/volume-2/backup-recovery/01/) — ch21 备份体系与恢复演练
+- [21.3 备份仓库与保留策略](/volume-2/backup-recovery/03/) — ch21 备份体系与恢复演练
+- [21.6 实战：完成一次隔离恢复演练](/volume-2/backup-recovery/06/) — ch21 备份体系与恢复演练
+- [22.1 服务端点的语义](/volume-2/connection-pooling-routing/01/) — ch22 服务接入、连接池与路由
+- [22.3 PgBouncer 池化模式](/volume-2/connection-pooling-routing/03/) — ch22 服务接入、连接池与路由
+- [22.4 路由与故障切换](/volume-2/connection-pooling-routing/04/) — ch22 服务接入、连接池与路由
+- [22.5 连接预算与过载边界](/volume-2/connection-pooling-routing/05/) — ch22 服务接入、连接池与路由
+- [22.7 实战：写入、只读与管理三类接入](/volume-2/connection-pooling-routing/07/) — ch22 服务接入、连接池与路由
+- [23.1 威胁模型与信任边界](/volume-2/authentication-authorization-security/01/) — ch23 认证、授权与数据安全
+- [23.5 密钥、审计与敏感信息](/volume-2/authentication-authorization-security/05/) — ch23 认证、授权与数据安全
+- [23.7 实战：隔离两个租户](/volume-2/authentication-authorization-security/07/) — ch23 认证、授权与数据安全
+- [24.1 服务目录与责任模型](/volume-2/slo-sop-governance/01/) — ch24 SLO、SOP 与组织治理
+- [24.2 SLI、SLO 与错误预算](/volume-2/slo-sop-governance/02/) — ch24 SLO、SOP 与组织治理
+- [24.3 SOP、Runbook 与变更治理](/volume-2/slo-sop-governance/03/) — ch24 SLO、SOP 与组织治理
+- [24.4 观察与告警契约](/volume-2/slo-sop-governance/04/) — ch24 SLO、SOP 与组织治理
+- [24.5 证据、审计与合规](/volume-2/slo-sop-governance/05/) — ch24 SLO、SOP 与组织治理
+- [25.1 从问题选择可观测信号](/volume-2/observability/01/) — ch25 监控体系与可观测诊断
+- [25.4 把观察契约变成告警](/volume-2/observability/04/) — ch25 监控体系与可观测诊断
+- [25.6 从告警到诊断包](/volume-2/observability/06/) — ch25 监控体系与可观测诊断
+- [25.7 实战：实现并演练观察契约](/volume-2/observability/07/) — ch25 监控体系与可观测诊断
+- [26.1 从需求建立容量模型](/volume-2/capacity-benchmarking/01/) — ch26 容量规划与压测基线
+- [26.3 建立可信实验](/volume-2/capacity-benchmarking/03/) — ch26 容量规划与压测基线
+- [26.4 找到饱和点与瓶颈](/volume-2/capacity-benchmarking/04/) — ch26 容量规划与压测基线
+- [26.5 从测量推导容量与成本](/volume-2/capacity-benchmarking/05/) — ch26 容量规划与压测基线
+- [27.1 调优是一套实验方法](/volume-2/configuration-tuning/01/) — ch27 参数调优与资源治理
+- [27.5 参数作用域与变更方式](/volume-2/configuration-tuning/05/) — ch27 参数调优与资源治理
+- [27.7 实战：只调一个已证实的瓶颈](/volume-2/configuration-tuning/07/) — ch27 参数调优与资源治理
+- [29.4 在线迁移状态机](/volume-2/logical-replication-migration/04/) — ch29 逻辑复制、迁移与异构同步
+- [29.5 异构同步的语义损失](/volume-2/logical-replication-migration/05/) — ch29 逻辑复制、迁移与异构同步
+- [29.7 实战：迁移 `pg36_shop`](/volume-2/logical-replication-migration/07/) — ch29 逻辑复制、迁移与异构同步
+- [30.1 先识别变化类型](/volume-2/version-upgrade/01/) — ch30 版本升级与回滚策略
+- [30.7 实战：前滚、回退与发布决策](/volume-2/version-upgrade/07/) — ch30 版本升级与回滚策略
+- [31.1 事件分级与响应目标](/volume-2/incident-response/01/) — ch31 事件分级、现场保护与应急决策
+- [31.2 第一原则：保护现场与可恢复性](/volume-2/incident-response/02/) — ch31 事件分级、现场保护与应急决策
+- [31.3 从症状路由而不是猜根因](/volume-2/incident-response/03/) — ch31 事件分级、现场保护与应急决策
+- [31.4 决策、沟通与变更纪律](/volume-2/incident-response/04/) — ch31 事件分级、现场保护与应急决策
+- [31.5 单人值守与团队响应](/volume-2/incident-response/05/) — ch31 事件分级、现场保护与应急决策
+- [31.6 实战：盲抽症状的桌面演练](/volume-2/incident-response/06/) — ch31 事件分级、现场保护与应急决策
+- [32.1 先界定误操作](/volume-2/pitr/01/) — ch32 PITR 与误操作恢复
+- [32.3 隔离恢复策略](/volume-2/pitr/03/) — ch32 PITR 与误操作恢复
+- [32.6 实战：随机恢复目标演练](/volume-2/pitr/06/) — ch32 PITR 与误操作恢复
+- [33.1 先识别失败域](/volume-2/failover-rebuild/01/) — ch33 故障切换与集群重建
+- [33.3 自动故障转移的保护条件](/volume-2/failover-rebuild/03/) — ch33 故障切换与集群重建
+- [33.4 DCS 故障的安全处理](/volume-2/failover-rebuild/04/) — ch33 故障切换与集群重建
+- [33.7 实战：主库故障与 DCS 干扰](/volume-2/failover-rebuild/07/) — ch33 故障切换与集群重建
+- [34.1 第一动作：流量型还是保留型](/volume-2/overload-resource-incidents/01/) — ch34 过载保护与资源故障判型
+- [34.2 连接风暴与排队失控](/volume-2/overload-resource-incidents/02/) — ch34 过载保护与资源故障判型
+- [34.4 CPU、内存、I/O 与 OOM](/volume-2/overload-resource-incidents/04/) — ch34 过载保护与资源故障判型
+- [34.5 流量型止血动作](/volume-2/overload-resource-incidents/05/) — ch34 过载保护与资源故障判型
+- [34.8 实战：同一症状、两种成因](/volume-2/overload-resource-incidents/08/) — ch34 过载保护与资源故障判型
+- [35.1 现场保护与操作边界](/volume-2/data-rescue-forensics/01/) — ch35 数据抢救与工程取证
+- [35.6 工程取证与业务验证](/volume-2/data-rescue-forensics/06/) — ch35 数据抢救与工程取证
+- [35.7 实战：在克隆环境分类并恢复](/volume-2/data-rescue-forensics/07/) — ch35 数据抢救与工程取证
+- [36.1 服务恢复不等于事件结束](/volume-2/postmortem-platform-improvement/01/) — ch36 事故复盘、控制固化与平台演进
+- [36.2 从时间线建立因果链](/volume-2/postmortem-platform-improvement/02/) — ch36 事故复盘、控制固化与平台演进
+- [36.3 证据质量与决策复盘](/volume-2/postmortem-platform-improvement/03/) — ch36 事故复盘、控制固化与平台演进
+- [36.4 把行动项变成控制](/volume-2/postmortem-platform-improvement/04/) — ch36 事故复盘、控制固化与平台演进
+- [36.5 回写 SLO、SOP 与架构 ADR](/volume-2/postmortem-platform-improvement/05/) — ch36 事故复盘、控制固化与平台演进
+- [36.7 实战：复盘四类事故并完成全书结业](/volume-2/postmortem-platform-improvement/07/) — ch36 事故复盘、控制固化与平台演进
+
+## [Pigsty] Pigsty 参考实现
+
+- [1.5 Pigsty 的资源模型](/volume-1/postgresql-pigsty-map/05/) — ch01 PostgreSQL 与 Pigsty 全局地图
+- [6.6 将规约接入统一实验环境](/volume-1/development-standards/06/) — ch06 开发规约与交付基线
+- [8.6 从可观测面板回到原生证据](/volume-1/slow-query-diagnosis/06/) — ch08 慢 SQL 诊断方法论
+- [11.6 发布窗口中的平台观察](/volume-1/schema-change-release/06/) — ch11 模式变更与安全发布
+- [12.6 部署与接入 `pg36_shop`](/volume-1/database-to-service/06/) — ch12 从数据库契约到后端服务
+- [14.5 用 Pigsty 管理扩展可用性](/volume-1/extensions-ecosystem/05/) — ch14 内核分支与扩展生态
+- [15.6 扩展部署与运行代价](/volume-1/search/06/) — ch15 全文、模糊与向量检索
+- [16.6 时空扩展的交付与观察](/volume-1/spatiotemporal/06/) — ch16 时序、空间与时空查询
+- [17.5 部署最小分布式 PoC](/volume-1/analytics-distributed/05/) — ch17 分析加速与分布式选型
+- [18.5 Pigsty 作为参考实现](/volume-1/data-platform-boundaries/05/) — ch18 PostgreSQL 数据平台与替代边界
+- [19.6 用声明式清单交付两个服务单元](/volume-2/deployment-baseline/06/) — ch19 环境规划与部署基线
+- [20.6 交付并观察 HA 集群](/volume-2/high-availability/06/) — ch20 高可用拓扑与容灾目标
+- [21.5 用 pgBackRest 交付备份策略](/volume-2/backup-recovery/05/) — ch21 备份体系与恢复演练
+- [22.6 Pigsty 服务接入层](/volume-2/connection-pooling-routing/06/) — ch22 服务接入、连接池与路由
+- [23.6 Pigsty 安全基线](/volume-2/authentication-authorization-security/06/) — ch23 认证、授权与数据安全
+- [24.6 实战：把 `pg36_shop` 纳入服务治理](/volume-2/slo-sop-governance/06/) — ch24 SLO、SOP 与组织治理
+- [25.5 Pigsty 可观测体系](/volume-2/observability/05/) — ch25 监控体系与可观测诊断
+- [26.6 实战：`pg36_shop` 容量基线](/volume-2/capacity-benchmarking/06/) — ch26 容量规划与压测基线
+- [27.6 模板参数与集群变更](/volume-2/configuration-tuning/06/) — ch27 参数调优与资源治理
+- [28.7 实战：建立维护节奏](/volume-2/vacuum-freeze-bloat/07/) — ch28 VACUUM、冻结与膨胀治理
+- [29.6 多集群迁移环境](/volume-2/logical-replication-migration/06/) — ch29 逻辑复制、迁移与异构同步
+- [30.6 用隔离环境完成升级彩排](/volume-2/version-upgrade/06/) — ch30 版本升级与回滚策略
+- [32.4 执行恢复并观察进度](/volume-2/pitr/04/) — ch32 PITR 与误操作恢复
+- [33.6 切换与重建 runbook](/volume-2/failover-rebuild/06/) — ch33 故障切换与集群重建
+- [34.7 平台级流量控制与证据](/volume-2/overload-resource-incidents/07/) — ch34 过载保护与资源故障判型
+- [36.6 将控制固化到平台](/volume-2/postmortem-platform-improvement/06/) — ch36 事故复盘、控制固化与平台演进
