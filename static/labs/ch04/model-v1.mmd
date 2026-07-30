@@ -1,0 +1,56 @@
+erDiagram
+  CUSTOMER ||--o{ SALES_ORDER : places
+  SALES_ORDER ||--|{ SALES_ORDER_ITEM : contains
+  PRODUCT ||--o{ SALES_ORDER_ITEM : snapshotted_as
+  SALES_ORDER ||--o{ PAYMENT : receives
+  ORDER_STATUS_CATALOG ||--o{ SALES_ORDER : permits
+  PAYMENT_STATUS_CATALOG ||--o{ PAYMENT : permits
+
+  CUSTOMER {
+    bigint customer_id PK "BY DEFAULT identity"
+    text customer_ref UK
+    text email UK "canonical ASCII"
+    timestamptz_3 created_at
+  }
+  PRODUCT {
+    bigint product_id PK "BY DEFAULT identity"
+    text sku UK
+    text currency_code "CNY"
+    bigint current_unit_price_minor
+  }
+  SALES_ORDER {
+    bigint order_id PK "BY DEFAULT identity"
+    text order_no UK
+    bigint customer_id FK
+    text order_status FK
+    text currency_code "CNY"
+    timestamptz_3 placed_at "nullable for draft"
+    timestamptz_3 paid_at
+    timestamptz_3 cancelled_at
+  }
+  SALES_ORDER_ITEM {
+    bigint order_id PK,FK
+    integer line_no PK
+    bigint product_id FK
+    text currency_code FK "CNY"
+    bigint unit_price_minor
+    integer quantity
+    bigint line_total_minor "stored generated"
+  }
+  PAYMENT {
+    bigint payment_id PK "BY DEFAULT identity"
+    bigint order_id FK
+    text payment_status FK
+    text currency_code FK "CNY"
+    bigint amount_minor
+    text failure_code
+    timestamptz_3 occurred_at
+  }
+  ORDER_STATUS_CATALOG {
+    text status_code PK
+    boolean terminal
+  }
+  PAYMENT_STATUS_CATALOG {
+    text status_code PK
+    boolean terminal
+  }

@@ -1,0 +1,770 @@
+{
+  "schema": "pg36-ch31-scenarios-v1",
+  "scenarios": [
+    {
+      "id": "data-accidental-delete",
+      "title": "复制正常，但订单明细突然减少",
+      "route": "PITR",
+      "objective": "RESTORE_DATA",
+      "severity": "SEV1",
+      "initial_signal": "订单详情接口成功率正常，但活跃订单数在五分钟内下降 38%；复制延迟告警为绿色。",
+      "user_impact": "用户看不到已提交订单，且后台任务仍可能继续删除。",
+      "false_friend": "复制延迟为零只能说明错误变更也已被及时复制，不能说明副本保留了正确数据。",
+      "hidden_truth": "维护任务在主库执行了范围过宽的 DELETE，物理副本已完整重放。",
+      "severity_basis": {
+        "user_impact": "核心已提交对象对大量用户不可见",
+        "data_risk": "逻辑删除仍在扩散，正确状态需要从历史边界恢复",
+        "blast_radius": "单数据库内两个关联表",
+        "time_dynamics": "每分钟继续扩大",
+        "recoverability": "WAL 归档覆盖事发前，能在隔离克隆中恢复"
+      },
+      "evidence_cards": [
+        {
+          "id": "delete-e1",
+          "question": "最近有哪些应用、作业或人工变更？",
+          "layer": "change",
+          "cost_minutes": 2,
+          "observation": "02:14 UTC 维护任务发布新过滤条件；审计摘要显示一条大范围 DELETE，任务仍启用。"
+        },
+        {
+          "id": "delete-e2",
+          "question": "主库与副本的业务 manifest 是否不同？",
+          "layer": "data",
+          "cost_minutes": 3,
+          "observation": "主库与两个副本的受影响表行数和摘要都相同，均已缺少同一批订单。"
+        },
+        {
+          "id": "delete-e3",
+          "question": "备份、WAL 归档和可恢复时间窗是什么？",
+          "layer": "recovery",
+          "cost_minutes": 3,
+          "observation": "最近完整备份可验证，archive 连续覆盖 02:14 UTC 前后，保留窗口尚有 41 小时。"
+        },
+        {
+          "id": "delete-e4",
+          "question": "是否存在能精确界定影响集合的业务审计键？",
+          "layer": "application",
+          "cost_minutes": 2,
+          "observation": "任务 run_id 与删除前导出的 order_id 清单可用，但尚未验证清单完整性。"
+        }
+      ],
+      "required_cards": [
+        "delete-e1",
+        "delete-e2",
+        "delete-e3"
+      ],
+      "safe_actions": [
+        {
+          "id": "fence-delete-job",
+          "risk_class": "R1",
+          "summary": "只停用精确的维护任务并围住受影响写路径",
+          "expected_result": "错误删除不再扩大，其他读流量保留",
+          "stop_condition": "无法证明任务身份或围栏影响超出声明范围",
+          "rollback": "由任务 owner 恢复同一调度项"
+        },
+        {
+          "id": "preserve-recovery-window",
+          "risk_class": "R0",
+          "summary": "记录目标时间、timeline、LSN、备份和 archive 边界",
+          "expected_result": "恢复目标可复核且 WAL 不被提前回收",
+          "stop_condition": "system identifier 或 timeline 无法对应",
+          "rollback": "none"
+        },
+        {
+          "id": "restore-isolated-clone",
+          "risk_class": "R2",
+          "summary": "在隔离目标执行 PITR，再导出并核对受影响对象",
+          "expected_result": "得到事发前候选数据而不覆盖现役主库",
+          "stop_condition": "恢复未到目标、manifest 不成立或目标可被生产访问",
+          "rollback": "销毁 marker 约束的隔离恢复实例"
+        }
+      ],
+      "dangerous_actions": [
+        {
+          "id": "promote-replica",
+          "reason": "副本已经重放错误 DELETE，提升不会恢复数据"
+        },
+        {
+          "id": "restore-over-primary",
+          "reason": "未定义目标和对账边界前覆盖主库会毁掉现场与事后提交"
+        },
+        {
+          "id": "delete-wal",
+          "reason": "会破坏仍可用的 PITR 时间窗"
+        }
+      ],
+      "stop_line": "在隔离恢复结果、影响键集和事后写入对账均未通过前，不向生产回灌。",
+      "escalation": "立即召集业务数据 owner、备份 owner 与事件指挥；若涉及财务记录，同时通知审计与法务。"
+    },
+    {
+      "id": "data-semantic-update",
+      "title": "数据库健康，但退款状态异常增长",
+      "route": "PITR",
+      "objective": "RESTORE_DATA",
+      "severity": "SEV2",
+      "initial_signal": "数据库延迟、CPU 和错误率都在基线内，但退款订单数突然增加 12,400。",
+      "user_impact": "部分客户状态错误，外部退款副作用是否已触发未知。",
+      "false_friend": "数据库健康只能说明系统可靠地执行了请求，不能证明请求语义正确。",
+      "hidden_truth": "一次 backfill 使用了错误时区边界，UPDATE 命中了不应修改的订单。",
+      "severity_basis": {
+        "user_impact": "状态错误且可能触发外部资金流程",
+        "data_risk": "影响集合可枚举但业务副作用未知",
+        "blast_radius": "单表 12,400 行及下游事件",
+        "time_dynamics": "backfill 已结束，下游 consumer 仍在处理",
+        "recoverability": "审计键可用，PITR 克隆可作为旧值来源"
+      },
+      "evidence_cards": [
+        {
+          "id": "update-e1",
+          "question": "异常变化对应哪次事务或批任务？",
+          "layer": "change",
+          "cost_minutes": 2,
+          "observation": "01:52 UTC backfill 完成；run_id 可定位 12,400 个 order_id，时区参数与设计不符。"
+        },
+        {
+          "id": "update-e2",
+          "question": "下游不可补偿副作用是否已经发生？",
+          "layer": "application",
+          "cost_minutes": 4,
+          "observation": "退款队列已消费 318 条，剩余消息可以按 run_id 暂停；已消费项需要业务逐笔确认。"
+        },
+        {
+          "id": "update-e3",
+          "question": "能否从审计或历史恢复出每行旧值？",
+          "layer": "recovery",
+          "cost_minutes": 3,
+          "observation": "审计只记录键和新值；隔离 PITR 到 01:51:59 可提供旧值，archive 连续。"
+        },
+        {
+          "id": "update-e4",
+          "question": "错误行是否还被后续合法交易修改？",
+          "layer": "data",
+          "cost_minutes": 3,
+          "observation": "其中 77 行在 01:52 后又发生合法状态变化，不能无条件覆盖。"
+        }
+      ],
+      "required_cards": [
+        "update-e1",
+        "update-e2",
+        "update-e3",
+        "update-e4"
+      ],
+      "safe_actions": [
+        {
+          "id": "pause-exact-refund-consumer",
+          "risk_class": "R1",
+          "summary": "按 run_id 暂停目标 consumer 分区并保留消息",
+          "expected_result": "新的外部退款副作用停止扩散",
+          "stop_condition": "过滤条件不能只覆盖本次异常消息",
+          "rollback": "由消息 owner 恢复被暂停分区"
+        },
+        {
+          "id": "build-affected-key-manifest",
+          "risk_class": "R0",
+          "summary": "冻结 run_id 键集并标记事后合法变更",
+          "expected_result": "影响集合、冲突集合和未知集合分开",
+          "stop_condition": "键集数量与指标变化不能解释",
+          "rollback": "none"
+        },
+        {
+          "id": "compare-pitr-old-values",
+          "risk_class": "R2",
+          "summary": "在隔离 PITR 克隆提取旧值，生成条件化修复集",
+          "expected_result": "只修复仍保持异常新值且无后续合法写入的行",
+          "stop_condition": "旧值来源或条件更新行数不一致",
+          "rollback": "回滚尚未提交的修复事务并保留导出"
+        }
+      ],
+      "dangerous_actions": [
+        {
+          "id": "bulk-update-from-pitr",
+          "reason": "会覆盖 77 行事后合法变化"
+        },
+        {
+          "id": "truncate-refund-queue",
+          "reason": "会销毁未消费消息和取证边界"
+        },
+        {
+          "id": "declare-database-healthy",
+          "reason": "资源指标正常不能排除逻辑事故"
+        }
+      ],
+      "stop_line": "未完成 target-only 副作用盘点和条件更新 dry-run 前，不提交任何批量回写。",
+      "escalation": "业务资金 owner 必须决定 318 个外部副作用的补偿；数据库团队只提供旧值和一致性证据。"
+    },
+    {
+      "id": "ha-proxy-health",
+      "title": "写端点 503，但 PostgreSQL 主库仍在运行",
+      "route": "HA",
+      "objective": "RESTORE_TOPOLOGY",
+      "severity": "SEV1",
+      "initial_signal": "应用写端点连续返回 503；主节点上的 PostgreSQL up 指标仍为 1。",
+      "user_impact": "所有新写入失败，已有直连会话状态未知。",
+      "false_friend": "端点不可用不等于 primary 已失效，立即提升副本可能制造双主。",
+      "hidden_truth": "HAProxy 健康检查凭据被错误轮换，三个 Patroni 成员与 PostgreSQL 拓扑实际一致。",
+      "severity_basis": {
+        "user_impact": "全量写入不可用",
+        "data_risk": "错误提升会造成 timeline 分叉",
+        "blast_radius": "单集群所有写服务",
+        "time_dynamics": "影响持续但数据层尚稳定",
+        "recoverability": "服务检查配置可回退，数据库无需提升"
+      },
+      "evidence_cards": [
+        {
+          "id": "proxy-e1",
+          "question": "客户端端点、HAProxy backend 与直连 PostgreSQL 分别怎样？",
+          "layer": "access",
+          "cost_minutes": 3,
+          "observation": "写端点无 healthy backend；精确主节点直连只读探针成功。"
+        },
+        {
+          "id": "proxy-e2",
+          "question": "三个 Patroni 成员对 leader、role 和 timeline 的观察是否一致？",
+          "layer": "ha",
+          "cost_minutes": 3,
+          "observation": "一主两从均 running，timeline 42 一致，DCS leader 未变化。"
+        },
+        {
+          "id": "proxy-e3",
+          "question": "最近访问层有哪些变更？",
+          "layer": "change",
+          "cost_minutes": 2,
+          "observation": "七分钟前只更新了 HAProxy health-check secret；数据库、Patroni 和 DCS 无变更。"
+        },
+        {
+          "id": "proxy-e4",
+          "question": "原主是否仍接受写入，是否存在第二个 writer？",
+          "layer": "database",
+          "cost_minutes": 2,
+          "observation": "原主仍为 read-write，两个副本均 in_recovery；未观察到第二 writer。"
+        }
+      ],
+      "required_cards": [
+        "proxy-e1",
+        "proxy-e2",
+        "proxy-e3",
+        "proxy-e4"
+      ],
+      "safe_actions": [
+        {
+          "id": "hold-manual-promotion",
+          "risk_class": "R0",
+          "summary": "声明禁止人工 promote，先证明 writer 唯一性",
+          "expected_result": "避免把接入层故障扩大为数据分叉",
+          "stop_condition": "发现现任 primary 不可控或 writer 不唯一",
+          "rollback": "none"
+        },
+        {
+          "id": "rollback-healthcheck-secret",
+          "risk_class": "R1",
+          "summary": "由访问层 owner 回退精确的健康检查凭据",
+          "expected_result": "HAProxy 重新识别既有 primary",
+          "stop_condition": "backend 指向非 DCS leader 或检查身份仍不一致",
+          "rollback": "恢复本次变更前的 versioned secret"
+        },
+        {
+          "id": "validate-service-path",
+          "risk_class": "R0",
+          "summary": "从客户端端点到事务提交逐层验证",
+          "expected_result": "路由、池、primary 与提交确认一致",
+          "stop_condition": "任何层的身份或 timeline 不一致",
+          "rollback": "none"
+        }
+      ],
+      "dangerous_actions": [
+        {
+          "id": "promote-random-replica",
+          "reason": "原 primary 健康且可写，会制造第二 writer"
+        },
+        {
+          "id": "restart-all-components",
+          "reason": "会覆盖证据并扩大影响面"
+        },
+        {
+          "id": "bypass-healthchecks-permanently",
+          "reason": "把流量无条件送到节点会绕过角色判定"
+        }
+      ],
+      "stop_line": "在 writer 唯一性、DCS leader 与服务 backend 三者不一致时，不恢复写流量。",
+      "escalation": "由事件指挥协调访问层和数据库 owner；若发现第二 writer，立即升级为数据风险事件。"
+    },
+    {
+      "id": "ha-dcs-partition",
+      "title": "DCS 超时与陈旧 leader 告警同时出现",
+      "route": "HA",
+      "objective": "RESTORE_TOPOLOGY",
+      "severity": "SEV1",
+      "initial_signal": "两个节点报告 DCS timeout，一个节点仍自称 primary；应用成功率在 40% 与 95% 间波动。",
+      "user_impact": "部分写入失败，提交确认与 writer 唯一性暂不确定。",
+      "false_friend": "某个节点自报 primary 只是一个观察面，不能单独证明它仍持有合法 leader lock。",
+      "hidden_truth": "网络分区把旧 primary 与 DCS 多数派隔离，访问层仍有一部分流量直达旧 primary。",
+      "severity_basis": {
+        "user_impact": "写入部分失败且确认语义不确定",
+        "data_risk": "存在双写与 timeline 分叉风险",
+        "blast_radius": "集群、DCS 与访问层",
+        "time_dynamics": "每次重试都可能扩大歧义",
+        "recoverability": "必须先围栏旧 writer，再选择权威 timeline"
+      },
+      "evidence_cards": [
+        {
+          "id": "dcs-e1",
+          "question": "每个节点从本地看到的 role、timeline 和 recovery 状态是什么？",
+          "layer": "database",
+          "cost_minutes": 3,
+          "observation": "隔离节点 read-write timeline 51；多数派侧一个节点已为 read-write timeline 52，另一个为 replica。"
+        },
+        {
+          "id": "dcs-e2",
+          "question": "DCS 多数派当前 leader key 与成员租约是什么？",
+          "layer": "dcs",
+          "cost_minutes": 3,
+          "observation": "leader key 指向 timeline 52 节点；旧节点租约过期且无法访问多数派。"
+        },
+        {
+          "id": "dcs-e3",
+          "question": "HAProxy、VIP 和直连流量分别指向哪里？",
+          "layer": "access",
+          "cost_minutes": 3,
+          "observation": "HAProxy 指向新 leader，但遗留 VIP 在旧节点，约 18% 流量仍到 timeline 51。"
+        },
+        {
+          "id": "dcs-e4",
+          "question": "两条 timeline 分叉后各自有哪些已确认事务？",
+          "layer": "data",
+          "cost_minutes": 4,
+          "observation": "两侧都有独占提交；必须由业务键与 WAL 边界完成 reconciliation。"
+        }
+      ],
+      "required_cards": [
+        "dcs-e1",
+        "dcs-e2",
+        "dcs-e3"
+      ],
+      "safe_actions": [
+        {
+          "id": "fence-old-writer",
+          "risk_class": "R2",
+          "summary": "在网络或存储层精确围栏 timeline 51 旧 writer",
+          "expected_result": "只剩 DCS 多数派认可的 writer 可接收写入",
+          "stop_condition": "围栏目标身份或影响范围无法独立确认",
+          "rollback": "由网络/虚拟化 owner 在权威节点确认后解除"
+        },
+        {
+          "id": "freeze-ambiguous-retries",
+          "risk_class": "R1",
+          "summary": "暂停非幂等重试并保留请求幂等键",
+          "expected_result": "不再制造新的提交歧义",
+          "stop_condition": "流量控制会阻断安全或合规关键路径",
+          "rollback": "按业务 owner 决策恢复指定流量"
+        },
+        {
+          "id": "capture-timeline-manifest",
+          "risk_class": "R0",
+          "summary": "记录两侧 system identifier、timeline、LSN、leader 与路由",
+          "expected_result": "分叉边界和后续对账输入可复核",
+          "stop_condition": "任何采集命令可能改变节点角色",
+          "rollback": "none"
+        }
+      ],
+      "dangerous_actions": [
+        {
+          "id": "promote-third-node",
+          "reason": "会增加第三条写 timeline"
+        },
+        {
+          "id": "rewind-before-reconcile",
+          "reason": "会覆盖旧 timeline 上独占提交的现场"
+        },
+        {
+          "id": "resume-all-routes",
+          "reason": "writer 唯一性尚未建立"
+        }
+      ],
+      "stop_line": "旧 writer 未被独立围栏前，不把任何节点宣告为全局权威，也不恢复非幂等写入。",
+      "escalation": "必须召集网络/DCS/数据库/业务 owner；若独占提交涉及受监管数据，通知安全、法务与审计。"
+    },
+    {
+      "id": "overload-connections",
+      "title": "连接失败被误判为数据库宕机",
+      "route": "OVERLOAD",
+      "objective": "RELIEVE_PRESSURE",
+      "severity": "SEV2",
+      "initial_signal": "应用大量报 connection timeout，数据库 CPU 只有 43%，HA 面板显示 primary 正常。",
+      "user_impact": "新请求无法获得连接，已有事务部分仍在运行。",
+      "false_friend": "CPU 不高不能排除容量耗尽；连接槽、pool wait 和长事务是独立资源。",
+      "hidden_truth": "一次应用发布绕过 PgBouncer，耗尽 max_connections，并留下大量 idle in transaction 会话。",
+      "severity_basis": {
+        "user_impact": "多数新请求失败",
+        "data_risk": "强制终止事务可能造成未知提交与重试副作用",
+        "blast_radius": "一个应用角色占满集群连接",
+        "time_dynamics": "连接重试风暴仍在增强",
+        "recoverability": "可先在入口限流，再处理精确会话集合"
+      },
+      "evidence_cards": [
+        {
+          "id": "conn-e1",
+          "question": "PostgreSQL、PgBouncer 与应用侧各自的连接和等待是多少？",
+          "layer": "access",
+          "cost_minutes": 3,
+          "observation": "PostgreSQL 连接占用 99%，PgBouncer pool 未满；异常应用绕过了 6432/服务端口。"
+        },
+        {
+          "id": "conn-e2",
+          "question": "连接按角色、application_name、状态与事务年龄如何分布？",
+          "layer": "database",
+          "cost_minutes": 3,
+          "observation": "单一发布版本占 81%，其中 270 个 idle in transaction，最长事务 19 分钟。"
+        },
+        {
+          "id": "conn-e3",
+          "question": "最近路由或连接串发生了什么变化？",
+          "layer": "change",
+          "cost_minutes": 2,
+          "observation": "新版本把 pool service 改成 PostgreSQL 直连端口；旧版本仍正常。"
+        },
+        {
+          "id": "conn-e4",
+          "question": "当前事务中是否有不可安全重试的业务？",
+          "layer": "application",
+          "cost_minutes": 3,
+          "observation": "部分支付事务无稳定幂等键，不能批量 terminate 后盲目重放。"
+        }
+      ],
+      "required_cards": [
+        "conn-e1",
+        "conn-e2",
+        "conn-e3"
+      ],
+      "safe_actions": [
+        {
+          "id": "stop-bad-deployment",
+          "risk_class": "R1",
+          "summary": "停止精确的新版本扩容与重试入口",
+          "expected_result": "新直连和重试风暴不再增长",
+          "stop_condition": "无法只匹配异常版本或会中断安全关键请求",
+          "rollback": "恢复上一个已验证连接配置"
+        },
+        {
+          "id": "reserve-admin-path",
+          "risk_class": "R0",
+          "summary": "验证保留管理连接和超时，避免操作面也被耗尽",
+          "expected_result": "应急查询可持续执行",
+          "stop_condition": "探针本身开始排队或增加显著压力",
+          "rollback": "none"
+        },
+        {
+          "id": "terminate-reviewed-session-set",
+          "risk_class": "R2",
+          "summary": "按应用版本、角色、事务年龄和 PID 清单复核后逐批终止",
+          "expected_result": "连接槽逐步释放且未知事务数受控",
+          "stop_condition": "命中不在清单的会话或业务错误率恶化",
+          "rollback": "停止下一批；已终止事务只能由业务幂等/对账恢复"
+        }
+      ],
+      "dangerous_actions": [
+        {
+          "id": "restart-primary",
+          "reason": "会终止所有会话而不修复绕过连接池的入口"
+        },
+        {
+          "id": "increase-max-connections",
+          "reason": "可能把连接瓶颈转成内存和调度崩溃"
+        },
+        {
+          "id": "terminate-all-backends",
+          "reason": "会杀死不相关和不可安全重试的事务"
+        }
+      ],
+      "stop_line": "在异常入口未被围住、会话所有权未知时，不批量终止连接或扩大 max_connections。",
+      "escalation": "应用 owner 负责回退连接配置与判定重试语义；数据库 owner 只执行精确会话集合。"
+    },
+    {
+      "id": "overload-wal-disk",
+      "title": "磁盘告警与复制延迟同时上升",
+      "route": "OVERLOAD",
+      "objective": "RELIEVE_PRESSURE",
+      "severity": "SEV1",
+      "initial_signal": "数据盘 99% 使用率，写入出现 no space left on device，某副本 replay lag 快速增加。",
+      "user_impact": "写事务失败，数据库可能 PANIC，恢复窗口也可能受损。",
+      "false_friend": "副本延迟是结果之一；直接删除 pg_wal 文件会把容量事故升级为不可恢复事故。",
+      "hidden_truth": "一个停用的逻辑消费者留下 inactive slot，保留 WAL 占满数据盘。",
+      "severity_basis": {
+        "user_impact": "核心写入失败",
+        "data_risk": "错误清理可能破坏崩溃恢复、复制或 CDC",
+        "blast_radius": "primary 数据盘和所有写流量",
+        "time_dynamics": "剩余空间以每分钟 3 GiB 下降",
+        "recoverability": "可扩容并在 owner 决策后处理精确 slot"
+      },
+      "evidence_cards": [
+        {
+          "id": "disk-e1",
+          "question": "哪个文件系统与哪个目录类别正在增长？",
+          "layer": "host",
+          "cost_minutes": 2,
+          "observation": "PGDATA 文件系统 99%；pg_wal 占 1.4 TiB，日志、base、temp 与备份增长正常。"
+        },
+        {
+          "id": "disk-e2",
+          "question": "WAL 产生、归档、复制和 slot 保留边界分别是什么？",
+          "layer": "database",
+          "cost_minutes": 3,
+          "observation": "archive healthy；一个 inactive logical slot retained 1.31 TiB，其余副本追赶范围较小。"
+        },
+        {
+          "id": "disk-e3",
+          "question": "该 slot 的 consumer、SLA 与重建能力是什么？",
+          "layer": "application",
+          "cost_minutes": 3,
+          "observation": "consumer 已下线 19 小时，owner 可从新快照重建，但尚未批准丢弃 slot。"
+        },
+        {
+          "id": "disk-e4",
+          "question": "能否在线扩容或安全释放预留空间？",
+          "layer": "storage",
+          "cost_minutes": 2,
+          "observation": "存储可在线扩 500 GiB；节点有 marker 约束的应急预留文件可由存储 owner 释放。"
+        }
+      ],
+      "required_cards": [
+        "disk-e1",
+        "disk-e2",
+        "disk-e3",
+        "disk-e4"
+      ],
+      "safe_actions": [
+        {
+          "id": "shed-wal-producing-load",
+          "risk_class": "R1",
+          "summary": "限制批量写和非关键流量，降低 WAL 产生速率",
+          "expected_result": "到满盘的剩余时间增加",
+          "stop_condition": "影响安全关键写或 WAL 速率没有下降",
+          "rollback": "按业务优先级恢复限流"
+        },
+        {
+          "id": "expand-or-release-reserve",
+          "risk_class": "R1",
+          "summary": "由存储 owner 扩容，必要时删除已声明的应急预留文件",
+          "expected_result": "恢复可操作空间且不删除数据库文件",
+          "stop_condition": "目标文件系统或 marker 无法确认",
+          "rollback": "扩容通常不可回退；预留文件在稳定后重建"
+        },
+        {
+          "id": "drop-exact-slot-after-owner",
+          "risk_class": "R2",
+          "summary": "consumer owner 批准重建后，删除精确 inactive slot",
+          "expected_result": "checkpoint 后可回收不再需要的 WAL",
+          "stop_condition": "slot active、名称/consumer 不匹配或 owner 未批准",
+          "rollback": "slot 删除不可回退，consumer 必须按新快照重建"
+        }
+      ],
+      "dangerous_actions": [
+        {
+          "id": "remove-pg-wal-files",
+          "reason": "绕过 PostgreSQL 回收会破坏崩溃恢复和 timeline 连续性"
+        },
+        {
+          "id": "drop-all-slots",
+          "reason": "会破坏无关复制消费者"
+        },
+        {
+          "id": "restart-until-healthy",
+          "reason": "满盘未解除，反复恢复只会增加风险和证据噪声"
+        }
+      ],
+      "stop_line": "未证明目录归属、slot owner 和替代恢复路径前，不删除任何 WAL、slot 或备份文件。",
+      "escalation": "立即召集存储、CDC consumer、数据库和业务流量 owner；空间不足以完成安全动作时升级基础设施指挥。"
+    },
+    {
+      "id": "integrity-checksum-page",
+      "title": "单个查询出现 checksum failure",
+      "route": "INTEGRITY",
+      "objective": "PRESERVE_INTEGRITY",
+      "severity": "SEV1",
+      "initial_signal": "一个关键查询报 data checksum mismatch；主库仍在线，复制延迟为零。",
+      "user_impact": "部分数据不可读，损坏是否扩散和副本是否同样受影响未知。",
+      "false_friend": "复制延迟为零不代表副本数据健康；物理损坏可能来自共享故障域，也可能被查询路径暂时掩盖。",
+      "hidden_truth": "主库一块 heap page 发生存储层 bit flip，副本对应页面目前可读。",
+      "severity_basis": {
+        "user_impact": "关键对象部分读取失败",
+        "data_risk": "继续写、vacuum 或 failover 可能覆盖现场或传播错误判断",
+        "blast_radius": "尚不明确，至少一个 relation block",
+        "time_dynamics": "存储设备错误计数仍在增长",
+        "recoverability": "副本与备份可能提供候选页或逻辑行，但需先判定权威"
+      },
+      "evidence_cards": [
+        {
+          "id": "checksum-e1",
+          "question": "错误对应哪个 database、relation、fork 和 block？",
+          "layer": "database",
+          "cost_minutes": 3,
+          "observation": "日志可定位一个 heap main fork block；同索引路径的错误只是后续症状。"
+        },
+        {
+          "id": "checksum-e2",
+          "question": "主库、副本、备份与存储层各自的独立证据是什么？",
+          "layer": "integrity",
+          "cost_minutes": 4,
+          "observation": "主库该页 checksum 失败；副本可读且业务键完整；最近恢复克隆未见该错误；主机 NVMe media error 增长。"
+        },
+        {
+          "id": "checksum-e3",
+          "question": "受影响对象是否仍在写入，能否缩小业务范围？",
+          "layer": "application",
+          "cost_minutes": 2,
+          "observation": "可按 tenant 分区围住写入，其他表可继续读；目标分区每分钟仍有更新。"
+        },
+        {
+          "id": "checksum-e4",
+          "question": "有没有在原介质上运行过修复或重写动作？",
+          "layer": "change",
+          "cost_minutes": 2,
+          "observation": "尚未执行 REINDEX、VACUUM FULL、zero_damaged_pages 或文件复制。"
+        }
+      ],
+      "required_cards": [
+        "checksum-e1",
+        "checksum-e2",
+        "checksum-e3",
+        "checksum-e4"
+      ],
+      "safe_actions": [
+        {
+          "id": "fence-affected-partition",
+          "risk_class": "R1",
+          "summary": "围住受影响业务分区的写入并保留安全读",
+          "expected_result": "现场不再被关系重写扩大",
+          "stop_condition": "无法把对象映射到可靠业务范围",
+          "rollback": "完整性验证后由业务 owner 恢复"
+        },
+        {
+          "id": "snapshot-and-hash-evidence",
+          "risk_class": "R2",
+          "summary": "由存储 owner 生成一致快照并记录设备、文件和块证据",
+          "expected_result": "原始介质之外存在可重复调查副本",
+          "stop_condition": "快照一致性、挂载只读性或来源无法证明",
+          "rollback": "删除非权威工作副本，保留原始快照"
+        },
+        {
+          "id": "compare-independent-copies",
+          "risk_class": "R0",
+          "summary": "在克隆上用 checksum、amcheck 和业务 manifest 分层比较",
+          "expected_result": "区分 heap、index、存储与逻辑损坏范围",
+          "stop_condition": "工具版本或对象映射不匹配",
+          "rollback": "none"
+        }
+      ],
+      "dangerous_actions": [
+        {
+          "id": "set-zero-damaged-pages",
+          "reason": "会用零页掩盖损坏并造成数据丢失"
+        },
+        {
+          "id": "copy-page-into-live-primary",
+          "reason": "未经 WAL/tuple/visibility 语义验证的块替换可能制造更深不一致"
+        },
+        {
+          "id": "reindex-everything",
+          "reason": "heap page 损坏不由 REINDEX 修复，且会覆盖现场"
+        }
+      ],
+      "stop_line": "在原始快照、对象映射和独立副本比较完成前，不对现役数据文件做块级或关系级重写。",
+      "escalation": "立即召集存储和数据库完整性专家；若怀疑恶意篡改，同时启动安全证据保全流程。"
+    },
+    {
+      "id": "integrity-collation-index",
+      "title": "升级后唯一查询结果与顺序不一致",
+      "route": "INTEGRITY",
+      "objective": "PRESERVE_INTEGRITY",
+      "severity": "SEV2",
+      "initial_signal": "升级后相同过滤条件在 index scan 与 seq scan 下返回集合不同，服务仍可用。",
+      "user_impact": "部分查找漏行，唯一性语义是否改变未知。",
+      "false_friend": "执行 `REFRESH VERSION` 只更新元数据，不证明依赖索引已经按新排序语义重建。",
+      "hidden_truth": "操作系统 ICU 版本变化后只刷新了 collation version，没有重建依赖唯一索引。",
+      "severity_basis": {
+        "user_impact": "部分用户查找结果错误",
+        "data_risk": "继续写入可能在新旧排序语义间制造重复或拒绝合法值",
+        "blast_radius": "使用同一 collation 的三个索引",
+        "time_dynamics": "写入持续，语义风险累积",
+        "recoverability": "可从对象依赖清单与隔离克隆重建验证"
+      },
+      "evidence_cards": [
+        {
+          "id": "collation-e1",
+          "question": "seq scan、index scan 和业务键 manifest 分别怎样？",
+          "layer": "data",
+          "cost_minutes": 3,
+          "observation": "seq scan 返回 104 行，index scan 返回 103 行；缺失键只出现在使用 app.en_numeric 的索引。"
+        },
+        {
+          "id": "collation-e2",
+          "question": "collation provider、记录版本、实际版本和依赖对象是什么？",
+          "layer": "catalog",
+          "cost_minutes": 3,
+          "observation": "ICU 实际版本已变化，元数据已被 REFRESH；三个依赖索引的 relfilenode 时间早于升级。"
+        },
+        {
+          "id": "collation-e3",
+          "question": "升级 runbook 实际执行了哪些命令？",
+          "layer": "change",
+          "cost_minutes": 2,
+          "observation": "记录显示先执行 ALTER COLLATION ... REFRESH VERSION，未执行 REINDEX。"
+        },
+        {
+          "id": "collation-e4",
+          "question": "唯一键在新排序语义下是否存在冲突候选？",
+          "layer": "application",
+          "cost_minutes": 4,
+          "observation": "隔离克隆重建时发现两组字符串在新语义下等价，需要业务 owner 决定保留规则。"
+        }
+      ],
+      "required_cards": [
+        "collation-e1",
+        "collation-e2",
+        "collation-e3",
+        "collation-e4"
+      ],
+      "safe_actions": [
+        {
+          "id": "fence-collation-writes",
+          "risk_class": "R1",
+          "summary": "围住依赖该唯一语义的写路径",
+          "expected_result": "不再产生新的语义冲突",
+          "stop_condition": "无法完整枚举依赖对象和应用路径",
+          "rollback": "验证并重建后恢复指定写路由"
+        },
+        {
+          "id": "preserve-before-rebuild",
+          "risk_class": "R2",
+          "summary": "克隆现状并保存依赖、查询结果和冲突键清单",
+          "expected_result": "修复前语义和争议键可复核",
+          "stop_condition": "克隆与现役 system identifier/时间边界不匹配",
+          "rollback": "销毁工作克隆，保留只读取证副本"
+        },
+        {
+          "id": "adjudicate-then-reindex",
+          "risk_class": "R2",
+          "summary": "先由业务裁决冲突键，再重建全部依赖索引并比较结果",
+          "expected_result": "新排序语义、唯一性和查询集合一致",
+          "stop_condition": "出现未裁决冲突或任一 manifest 不等",
+          "rollback": "保持写围栏，回到升级前副本或继续前滚修复"
+        }
+      ],
+      "dangerous_actions": [
+        {
+          "id": "refresh-version-again",
+          "reason": "重复刷新元数据不会重建索引"
+        },
+        {
+          "id": "drop-unique-constraint",
+          "reason": "会允许语义冲突继续进入数据"
+        },
+        {
+          "id": "delete-conflicting-rows-arbitrarily",
+          "reason": "数据库无法替业务决定哪个标识是权威"
+        }
+      ],
+      "stop_line": "业务 owner 未裁决新排序语义下的冲突键前，不重开写入或删除唯一约束。",
+      "escalation": "升级 owner、应用标识 owner 和数据库团队共同决策；争议值涉及用户身份时通知安全与合规。"
+    }
+  ]
+}

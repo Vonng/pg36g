@@ -1,0 +1,59 @@
+{
+  "schema": "pg36-ch31-response-v1",
+  "incident_id": "REPLACE_ME",
+  "scenario_id": "REPLACE_ME",
+  "mode": "solo-or-team",
+  "severity": "SEV1-SEV4",
+  "severity_basis": {
+    "user_impact": "REPLACE_ME",
+    "data_risk": "REPLACE_ME",
+    "blast_radius": "REPLACE_ME",
+    "time_dynamics": "REPLACE_ME",
+    "recoverability": "REPLACE_ME"
+  },
+  "roles": {
+    "incident_commander": "REPLACE_ME",
+    "operator": "REPLACE_ME",
+    "scribe": "REPLACE_ME",
+    "business_liaison": "REPLACE_ME"
+  },
+  "selected_evidence_cards": [],
+  "route": "PITR-HA-OVERLOAD-INTEGRITY",
+  "response_objective": "REPLACE_ME",
+  "actions": [
+    {
+      "minute": 1,
+      "action_id": "REPLACE_ME",
+      "risk_class": "R0-R3",
+      "owner": "REPLACE_ME",
+      "fact_ids": [],
+      "expected_result": "REPLACE_ME",
+      "stop_condition": "REPLACE_ME",
+      "rollback": "REPLACE_ME"
+    }
+  ],
+  "decision_log": [
+    {
+      "minute": 0,
+      "actor": "REPLACE_ME",
+      "entry_type": "fact-hypothesis-decision-action-result",
+      "statement": "REPLACE_ME",
+      "evidence_ids": [],
+      "expected_result": "REPLACE_ME",
+      "stop_condition": "REPLACE_ME",
+      "rollback": "REPLACE_ME"
+    }
+  ],
+  "communications": [
+    {
+      "minute": 5,
+      "audience": "REPLACE_ME",
+      "known": "REPLACE_ME",
+      "unknown": "REPLACE_ME",
+      "impact": "REPLACE_ME",
+      "next_update_minute": 15
+    }
+  ],
+  "dangerous_actions_executed": [],
+  "production_authorized": false
+}

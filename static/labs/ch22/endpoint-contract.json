@@ -1,0 +1,72 @@
+{
+  "schema": "pg36-ch22-endpoint-contract-v1",
+  "logical_service": "pg36_shop",
+  "sandbox_database": "test",
+  "endpoints": [
+    {
+      "name": "primary",
+      "port": 5433,
+      "client_semantics": "pooled read-write service",
+      "selector_semantics": "Patroni /primary",
+      "destination": "PgBouncer 6432 on current primary",
+      "pool_mode": "transaction",
+      "allowed_work": [
+        "short OLTP transactions",
+        "protocol-level prepared statements when the exact version matrix is proven"
+      ],
+      "forbidden_assumptions": [
+        "one client session owns one PostgreSQL backend",
+        "SQL session state survives transaction boundaries"
+      ]
+    },
+    {
+      "name": "replica",
+      "port": 5434,
+      "client_semantics": "pooled read-only, replica-preferred service",
+      "selector_semantics": "Patroni /read-only with primary/offline as backups",
+      "destination": "PgBouncer 6432 on eligible replicas",
+      "pool_mode": "transaction",
+      "allowed_work": [
+        "staleness-tolerant read-only transactions"
+      ],
+      "forbidden_assumptions": [
+        "read-your-writes",
+        "bounded staleness without an explicit LSN protocol",
+        "a replica is always selected under degradation"
+      ]
+    },
+    {
+      "name": "default",
+      "port": 5436,
+      "client_semantics": "direct primary service",
+      "selector_semantics": "Patroni /primary",
+      "destination": "PostgreSQL 5432 on current primary",
+      "pool_mode": "none",
+      "allowed_work": [
+        "administration",
+        "ETL or migration work that requires a stable backend",
+        "CDC or session-sensitive tooling after separate review"
+      ],
+      "forbidden_assumptions": [
+        "unlimited direct connections",
+        "safe application default"
+      ]
+    },
+    {
+      "name": "offline",
+      "port": 5438,
+      "client_semantics": "direct isolated analytic replica service",
+      "selector_semantics": "declared offline replica, normal replica fallback",
+      "destination": "PostgreSQL 5432",
+      "pool_mode": "none",
+      "allowed_work": [
+        "reviewed OLAP and ETL reads"
+      ],
+      "forbidden_assumptions": [
+        "fresh data",
+        "write availability",
+        "no effect on replay"
+      ]
+    }
+  ]
+}

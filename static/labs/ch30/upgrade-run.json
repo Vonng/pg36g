@@ -1,0 +1,95 @@
+{
+  "captured_at": "2026-07-30T02:06:02.612270Z",
+  "claims_not_made": [
+    "this run upgraded a Pigsty-managed PostgreSQL data directory",
+    "the sandbox duration predicts a production downtime window",
+    "all third-party extensions and application drivers are compatible",
+    "the sandbox result authorizes a production upgrade"
+  ],
+  "cleanup": {
+    "fixture_run_root_absent": true,
+    "remote_root_absent": true,
+    "temporary_postmasters_stopped": true,
+    "unrelated_processes_terminated": 0
+  },
+  "collation_gate": {
+    "affected_indexes": [
+      "app.orders_order_code_key"
+    ],
+    "injected_mismatch_observed": true,
+    "mismatch_after": false,
+    "release_before": "blocked",
+    "repair_order": [
+      "REINDEX INDEX app.orders_order_code_key",
+      "ALTER COLLATION app.en_numeric REFRESH VERSION"
+    ]
+  },
+  "decision": {
+    "production_approval": null,
+    "production_ch30_gate": "pending",
+    "result": "isolated-pg17-to-pg18-state-machine-demonstrated"
+  },
+  "environment": {
+    "host_cluster": "pg-meta",
+    "new_postgresql": "postgres (PostgreSQL) 18.4 (Ubuntu 18.4-1.pgdg24.04+1)",
+    "old_postgresql": "postgres (PostgreSQL) 17.10 (Ubuntu 17.10-1.pgdg24.04+1)",
+    "unix_socket_only": true
+  },
+  "fixture": {
+    "baseline_digest": "7c1f9a24b7a7ac4aef59e9b482bb1374",
+    "initial_rows": 10000,
+    "logical_manifest_equal": true,
+    "upgraded_digest": "7c1f9a24b7a7ac4aef59e9b482bb1374",
+    "upgraded_rows": 10000
+  },
+  "forward": {
+    "canary_order_id": 10001,
+    "canary_rows": 1,
+    "final_rows": 10001,
+    "rollback_requires_reconciliation": true
+  },
+  "incompatible_target": {
+    "check_returncode": 1,
+    "reason": "old cluster uses data checksums but the new one does not",
+    "rejected": true,
+    "removed": true
+  },
+  "preflight_run_id": "d6b27383-e286-4c7c-8c24-08d9cee75e51",
+  "release": "1.0-sandbox",
+  "risk": {
+    "delete_old_cluster_script_run": false,
+    "external_listener_created": false,
+    "link_clone_swap_used": false,
+    "patroni_configuration_changed": false,
+    "persistent_cluster_configuration_change": false,
+    "pigsty_inventory_changed": false,
+    "production_data_touched": false,
+    "production_traffic_touched": false,
+    "system_package_changed": false,
+    "unrelated_process_terminated": false
+  },
+  "rollback": {
+    "manifest_equal": true,
+    "old_cluster_restarted": true,
+    "proven_before_target_writes": true,
+    "target_only_writes_before_proof": 0
+  },
+  "run_id": "44dae7d4-bfd2-4d5c-ab74-cb9c0599346e",
+  "schema": "pg36-ch30-reference-run-v1",
+  "target": "pg36-l2-vagrant/isolated-pg17-to-pg18",
+  "upgrade": {
+    "amcheck_passed": true,
+    "check_passed": true,
+    "complete": true,
+    "extension_manifest_equal": true,
+    "method": "copy",
+    "post_upgrade_analyze_completed": true,
+    "query_result_equal": true
+  },
+  "validation": {
+    "declared_counterexamples_rejected": 30,
+    "live_evidence_mutants_rejected": 20,
+    "private_bundle_required": true,
+    "source_hash_bound": true
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema": "pg36-ch23-negative-cases-v1",
+  "cases": [
+    {
+      "id": "N01",
+      "mutation": "accept a snapshot from another target",
+      "expected": "reject"
+    },
+    {
+      "id": "N02",
+      "mutation": "accept an unstable or changed Patroni topology",
+      "expected": "reject"
+    },
+    {
+      "id": "N03",
+      "mutation": "report production gate passed while known gaps remain",
+      "expected": "reject"
+    },
+    {
+      "id": "N04",
+      "mutation": "allow a synthetic role to be superuser or BYPASSRLS",
+      "expected": "reject"
+    },
+    {
+      "id": "N05",
+      "mutation": "allow owner, runtime, readonly, or migrate to LOGIN",
+      "expected": "reject"
+    },
+    {
+      "id": "N06",
+      "mutation": "grant ADMIN OPTION on a fixture membership",
+      "expected": "reject"
+    },
+    {
+      "id": "N07",
+      "mutation": "disable RLS or omit FORCE ROW LEVEL SECURITY",
+      "expected": "reject"
+    },
+    {
+      "id": "N08",
+      "mutation": "treat missing tenant context as all tenants",
+      "expected": "reject"
+    },
+    {
+      "id": "N09",
+      "mutation": "accept a cross-tenant INSERT or UPDATE",
+      "expected": "reject"
+    },
+    {
+      "id": "N10",
+      "mutation": "omit the session-state leak counterexample",
+      "expected": "reject"
+    },
+    {
+      "id": "N11",
+      "mutation": "reuse session SET as the supported pooled contract",
+      "expected": "reject"
+    },
+    {
+      "id": "N12",
+      "mutation": "leave the PgBouncer pool override in place",
+      "expected": "reject"
+    },
+    {
+      "id": "N13",
+      "mutation": "claim password change disconnects an existing session",
+      "expected": "reject"
+    },
+    {
+      "id": "N14",
+      "mutation": "leave the rotation role LOGIN or with a password",
+      "expected": "reject"
+    },
+    {
+      "id": "N15",
+      "mutation": "place a cleartext secret, SCRAM verifier, private key, or raw userlist in evidence",
+      "expected": "reject"
+    },
+    {
+      "id": "N16",
+      "mutation": "call sslmode=require server authentication",
+      "expected": "reject"
+    },
+    {
+      "id": "N17",
+      "mutation": "hide that direct non-TLS succeeds in the retained sandbox",
+      "expected": "reject"
+    },
+    {
+      "id": "N18",
+      "mutation": "hide that PgBouncer client TLS is disabled",
+      "expected": "reject"
+    },
+    {
+      "id": "N19",
+      "mutation": "call ordinary PostgreSQL logs a complete audit trail",
+      "expected": "reject"
+    },
+    {
+      "id": "N20",
+      "mutation": "allow reset without exact target and destructive confirmation guards",
+      "expected": "reject"
+    }
+  ]
+}

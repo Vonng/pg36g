@@ -1,0 +1,314 @@
+{
+  "schema": "pg36-ch18-production-blueprint-v1",
+  "release": "1.6-proposal",
+  "status": "architecture-proposal-not-production-approval",
+  "target": {
+    "business_service": "pg36_shop",
+    "cluster_name": "pg-shop",
+    "database": "pg36_shop",
+    "owner_role": "pg36_owner",
+    "application_role": "pg36_app",
+    "postgresql": "18.x target",
+    "validated_fixture": "18.4",
+    "pigsty_reference": "4.4",
+    "pigsty_l1_validation": "not-run",
+    "pigsty_l1_evidence": []
+  },
+  "principles": [
+    "PostgreSQL remains authoritative for transactional business state.",
+    "A capability stays in PostgreSQL when relational consistency and unified queries outweigh resource and lifecycle cost.",
+    "Every derived copy names its authority, freshness, idempotency, reconciliation, rebuild, failure, deletion, and exit behavior.",
+    "Extensions are admitted by service tier and lifecycle state, not merely by installability.",
+    "No proposal target is reported as an achieved SLO before lower-volume validation.",
+    "The platform reference implementation can change without changing the capability contract."
+  ],
+  "service_catalog_ids": [
+    "pg-ha-standard",
+    "pg-analytics-offline"
+  ],
+  "extension_bundles": [
+    {
+      "id": "core",
+      "production_state": "accepted",
+      "gate_ids": [
+        "ch19-deployment-baseline",
+        "ch21-backup-restore",
+        "ch30-upgrade"
+      ]
+    },
+    {
+      "id": "search-accepted",
+      "production_state": "accepted-with-l1-gates",
+      "gate_ids": [
+        "ch19-deployment-baseline",
+        "ch21-backup-restore",
+        "ch26-capacity",
+        "ch30-upgrade"
+      ]
+    },
+    {
+      "id": "vector-pilot",
+      "production_state": "pilot-only",
+      "gate_ids": [
+        "ch19-deployment-baseline",
+        "ch21-backup-restore",
+        "ch26-capacity",
+        "ch30-upgrade"
+      ]
+    },
+    {
+      "id": "spatiotemporal-conditional",
+      "production_state": "conditional",
+      "gate_ids": [
+        "ch19-deployment-baseline",
+        "ch21-backup-restore",
+        "ch26-capacity",
+        "ch30-upgrade"
+      ]
+    },
+    {
+      "id": "federation-lab",
+      "production_state": "lab-only",
+      "gate_ids": [],
+      "lab_authentication": {
+        "password_required_false": true,
+        "production_permitted": false
+      }
+    }
+  ],
+  "capability_decisions": [
+    {
+      "id": "transactional-system-of-record",
+      "owner": "shop-order-team",
+      "placement": "postgresql",
+      "system_of_record": "postgresql",
+      "state": "accepted",
+      "consistency": "constraints and transactions define order, inventory, and payment invariants",
+      "freshness": "committed state",
+      "evidence": [
+        "ch04-v1 physical model",
+        "ch10 concurrency and idempotency lab",
+        "ch12 service contract"
+      ],
+      "external_contract_ids": [],
+      "externalization_trigger": null
+    },
+    {
+      "id": "atomic-database-logic",
+      "owner": "shop-order-team",
+      "placement": "postgresql",
+      "system_of_record": "postgresql",
+      "state": "accepted-with-scope",
+      "consistency": "short invariant enforcement may use constraints, functions, and triggers",
+      "freshness": "same transaction",
+      "evidence": [
+        "ch13-routine-guard-v1"
+      ],
+      "external_contract_ids": [],
+      "externalization_trigger": "long-running orchestration, remote calls, or unbounded retry moves to an external worker"
+    },
+    {
+      "id": "lexical-and-fuzzy-product-search",
+      "owner": "shop-search-team",
+      "placement": "postgresql",
+      "system_of_record": "postgresql",
+      "state": "accepted",
+      "consistency": "searchable projection is transactionally maintained with product state",
+      "freshness": "committed state",
+      "evidence": [
+        "ch15 exact golden and ranked quality evidence",
+        "pg_trgm 1.6 accepted by ch14"
+      ],
+      "external_contract_ids": [
+        "external-search-projection-v1"
+      ],
+      "externalization_trigger": "quality, scale, language, or independent availability SLO fails the PostgreSQL baseline"
+    },
+    {
+      "id": "semantic-product-search",
+      "owner": "shop-search-team",
+      "placement": "postgresql-pilot",
+      "system_of_record": "postgresql",
+      "state": "pilot",
+      "consistency": "embedding model identity and vector dimension are versioned",
+      "freshness": "bounded by embedding generation",
+      "evidence": [
+        "ch15 exact-vector quality golden",
+        "vector 0.8.4 pilot decision by ch14"
+      ],
+      "external_contract_ids": [
+        "external-search-projection-v1"
+      ],
+      "externalization_trigger": "ANN scale, quality, rebuild, or independent service SLO fails the production benchmark"
+    },
+    {
+      "id": "spatiotemporal-delivery-state",
+      "owner": "shop-fulfillment-team",
+      "placement": "postgresql",
+      "system_of_record": "postgresql",
+      "state": "conditional",
+      "consistency": "UTC event time, versioned validity, EPSG:4326 identity, and boundary policy are contractual",
+      "freshness": "event ingest plus explicitly measured lateness",
+      "evidence": [
+        "ch16 frozen time, space, boundary, and partition evidence"
+      ],
+      "external_contract_ids": [
+        "analytics-export-v1"
+      ],
+      "externalization_trigger": "retention, compression, routing, or analytical throughput misses measured service objectives"
+    },
+    {
+      "id": "operational-analytics",
+      "owner": "data-analytics-team",
+      "placement": "postgresql-summary-plus-offline-replica",
+      "system_of_record": "postgresql",
+      "state": "accepted-first-step",
+      "consistency": "reports name their source watermark and freshness",
+      "freshness": "offline replica or summary lag is explicit",
+      "evidence": [
+        "ch17 parallel, covering-index, spill, and summary evidence",
+        "ch17 naive versus two-stage FDW transfer shape"
+      ],
+      "external_contract_ids": [
+        "analytics-export-v1"
+      ],
+      "externalization_trigger": "representative capacity evidence crosses a single-node or offline-replica boundary"
+    },
+    {
+      "id": "product-read-cache",
+      "owner": "shop-application-team",
+      "placement": "external-derived",
+      "system_of_record": "postgresql",
+      "state": "conditional",
+      "consistency": "cache version never supersedes newer PostgreSQL product state",
+      "freshness": "TTL and invalidation contract",
+      "evidence": [
+        "contract-only; no external cache L1 has been run"
+      ],
+      "external_contract_ids": [
+        "product-cache-v1"
+      ],
+      "externalization_trigger": "measured read amplification or latency justifies a cache"
+    },
+    {
+      "id": "order-event-delivery",
+      "owner": "shop-order-team",
+      "placement": "postgresql-outbox-plus-external-bus",
+      "system_of_record": "postgresql",
+      "state": "conditional",
+      "consistency": "business change and publication intent commit atomically; delivery is at-least-once",
+      "freshness": "publish lag SLO is pending",
+      "evidence": [
+        "ch12 transactional outbox behavior",
+        "contract-only; no event-bus L1 has been run"
+      ],
+      "external_contract_ids": [
+        "order-events-v1"
+      ],
+      "externalization_trigger": "another service needs durable asynchronous delivery or replay"
+    },
+    {
+      "id": "product-media-bytes",
+      "owner": "shop-catalog-team",
+      "placement": "external-object-storage",
+      "system_of_record": "split-by-domain",
+      "state": "accepted-boundary",
+      "consistency": "object bytes and PostgreSQL metadata agree by immutable identity and checksum",
+      "freshness": "visible only after upload and metadata finalization",
+      "evidence": [
+        "architecture contract; L1 object workflow is pending"
+      ],
+      "external_contract_ids": [
+        "product-media-v1"
+      ],
+      "externalization_trigger": "always external for authoritative media bytes"
+    }
+  ],
+  "topology": {
+    "primary_service": "pg-ha-standard",
+    "read_service": "pg-analytics-offline",
+    "logical_nodes": [
+      {
+        "role": "primary",
+        "count": 1,
+        "purpose": "authoritative writes and read-your-writes"
+      },
+      {
+        "role": "replica",
+        "count": 2,
+        "purpose": "HA candidates and reviewed read-only traffic"
+      },
+      {
+        "role": "offline",
+        "count": 1,
+        "purpose": "OLAP, ETL, and interactive slow reads with explicit lag"
+      }
+    ],
+    "failure_domains": "must be proven in chapter 19 rather than inferred from node count",
+    "distributed_sharding": "deferred; Citus requires a new ADR after chapter 26 evidence"
+  },
+  "security": {
+    "runtime_role": "pg36_app",
+    "owner_role": "pg36_owner NOLOGIN",
+    "administrator_role": "separate audited operator identity",
+    "public_object_creation": "revoked",
+    "external_secrets": "not stored in this repository blueprint",
+    "tenant_isolation": "must be selected and proven in chapter 23"
+  },
+  "observability": {
+    "service_signals": [
+      "availability and routing",
+      "transaction latency and errors",
+      "connections and queueing",
+      "locks and long transactions",
+      "CPU, memory, storage, temp, WAL, and replication lag",
+      "backup freshness and restore rehearsal",
+      "extension and schema version drift",
+      "derived-copy freshness and reconciliation"
+    ],
+    "slo_definition": "pending chapter 24",
+    "implementation": "pending chapter 25"
+  },
+  "external_contract_ids": [
+    "product-cache-v1",
+    "order-events-v1",
+    "product-media-v1",
+    "analytics-export-v1",
+    "external-search-projection-v1"
+  ],
+  "lower_volume_gate_ids": [
+    "ch19-deployment-baseline",
+    "ch20-ha",
+    "ch21-backup-restore",
+    "ch22-access-routing",
+    "ch23-security",
+    "ch24-governance",
+    "ch25-observability",
+    "ch26-capacity",
+    "ch27-tuning",
+    "ch28-vacuum",
+    "ch29-migration",
+    "ch30-upgrade",
+    "ch31-incident",
+    "ch32-pitr",
+    "ch33-failover-rebuild",
+    "ch34-overload",
+    "ch35-forensics",
+    "ch36-postmortem"
+  ],
+  "exit_paths": [
+    "Every derived cache, search, or analytical projection can be rebuilt from its named authority.",
+    "Extension-owned data has a portable export and restore path before production admission.",
+    "Service routing can return to PostgreSQL-only behavior while external consumers drain.",
+    "A Citus or specialized analytical adoption requires a separate reverse-migration rehearsal.",
+    "Database and object-storage authority are reconciled by stable identity and checksum before provider migration."
+  ],
+  "limitations": [
+    "This blueprint validates document relationships and current development fixtures; it does not deploy production infrastructure.",
+    "All service objectives remain proposals until the lower-volume chapters produce evidence.",
+    "The local database contains teaching schemas that are not all intended for one production cluster.",
+    "The loopback postgres_fdw lab and password_required=false are explicitly excluded from production admission.",
+    "Product names for cache, message bus, object storage, search, and lakehouse are deliberately undecided.",
+    "Citus and specialized OLAP remain conditional alternatives, not selected production components."
+  ]
+}

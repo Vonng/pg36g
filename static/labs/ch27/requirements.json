@@ -1,0 +1,68 @@
+{
+  "schema": "pg36-ch27-requirements-v1",
+  "chapter": 27,
+  "title": "精益求精：参数调优与资源治理",
+  "target": {
+    "environment": "pg36-l2-vagrant",
+    "cluster": "pg-test",
+    "primary": "pg-test-1",
+    "primary_address": "10.10.10.11",
+    "bastion": "10.10.10.10",
+    "database": "pg36_tuning",
+    "role": "dbuser_pg36tune",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false
+  },
+  "upstream": {
+    "capacity_summary": "../ch26/capacity-run.json",
+    "required_run_id": "6c44ebdb-2206-48c3-8089-d90fdff45204",
+    "required_findings": {
+      "production_sustainable_tps": null,
+      "all_exact_knee_known": false,
+      "all_temp_bytes": 0
+    }
+  },
+  "experiment": {
+    "risk": "L2-bounded-session-local-parameter-experiment",
+    "parameter": "plan_cache_mode",
+    "baseline": "auto",
+    "candidate": "force_generic_plan",
+    "scope": "benchmark sessions only through PGOPTIONS",
+    "persistent_configuration_change": false,
+    "dataset_scale": "M",
+    "scale_factor": 8,
+    "clients": 8,
+    "warmup_seconds": 5,
+    "measured_seconds": 12,
+    "paired_repetitions": 5,
+    "arrival_model": "closed-loop",
+    "protocol": "prepared",
+    "workload_mix": {
+      "read-product": 50,
+      "read-order": 30,
+      "place-order": 20
+    }
+  },
+  "safety": {
+    "allowed_mutations": [
+      "create marker-bound disposable database pg36_tuning",
+      "create marker-bound non-superuser login dbuser_pg36tune",
+      "load synthetic fixture",
+      "write only synthetic shopbench.order_live and inventory rows",
+      "set plan_cache_mode only inside benchmark sessions",
+      "drop only the exact marker-bound fixture after proving no unrelated sessions"
+    ],
+    "forbidden_mutations": [
+      "ALTER SYSTEM",
+      "Patroni DCS edit",
+      "postgresql.conf or postgresql.auto.conf edit",
+      "reload or restart",
+      "failover or switchover",
+      "statistics reset",
+      "cache drop",
+      "durability reduction",
+      "termination of unrelated sessions",
+      "production approval"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "pg36-ch23-tenant-contract-v1",
+  "context_parameter": "app.tenant_id",
+  "context_source": "an identity already authenticated and authorized by the application",
+  "forbidden_context_source": "an unverified tenant identifier supplied by the end user",
+  "transaction_sequence": [
+    "BEGIN",
+    "SET LOCAL ROLE pg36_ch23_runtime",
+    "SELECT set_config('app.tenant_id', $1, true)",
+    "execute all tenant SQL with bound parameters",
+    "COMMIT"
+  ],
+  "fail_closed_rules": [
+    "missing context returns no rows",
+    "empty context returns no rows",
+    "malformed UUID context raises an error",
+    "cross-tenant INSERT or UPDATE is rejected by WITH CHECK",
+    "a new transaction must establish role and tenant context again"
+  ],
+  "pooling_rule": "session-level SET is a counterexample; transaction-local role and tenant context are the supported contract",
+  "defense_in_depth": "RLS complements application authorization and object grants; it does not authenticate the end user or replace service-level policy"
+}

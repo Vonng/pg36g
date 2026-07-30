@@ -1,0 +1,216 @@
+{
+  "schema": "pg36-ch30-negative-cases-v1",
+  "cases": [
+    {
+      "id": "N01-old-major-is-not-17",
+      "document": "requirements",
+      "path": ["versions", "old_major"],
+      "operation": "set",
+      "value": 18
+    },
+    {
+      "id": "N02-upgrade-method-is-link",
+      "document": "requirements",
+      "path": ["execution", "upgrade_method"],
+      "operation": "set",
+      "value": "link"
+    },
+    {
+      "id": "N03-production-data-is-permitted",
+      "document": "requirements",
+      "path": ["risk", "production_data_permitted"],
+      "operation": "set",
+      "value": true
+    },
+    {
+      "id": "N04-cleaned-state-is-missing",
+      "document": "contract",
+      "path": ["states", 11],
+      "operation": "delete"
+    },
+    {
+      "id": "N05-preflight-target-drift",
+      "document": "preflight",
+      "path": ["target"],
+      "operation": "set",
+      "value": "production"
+    },
+    {
+      "id": "N06-preflight-old-major-drift",
+      "document": "preflight",
+      "path": ["environment", "old_major"],
+      "operation": "set",
+      "value": 18
+    },
+    {
+      "id": "N07-preflight-new-major-drift",
+      "document": "preflight",
+      "path": ["environment", "new_major"],
+      "operation": "set",
+      "value": 17
+    },
+    {
+      "id": "N08-managed-host-cluster-drift",
+      "document": "preflight",
+      "path": ["environment", "managed_host", "cluster_name"],
+      "operation": "set",
+      "value": "pg-prod"
+    },
+    {
+      "id": "N09-managed-host-is-replica",
+      "document": "preflight",
+      "path": ["environment", "managed_host", "in_recovery"],
+      "operation": "set",
+      "value": true
+    },
+    {
+      "id": "N10-C-locale-unavailable",
+      "document": "preflight",
+      "path": ["environment", "locale_c_available"],
+      "operation": "set",
+      "value": false
+    },
+    {
+      "id": "N11-insufficient-temp-space",
+      "document": "preflight",
+      "path": ["environment", "tmp_free_bytes"],
+      "operation": "set",
+      "value": 1
+    },
+    {
+      "id": "N12-stale-fixture-root-exists",
+      "document": "preflight",
+      "path": ["environment", "stale_fixture_roots"],
+      "operation": "set",
+      "value": ["/tmp/pg36-ch30-remote-stale"]
+    },
+    {
+      "id": "N13-temp-postmaster-already-running",
+      "document": "preflight",
+      "path": ["environment", "live_temp_postmasters"],
+      "operation": "set",
+      "value": [{"pid": 42}]
+    },
+    {
+      "id": "N14-preflight-claims-production-touch",
+      "document": "preflight",
+      "path": ["risk", "production_data_touched"],
+      "operation": "set",
+      "value": true
+    },
+    {
+      "id": "N15-production-gate-preapproved",
+      "document": "preflight",
+      "path": ["decision", "production_ch30_gate"],
+      "operation": "set",
+      "value": "approved"
+    },
+    {
+      "id": "N16-preflight-run-id-unbound",
+      "document": "upgrade",
+      "path": ["preflight_run_id"],
+      "operation": "set",
+      "value": "different-preflight"
+    },
+    {
+      "id": "N17-upgrade-cleaned-state-missing",
+      "document": "upgrade",
+      "path": ["states", 11],
+      "operation": "delete"
+    },
+    {
+      "id": "N18-external-listener-claimed",
+      "document": "upgrade",
+      "path": ["environment", "unix_socket_only"],
+      "operation": "set",
+      "value": false
+    },
+    {
+      "id": "N19-managed-host-changed",
+      "document": "upgrade",
+      "path": ["environment", "host_after", "system_identifier"],
+      "operation": "set",
+      "value": 1
+    },
+    {
+      "id": "N20-source-row-count-drift",
+      "document": "upgrade",
+      "path": ["source", "baseline", "manifest", "rows"],
+      "operation": "set",
+      "value": 9999
+    },
+    {
+      "id": "N21-collation-gate-did-not-block",
+      "document": "upgrade",
+      "path": ["collation_gate", "release_before"],
+      "operation": "set",
+      "value": "allowed"
+    },
+    {
+      "id": "N22-injected-collation-not-mismatched",
+      "document": "upgrade",
+      "path": ["collation_gate", "state_before", "mismatch"],
+      "operation": "set",
+      "value": false
+    },
+    {
+      "id": "N23-collation-repair-order-reversed",
+      "document": "upgrade",
+      "path": ["collation_gate", "repair_order"],
+      "operation": "set",
+      "value": [
+        "ALTER COLLATION app.en_numeric REFRESH VERSION",
+        "REINDEX INDEX app.orders_order_code_key"
+      ]
+    },
+    {
+      "id": "N24-collation-still-mismatched",
+      "document": "upgrade",
+      "path": ["collation_gate", "state_after", "mismatch"],
+      "operation": "set",
+      "value": true
+    },
+    {
+      "id": "N25-incompatible-check-returned-success",
+      "document": "upgrade",
+      "path": ["incompatible_target", "check_returncode"],
+      "operation": "set",
+      "value": 0
+    },
+    {
+      "id": "N26-upgrade-reported-link-mode",
+      "document": "upgrade",
+      "path": ["upgrade", "method"],
+      "operation": "set",
+      "value": "link"
+    },
+    {
+      "id": "N27-manifest-equality-is-false",
+      "document": "upgrade",
+      "path": ["upgrade", "manifest_equal_before_writes"],
+      "operation": "set",
+      "value": false
+    },
+    {
+      "id": "N28-target-wrote-before-rollback-proof",
+      "document": "upgrade",
+      "path": ["rollback", "target_only_writes_before_proof"],
+      "operation": "set",
+      "value": 1
+    },
+    {
+      "id": "N29-forward-boundary-claims-easy-rollback",
+      "document": "upgrade",
+      "path": ["forward", "rollback_requires_reconciliation"],
+      "operation": "set",
+      "value": false
+    },
+    {
+      "id": "N30-remote-root-still-exists",
+      "document": "remote_cleanup",
+      "path": ["remote_root_absent"],
+      "operation": "set",
+      "value": false
+    }
+  ]
+}

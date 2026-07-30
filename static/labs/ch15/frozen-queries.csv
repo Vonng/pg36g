@@ -1,0 +1,9 @@
+query_id,raw_query,category_filter,embedding,intent
+q01,wireless headphones,audio,"[0.9,0,0,0]",exact product words
+q02,wireles hedphones,audio,"[0.9,0,0,0]",two spelling errors
+q03,music on the go,audio,"[0.9,0,0,0]",descriptive audio intent
+q04,coffee bean grinder,kitchen,"[0,0.9,0,0]",exact product and ingredient
+q05,make espresso at home,kitchen,"[0,0.9,0,0]",descriptive kitchen intent
+q06,trail hydration,outdoor,"[0,0,0.9,0]",cross-title description terms
+q07,postgre databse tuning,books,"[0,0,0,0.9]",database intent with spelling errors
+q08,semantic nearest neighbor,books,"[0.25,0,0,0.82]",semantic retrieval terminology

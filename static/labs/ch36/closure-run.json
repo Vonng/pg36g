@@ -1,0 +1,53 @@
+{
+  "decision": {
+    "production_approval": null,
+    "production_ch36_gate": "pending",
+    "roadmap_status": "reference-proposal-requires-local-approval"
+  },
+  "evidence": {
+    "capability_chapters_covered": 36,
+    "declared_counterexamples": 36,
+    "input_evidence_files_hash_bound": 4,
+    "live_mutants_rejected": 36,
+    "source_files_hash_bound": 12
+  },
+  "generated_at": "2026-07-30T04:53:15.383831Z",
+  "input": {
+    "chapters": [
+      32,
+      33,
+      34,
+      35
+    ],
+    "incident_count": 4,
+    "kind": "frozen-public-evidence"
+  },
+  "learner_assessment": {
+    "assessment_required": true,
+    "automatic_certification": false,
+    "status": "not-assessed"
+  },
+  "portfolio": {
+    "cross_incident_themes": 7,
+    "production_gaps_confirmed": 0,
+    "proposed_actions": 12,
+    "roadmap_phases": [
+      "day-0-30",
+      "day-31-60",
+      "day-61-90"
+    ]
+  },
+  "run_id": "91c4464b-89f7-4145-9708-f07256d747ce",
+  "safety": {
+    "backlog_actions_executed": 0,
+    "database_connections": 0,
+    "external_dispatch_count": 0,
+    "personal_data_exported": false,
+    "production_mutations": 0,
+    "secret_values_exported": 0,
+    "source_evidence_overwritten": false,
+    "ssh_connections": 0
+  },
+  "schema": "pg36-ch36-public-summary-v1",
+  "status": "completed"
+}

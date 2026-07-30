@@ -1,0 +1,132 @@
+{
+  "schema": "pg36-ch35-forensics-requirements-v1",
+  "chapter": 35,
+  "target": {
+    "id": "pg36-l2-vagrant/pg-test",
+    "ssh_user": "vagrant",
+    "cluster": "pg-test",
+    "managed_primary": "pg-test-1",
+    "managed_primary_address": "10.10.10.11",
+    "observer": "pg-test-3",
+    "observer_address": "10.10.10.13",
+    "postgresql_major": 18,
+    "postgresql_observed": "18.4",
+    "pig_observed": "1.5.1",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false
+  },
+  "exercise": {
+    "scenario_count": 2,
+    "random_order": true,
+    "blind_classification": true,
+    "routes": [
+      "RESTORE_FROM_KNOWN_GOOD_COPY",
+      "REINDEX_AND_REFRESH_COLLATION"
+    ],
+    "unknown_route": "STOP_AND_ESCALATE",
+    "wrong_action_execution": false
+  },
+  "disposable_cluster": {
+    "host": "pg-test-3",
+    "address": "10.10.10.13",
+    "root_prefix": "/tmp/pg36-ch35-forensics",
+    "port": 55445,
+    "listen_addresses": "",
+    "unix_socket_permissions": "0700",
+    "data_checksums": true,
+    "allow_system_table_mods": true,
+    "exact_cleanup_required": true
+  },
+  "fixture": {
+    "table": "public.pg36_ch35_accounts",
+    "primary_key": "id",
+    "index": "public.pg36_ch35_code_idx",
+    "collation": "public.pg36_ch35_icu",
+    "row_count": 12000,
+    "payload_bytes_per_row": 384,
+    "minimum_heap_blocks": 8,
+    "business_invariants": [
+      "row_count",
+      "sum_id",
+      "sum_balance",
+      "ordered_content_digest"
+    ]
+  },
+  "physical_case": {
+    "relation_kind": "heap",
+    "offline_mutation_only": true,
+    "mutated_block": 2,
+    "byte_offset_within_block": 512,
+    "mutation": "xor-one-bit",
+    "minimum_bad_checksums": 1,
+    "online_scan_must_fail": true,
+    "ignore_checksum_failure_permitted": false,
+    "zero_damaged_pages_permitted": false,
+    "recovery": "fresh-working-copy-from-known-good-stopped-snapshot"
+  },
+  "collation_case": {
+    "provider": "icu",
+    "metadata_mutation_only": true,
+    "injected_version_prefix": "0.pg36-ch35-",
+    "checksum_failure_expected": false,
+    "amcheck_before_repair_expected": "pass",
+    "repair_order": [
+      "reindex exact dependent index on working copy",
+      "refresh exact collation version metadata"
+    ],
+    "original_evidence_copy_preserved_until_cleanup": true
+  },
+  "risk": {
+    "managed_capture": "L0-read-only",
+    "exercise": "L3-disposable-clones-only",
+    "managed_postgresql_mutation_permitted": false,
+    "managed_pgdata_mutation_permitted": false,
+    "managed_service_change_permitted": false,
+    "managed_route_change_permitted": false,
+    "managed_reset_host_permitted": false,
+    "unique_source_mutation_permitted": false,
+    "manual_pg_wal_deletion_permitted": false,
+    "ignore_checksum_failure_permitted": false,
+    "zero_damaged_pages_permitted": false,
+    "pg_resetwal_permitted": false
+  },
+  "acceptance": {
+    "physical_case_must_be_detected_offline": true,
+    "physical_case_must_not_be_repaired_in_place": true,
+    "physical_recovery_must_match_all_business_invariants": true,
+    "collation_case_must_have_checksum_clean_storage": true,
+    "collation_case_must_reindex_before_refresh": true,
+    "collation_recovery_must_match_all_business_invariants": true,
+    "original_case_copies_preserved_until_final_cleanup": true,
+    "managed_topology_unchanged": true,
+    "exact_cleanup_required": true,
+    "production_ch35_gate": "pending"
+  },
+  "exceptions": [
+    {
+      "id": "EX35-DISPOSABLE-ONLY",
+      "reason": "all byte and system-catalog mutations occur in private disposable clones",
+      "claim_blocked": "repairing a unique production data directory"
+    },
+    {
+      "id": "EX35-CONTROLLED-BITFLIP",
+      "reason": "one known heap block byte is flipped only while its clone is stopped",
+      "claim_blocked": "real storage-controller, memory, or filesystem fault behavior"
+    },
+    {
+      "id": "EX35-COLLATION-METADATA",
+      "reason": "the ICU version mismatch is an explicit catalog metadata injection",
+      "claim_blocked": "actual operating-system or ICU semantic drift"
+    },
+    {
+      "id": "EX35-NO-DANGEROUS-GUC",
+      "reason": "ignore_checksum_failure and zero_damaged_pages remain off",
+      "claim_blocked": "best-effort extraction from unreadable pages"
+    },
+    {
+      "id": "EX35-NO-MANAGED-RESET",
+      "reason": "reset:host is documented as a destructive production-gated plan and is not executed",
+      "claim_blocked": "Pigsty host rebuild duration or production suitability"
+    }
+  ]
+}

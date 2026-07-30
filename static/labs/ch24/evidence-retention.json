@@ -1,0 +1,157 @@
+{
+  "schema": "pg36-ch24-evidence-retention-v1",
+  "service_id": "pg36_shop",
+  "policy_status": "teaching-reference-requires-production-legal-review",
+  "production_approval": false,
+  "principles": {
+    "evidence_is_not_a_secret_store": true,
+    "minimum_necessary_collection": true,
+    "immutable_manifest": true,
+    "hash_algorithm": "sha256",
+    "time_source_recorded": true,
+    "access_is_role_based": true,
+    "legal_hold_overrides_scheduled_deletion": true,
+    "deletion_is_audited": true
+  },
+  "categories": [
+    {
+      "id": "configuration",
+      "examples": [
+        "reviewed inventory projection",
+        "rendered configuration hash",
+        "version and topology snapshot"
+      ],
+      "retention_days": 400,
+      "classification": "internal",
+      "access_roles": [
+        "database-platform-owner",
+        "security-privacy-duty"
+      ],
+      "secret_values_permitted": false,
+      "integrity_manifest_required": true
+    },
+    {
+      "id": "change",
+      "examples": [
+        "request and approval identities",
+        "artifact hash",
+        "execution and verification result"
+      ],
+      "retention_days": 400,
+      "classification": "confidential-operational",
+      "access_roles": [
+        "shop-service-owner",
+        "database-platform-owner",
+        "security-privacy-duty"
+      ],
+      "secret_values_permitted": false,
+      "integrity_manifest_required": true
+    },
+    {
+      "id": "access",
+      "examples": [
+        "role attributes",
+        "grant decision",
+        "authentication outcome without verifier"
+      ],
+      "retention_days": 400,
+      "classification": "confidential-security",
+      "access_roles": [
+        "security-privacy-duty",
+        "database-platform-owner"
+      ],
+      "secret_values_permitted": false,
+      "integrity_manifest_required": true
+    },
+    {
+      "id": "recovery",
+      "examples": [
+        "backup identity",
+        "WAL coverage",
+        "restore timings",
+        "application verification"
+      ],
+      "retention_days": 400,
+      "classification": "confidential-operational",
+      "access_roles": [
+        "database-platform-owner",
+        "shop-data-owner"
+      ],
+      "secret_values_permitted": false,
+      "integrity_manifest_required": true
+    },
+    {
+      "id": "slo_and_alert",
+      "examples": [
+        "eligible and good event aggregates",
+        "error budget decision",
+        "alert delivery test"
+      ],
+      "retention_days": 400,
+      "classification": "internal",
+      "access_roles": [
+        "shop-service-owner",
+        "database-platform-owner"
+      ],
+      "secret_values_permitted": false,
+      "integrity_manifest_required": true
+    },
+    {
+      "id": "incident",
+      "examples": [
+        "timeline",
+        "decision log",
+        "impact aggregate",
+        "preserved technical evidence"
+      ],
+      "retention_days": 730,
+      "classification": "confidential-incident",
+      "access_roles": [
+        "shop-service-owner",
+        "shop-data-owner",
+        "database-platform-owner",
+        "security-privacy-duty"
+      ],
+      "secret_values_permitted": false,
+      "integrity_manifest_required": true
+    }
+  ],
+  "redaction": {
+    "forbidden_material": [
+      "cleartext password",
+      "SCRAM verifier",
+      "private key",
+      "session token",
+      "raw connection URI with credentials",
+      "full customer row",
+      "unbounded SQL bind values"
+    ],
+    "preferred_substitutes": [
+      "secret version identifier",
+      "certificate fingerprint",
+      "role name and nonsecret attributes",
+      "aggregate count",
+      "SQLSTATE",
+      "artifact hash",
+      "synthetic correlation token"
+    ],
+    "personal_data": "collect only fields needed to establish authority and accountability; use durable workforce identity rather than free-form narrative",
+    "raw_sql_policy": "normalize or fingerprint statements; retain values only through separately authorized incident evidence handling"
+  },
+  "chain_of_custody": [
+    "record source, collector, UTC timestamp, target identity, and tool version",
+    "write an append-only or object-locked artifact when required by the threat model",
+    "hash each artifact and a canonical manifest",
+    "record every access, disclosure, hold, export, and deletion",
+    "verify hashes before relying on evidence in a decision",
+    "preserve the original and derive redacted review copies"
+  ],
+  "production_decisions_pending": [
+    "legal and regulatory retention periods",
+    "approved evidence store and object-lock policy",
+    "workforce identity source",
+    "cross-border and privacy disclosure rules",
+    "incident legal-hold authority",
+    "secure deletion verification"
+  ]
+}

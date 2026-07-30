@@ -1,0 +1,103 @@
+{
+  "schema": "pg36-ch25-observability-requirements-v1",
+  "release": "1.0-sandbox",
+  "target": {
+    "id": "pg36-l2-vagrant/pg-test",
+    "service_id": "pg36_shop",
+    "environment": "l2-sandbox",
+    "bastion": "10.10.10.10",
+    "database_primary": "10.10.10.11",
+    "expected_database_hostname": "pg-test-1",
+    "expected_cluster_name": "pg-test",
+    "production_data": false,
+    "production_traffic": false,
+    "production_slo_claimed": false
+  },
+  "upstream_governance": {
+    "chapter": "ch24",
+    "required_files": [
+      "observation-contract.json",
+      "alert-candidates.json",
+      "slo-policy.json",
+      "governance-run.json"
+    ],
+    "required_run_id": "34909737-527a-460c-927c-d9d71c93aa13",
+    "production_gate_required": "pending"
+  },
+  "required_artifacts": [
+    "signal-contract.json",
+    "recording-rules.yml",
+    "alert-rules.yml",
+    "rule-tests.yml",
+    "alertmanager-sandbox.yml",
+    "route-tests.json",
+    "diagnostic-pack-contract.json",
+    "coverage-matrix.json",
+    "negative-cases.json"
+  ],
+  "required_live_surfaces": [
+    "VictoriaMetrics",
+    "VictoriaLogs",
+    "VictoriaTraces",
+    "VMAlert",
+    "Alertmanager",
+    "pg_exporter",
+    "Patroni",
+    "PostgreSQL"
+  ],
+  "accepted_alerts_from_ch24": [
+    "PG36ShopAvailabilityFastBurn",
+    "PG36ShopAvailabilitySlowBurn",
+    "PG36ShopAvailabilityBudgetTicket",
+    "PG36ShopCorrectnessMismatch",
+    "PG36ShopFreshnessFastBurn",
+    "PG36ShopCapacityHorizon",
+    "PG36MonitoringPathBroken"
+  ],
+  "exercise": {
+    "live_capture_risk": "L0",
+    "isolated_rule_test_risk": "L1-ephemeral",
+    "live_capture_mutation": "none",
+    "isolated_mutation": "temporary files and loopback-only test processes on the l2 sandbox bastion",
+    "database_mutation": "none",
+    "live_rule_deployment": false,
+    "live_alert_submission": false,
+    "real_notification": false,
+    "live_silence_creation": false,
+    "remote_cleanup_scope": "/tmp/pg36-ch25.* only"
+  },
+  "required_claims_not_made": [
+    "application SLI metrics currently exist",
+    "chapter rules are deployed to the live VMAlert",
+    "a real pager or ticket integration received a notification",
+    "the sandbox baseline is a production SLO measurement",
+    "a dashboard alone proves a root cause",
+    "zero replay distance proves read-your-writes",
+    "a successful backup job proves restore readiness",
+    "a nonzero cumulative failure counter proves an active failure",
+    "chapter 25 has production approval"
+  ],
+  "hard_rejections": [
+    "treat missing SLI data as healthy",
+    "attach customer, tenant, order, raw SQL, or error text as metric labels",
+    "page on a component symptom without user, integrity, durability, or observation-path impact",
+    "page on CPU utilization alone",
+    "page on replica WAL distance alone",
+    "page on a historical cumulative archive failure count alone",
+    "route a proposed rule as if governance already accepted it",
+    "let a metamonitoring alert inhibit an independently observed user symptom",
+    "let any alert inhibit a correctness mismatch",
+    "put a recording rule and its dependent alert in one VMAlert group",
+    "use a real receiver in the sandbox route exercise",
+    "send synthetic alerts to the live Alertmanager",
+    "export query text, bind values, passwords, tokens, client addresses, or log bodies into evidence",
+    "run EXPLAIN ANALYZE, pg_stat_statements_reset, pg_stat_reset, VACUUM, CHECKPOINT, failover, restore, or load generation during capture",
+    "identify a database target only by a local SSH alias",
+    "publish private evidence with group or world access",
+    "interpret disabled timing instrumentation as measured zero",
+    "claim a current incident from one instantaneous sample",
+    "claim production readiness while any production gate remains pending"
+  ],
+  "production_ch25_gate": "pending",
+  "production_approval": false
+}

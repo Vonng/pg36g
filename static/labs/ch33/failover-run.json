@@ -1,0 +1,102 @@
+{
+  "captured_at": "2026-07-30T03:58:25.030027Z",
+  "claims_not_made": [
+    "host power loss, storage failure, or asymmetric network partition was injected",
+    "the single-member DCS proves quorum availability",
+    "hardware watchdog fencing was exercised",
+    "asynchronous replication guarantees zero production RPO",
+    "managed patronictl reinit was executed",
+    "sandbox timings are a production RTO SLO"
+  ],
+  "client": {
+    "acknowledged": 130,
+    "acknowledged_missing": 0,
+    "attempts": 160,
+    "backend_attribution": "timeline-plus-patroni-topology;inet_server_addr-is-null-on-unix-socket-route",
+    "duplicate_tokens": 0,
+    "maximum_ack_gap_ms": 6211.692334,
+    "measurement_resolution_ms": 200.0,
+    "new_primary_acknowledged": 112,
+    "old_timeline_acknowledged": 18,
+    "persisted_rows": 130,
+    "unknown": 30,
+    "unreconciled_unknown_outcomes": 0
+  },
+  "dcs_tabletop": {
+    "decision_only": true,
+    "drawn_scenario": "primary-isolated-from-dcs-and-one-replica",
+    "live_dcs_fault_injected": false,
+    "live_network_partition_injected": false,
+    "scenario_library": 6
+  },
+  "decision": {
+    "production_approval": null,
+    "production_ch33_gate": "pending",
+    "result": "controlled-process-failover-rejoin-and-disposable-rebuild-demonstrated"
+  },
+  "environment": {
+    "cluster": "pg-test",
+    "dcs_kind": "etcd3",
+    "dcs_members": 1,
+    "failsafe_mode": true,
+    "members": 3,
+    "patroni": "4.1.3",
+    "pig": "1.5.1",
+    "postgresql": "18.4",
+    "synchronous_mode": false,
+    "watchdog_mode": "off"
+  },
+  "managed_failover": {
+    "baseline_restored_to": "pg-test-1",
+    "candidate_forced": false,
+    "control_plane_failover_ms": 4535.88275,
+    "eligible_candidates": [
+      "pg-test-2",
+      "pg-test-3"
+    ],
+    "failover_timeline": 18,
+    "fault": "controlled-patroni-service-stop",
+    "fence_from_action_start_ms": 1817.321125,
+    "initial_timeline": 17,
+    "old_primary": "pg-test-1",
+    "old_primary_rejoin_ms": 2526.655959,
+    "old_primary_rejoined_streaming": true,
+    "planned_baseline_restore_ms": 2832.318916,
+    "restored_timeline": 19,
+    "selected_candidate": "pg-test-3",
+    "service_stop_ms": 1582.44425
+  },
+  "rebuild": {
+    "fresh_basebackup_ms": 228.115274,
+    "fresh_basebackup_streaming": true,
+    "pg_rewind_ms": 245.34292,
+    "postgresql": "18.4 (Ubuntu 18.4-1.pgdg24.04+1)",
+    "rewind_new_branch_markers": true,
+    "rewind_old_divergent_marker": false,
+    "rewind_target_streaming": true,
+    "same_system_identifier": true,
+    "temporary_root_removed": true,
+    "timeline_diverged": true
+  },
+  "run_id": "4c87f86d-d0ea-4c63-9202-1653b5ad524a",
+  "safety": {
+    "dcs_changed": false,
+    "external_dispatch_count": 0,
+    "fixture_schema_removed": true,
+    "hardware_fence_claimed": false,
+    "managed_pgdata_deleted": false,
+    "managed_reinit_executed": false,
+    "network_partition_injected": false,
+    "old_primary_process_fenced_before_acceptance": true,
+    "raw_patroni_log_exported": false,
+    "route_changed": false,
+    "secret_values_exported": 0
+  },
+  "schema": "pg36-ch33-reference-run-v1",
+  "target": "pg36-l2-vagrant/pg-test",
+  "validation": {
+    "declared_counterexamples_rejected": 33,
+    "live_evidence_mutants_rejected": 33,
+    "source_files_hash_bound": 15
+  }
+}

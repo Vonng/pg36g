@@ -1,0 +1,16 @@
+flowchart LR
+  H["Pigsty pg-meta host<br/>identity probe only"]
+  O["Private PG 17 cluster<br/>C / checksums on"]
+  B["Rejected PG 18 target<br/>checksums off"]
+  N["Accepted PG 18 target<br/>C / checksums on"]
+  G["Release gates<br/>collation, manifest, amcheck"]
+  R["Rollback proof<br/>old starts before new writes"]
+  F["Forward canary<br/>reconciliation boundary"]
+
+  H -. "no managed-cluster mutation" .-> O
+  O -->|"stale collation blocked, repaired"| G
+  O -->|"pg_upgrade --check rejected"| B
+  O -->|"pg_upgrade --copy"| N
+  N --> G
+  G --> R
+  R --> F

@@ -1,0 +1,238 @@
+{
+  "schema": "pg36-service-catalog-v1",
+  "release": "1.6-proposal",
+  "status": "proposal-not-a-service-commitment",
+  "owner": "database-platform-team",
+  "review_cycle_days": 90,
+  "extension_bundles": [
+    {
+      "id": "core",
+      "status": "accepted",
+      "extensions": [
+        {
+          "name": "plpgsql",
+          "version_policy": "bundled-with-target-postgresql",
+          "lifecycle": "accepted"
+        }
+      ],
+      "gates": [
+        "target PostgreSQL minor is pinned",
+        "restore and upgrade paths are rehearsed"
+      ]
+    },
+    {
+      "id": "search-accepted",
+      "status": "accepted",
+      "extensions": [
+        {
+          "name": "pg_trgm",
+          "version_policy": "1.6 on the validated PostgreSQL 18.4 fixture",
+          "lifecycle": "accepted"
+        }
+      ],
+      "gates": [
+        "query quality golden passes",
+        "index build, backup, restore, and upgrade are rehearsed"
+      ]
+    },
+    {
+      "id": "vector-pilot",
+      "status": "pilot",
+      "extensions": [
+        {
+          "name": "vector",
+          "version_policy": "0.8.4 on the validated PostgreSQL 18.4 fixture",
+          "lifecycle": "pilot"
+        }
+      ],
+      "gates": [
+        "model identity and embedding dimension are pinned",
+        "exact quality golden and ANN operational benchmark both pass",
+        "backup, restore, replica, and upgrade behavior are rehearsed"
+      ]
+    },
+    {
+      "id": "spatiotemporal-conditional",
+      "status": "conditional",
+      "extensions": [
+        {
+          "name": "btree_gist",
+          "version_policy": "1.8 on the validated PostgreSQL 18.4 fixture",
+          "lifecycle": "conditional"
+        },
+        {
+          "name": "postgis",
+          "version_policy": "3.6.4 on the validated PostgreSQL 18.4 fixture",
+          "lifecycle": "conditional"
+        }
+      ],
+      "gates": [
+        "canonical SRID and time semantics are documented",
+        "packages are identical on every L1 node",
+        "spatial backup, restore, replica, and major-upgrade rehearsals pass"
+      ]
+    },
+    {
+      "id": "federation-lab",
+      "status": "lab-only",
+      "extensions": [
+        {
+          "name": "postgres_fdw",
+          "version_policy": "1.2 on the validated PostgreSQL 18.4 fixture",
+          "lifecycle": "lab-only"
+        }
+      ],
+      "gates": [
+        "not admitted to a production offering by this proposal",
+        "production identity must not use password_required=false"
+      ]
+    }
+  ],
+  "offerings": [
+    {
+      "id": "pg-dev",
+      "status": "proposal",
+      "environment": "development-test",
+      "service_owner": "database-platform-team",
+      "consumer_owner_required": true,
+      "topology": "single PostgreSQL instance without HA commitment",
+      "service_objectives": {
+        "availability_target": "best-effort",
+        "rpo_seconds": null,
+        "rto_minutes": null,
+        "freshness_seconds": 0
+      },
+      "isolation": "database or schema according to trust boundary",
+      "backup_class": "optional-explicit",
+      "allowed_extension_bundles": [
+        "core",
+        "search-accepted",
+        "vector-pilot",
+        "spatiotemporal-conditional",
+        "federation-lab"
+      ],
+      "quotas": {
+        "connections": "declared-per-consumer",
+        "storage": "declared-per-database",
+        "temporary_files": "bounded-per-role",
+        "statement_time": "bounded-per-role"
+      },
+      "lifecycle": {
+        "request": "ticket-or-pull-request",
+        "expiry": "required",
+        "decommission": "export-if-required-then-exact-remove"
+      }
+    },
+    {
+      "id": "pg-ha-standard",
+      "status": "proposal",
+      "environment": "production",
+      "service_owner": "database-platform-team",
+      "consumer_owner_required": true,
+      "topology": "primary plus two replicas across reviewed failure domains",
+      "service_objectives": {
+        "availability_target": "99.9%-proposal",
+        "rpo_seconds": 60,
+        "rto_minutes": 30,
+        "freshness_seconds": 0
+      },
+      "isolation": "dedicated database by default; dedicated cluster when risk gates require it",
+      "backup_class": "continuous-wal-plus-full-differential",
+      "allowed_extension_bundles": [
+        "core",
+        "search-accepted",
+        "spatiotemporal-conditional"
+      ],
+      "exception_bundles": [
+        "vector-pilot"
+      ],
+      "quotas": {
+        "connections": "capacity-model-required",
+        "storage": "forecast-and-alert-required",
+        "temporary_files": "bounded-per-role",
+        "statement_time": "bounded-per-workload-class"
+      },
+      "lifecycle": {
+        "request": "service-owner-approved-change",
+        "expiry": "annual-ownership-review",
+        "decommission": "backup-retention-and-data-erasure-evidence"
+      }
+    },
+    {
+      "id": "pg-ha-critical",
+      "status": "proposal",
+      "environment": "production",
+      "service_owner": "database-platform-team",
+      "consumer_owner_required": true,
+      "topology": "dedicated HA cluster with synchronous policy selected from failure model",
+      "service_objectives": {
+        "availability_target": "99.95%-proposal",
+        "rpo_seconds": 0,
+        "rto_minutes": 10,
+        "freshness_seconds": 0,
+        "scope_note": "zero RPO applies only to the explicitly rehearsed failure domain"
+      },
+      "isolation": "dedicated cluster",
+      "backup_class": "continuous-wal-plus-cross-domain-copy",
+      "allowed_extension_bundles": [
+        "core",
+        "search-accepted"
+      ],
+      "exception_bundles": [
+        "spatiotemporal-conditional",
+        "vector-pilot"
+      ],
+      "quotas": {
+        "connections": "hard-budget-and-overload-runbook",
+        "storage": "forecast-with-failure-and-upgrade-headroom",
+        "temporary_files": "deny-by-default-then-exception",
+        "statement_time": "workload-class-specific"
+      },
+      "lifecycle": {
+        "request": "architecture-and-risk-approval",
+        "expiry": "quarterly-objective-and-owner-review",
+        "decommission": "dual-approval-with-recovery-evidence"
+      }
+    },
+    {
+      "id": "pg-analytics-offline",
+      "status": "proposal",
+      "environment": "production-read-only-dependent-service",
+      "service_owner": "database-platform-team",
+      "consumer_owner_required": true,
+      "topology": "offline replica attached to a source HA cluster",
+      "service_objectives": {
+        "availability_target": "derived-from-source-with-separate-query-slo",
+        "rpo_seconds": null,
+        "rto_minutes": 60,
+        "freshness_seconds": 60,
+        "scope_note": "not a source of truth and not a read-your-writes endpoint"
+      },
+      "isolation": "dedicated replica resources and analytics role",
+      "backup_class": "source-cluster-policy",
+      "allowed_extension_bundles": [
+        "core",
+        "search-accepted",
+        "spatiotemporal-conditional"
+      ],
+      "quotas": {
+        "connections": "bounded-analytics-pool",
+        "storage": "inherits-source-plus-index-headroom",
+        "temporary_files": "bounded-per-role",
+        "statement_time": "batch-and-interactive-classes"
+      },
+      "lifecycle": {
+        "request": "source-owner-and-platform-approval",
+        "expiry": "quarterly-workload-review",
+        "decommission": "drain-clients-then-remove-replica"
+      }
+    }
+  ],
+  "limitations": [
+    "Every objective is a draft target, not an achieved SLO or contractual commitment.",
+    "Topology names do not prove failure-domain independence, routing, backup, restore, or failover.",
+    "Extension admission is version-, operating-system-, architecture-, and service-tier-specific.",
+    "The catalog does not replace threat modeling, data classification, capacity testing, or consumer ownership.",
+    "Pigsty L1 validation is intentionally outside this static catalog."
+  ]
+}

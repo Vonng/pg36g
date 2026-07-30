@@ -1,0 +1,150 @@
+{
+  "schema": "pg36-ch23-threat-model-v1",
+  "scope": "one synthetic two-tenant application on the non-production pg-test cluster",
+  "assets": [
+    {
+      "asset": "tenant rows",
+      "security_properties": [
+        "confidentiality",
+        "integrity",
+        "tenant isolation"
+      ]
+    },
+    {
+      "asset": "login and certificate credentials",
+      "security_properties": [
+        "confidentiality",
+        "revocability",
+        "attributable use"
+      ]
+    },
+    {
+      "asset": "role graph and object ownership",
+      "security_properties": [
+        "least privilege",
+        "controlled change"
+      ]
+    },
+    {
+      "asset": "audit and connection evidence",
+      "security_properties": [
+        "integrity",
+        "retention",
+        "restricted access"
+      ]
+    }
+  ],
+  "actors": [
+    {
+      "actor": "end user",
+      "trusted_for": [
+        "presenting an application identity"
+      ],
+      "not_trusted_for": [
+        "choosing database tenant context"
+      ]
+    },
+    {
+      "actor": "application runtime",
+      "trusted_for": [
+        "binding authenticated identity to one transaction"
+      ],
+      "not_trusted_for": [
+        "DDL",
+        "ownership",
+        "cross-tenant access"
+      ]
+    },
+    {
+      "actor": "migration pipeline",
+      "trusted_for": [
+        "approved object changes"
+      ],
+      "not_trusted_for": [
+        "routine serving traffic",
+        "credential delegation"
+      ]
+    },
+    {
+      "actor": "database operator",
+      "trusted_for": [
+        "break-glass administration"
+      ],
+      "not_trusted_for": [
+        "unrecorded emergency access"
+      ]
+    },
+    {
+      "actor": "platform automation",
+      "trusted_for": [
+        "rendering declared state",
+        "converging nodes"
+      ],
+      "not_trusted_for": [
+        "proving application authorization semantics"
+      ]
+    },
+    {
+      "actor": "third-party extension or backup consumer",
+      "trusted_for": [],
+      "not_trusted_for": [
+        "receiving unrestricted secrets or tenant data"
+      ]
+    }
+  ],
+  "trust_crossings": [
+    {
+      "from": "client",
+      "to": "service endpoint",
+      "must_prove": [
+        "server identity",
+        "transport encryption",
+        "allowed source"
+      ]
+    },
+    {
+      "from": "service endpoint",
+      "to": "PgBouncer",
+      "must_prove": [
+        "client authentication",
+        "pool mode",
+        "session-state contract"
+      ]
+    },
+    {
+      "from": "authenticated login",
+      "to": "effective database role",
+      "must_prove": [
+        "SET membership",
+        "no implicit inheritance",
+        "transaction lifetime"
+      ]
+    },
+    {
+      "from": "effective role",
+      "to": "tenant row",
+      "must_prove": [
+        "object privilege",
+        "RLS USING",
+        "RLS WITH CHECK",
+        "forced owner policy"
+      ]
+    },
+    {
+      "from": "database log",
+      "to": "observability system",
+      "must_prove": [
+        "sensitive-field policy",
+        "access control",
+        "retention and deletion"
+      ]
+    }
+  ],
+  "explicitly_out_of_scope": [
+    "claiming compliance certification",
+    "rotating the Pigsty CA or production certificates",
+    "changing host firewalls or cloud security groups",
+    "placing real customer data in the fixture",
+    "testing malicious operating-system root"
+  ]
+}

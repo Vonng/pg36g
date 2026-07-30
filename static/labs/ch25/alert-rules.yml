@@ -1,0 +1,281 @@
+groups:
+  - name: pg36-shop-slo-alerts
+    interval: 1m
+    type: prometheus
+    rules:
+      - alert: PG36ShopAvailabilityFastBurn
+        expr: |
+          pg36_shop:sli_availability_bad_ratio:rate1h > (14.4 * 0.001)
+          and on (service, operation_class, environment)
+          pg36_shop:sli_availability_bad_ratio:rate5m > (14.4 * 0.001)
+        for: 2m
+        labels:
+          class: symptom
+          route: page
+          severity: SEV-1
+          objective_id: SLO-AVAILABILITY
+          owner_function: service
+          runbook_id: RB-USER-SYMPTOM
+          governance_status: accepted-ch24
+          observation_dependency: "false"
+        annotations:
+          summary: Availability error budget is burning fast
+          user_impact: Eligible order attempts are failing or have unreconciled outcomes
+          first_safe_action: freeze the latest risky release and reconcile unknown order outcomes before retrying writes
+          verification: Both burn windows recover and sampled idempotency tokens reconcile
+          dashboard: dashboard://pg36-shop-slo
+
+      - alert: PG36ShopAvailabilitySlowBurn
+        expr: |
+          pg36_shop:sli_availability_bad_ratio:rate6h > (6 * 0.001)
+          and on (service, operation_class, environment)
+          pg36_shop:sli_availability_bad_ratio:rate30m > (6 * 0.001)
+        for: 5m
+        labels:
+          class: symptom
+          route: page
+          severity: SEV-2
+          objective_id: SLO-AVAILABILITY
+          owner_function: service
+          runbook_id: RB-USER-SYMPTOM
+          governance_status: accepted-ch24
+          observation_dependency: "false"
+        annotations:
+          summary: Availability error budget is burning persistently
+          user_impact: Sustained failed or unreconciled order attempts threaten the objective
+          first_safe_action: stop concurrent risky changes and segment failures by operation and release
+          verification: Both burn windows recover and the responsible failure class is bounded
+          dashboard: dashboard://pg36-shop-slo
+
+      - alert: PG36ShopAvailabilityBudgetTicket
+        expr: |
+          pg36_shop:sli_availability_bad_ratio:rate3d > (1 * 0.001)
+          and on (service, operation_class, environment)
+          pg36_shop:sli_availability_bad_ratio:rate6h > (1 * 0.001)
+        for: 15m
+        labels:
+          class: symptom
+          route: ticket
+          severity: ticket
+          objective_id: SLO-AVAILABILITY
+          owner_function: service
+          runbook_id: RB-BUDGET-REVIEW
+          governance_status: accepted-ch24
+          observation_dependency: "false"
+        annotations:
+          summary: Availability budget requires an owned review
+          user_impact: The sustained rate would exhaust the objective budget
+          first_safe_action: open an owned budget review and identify the largest eligible failure class
+          verification: The ticket contains event counts windows release markers and a due date
+          dashboard: dashboard://pg36-shop-slo
+
+      - alert: PG36ShopFreshnessFastBurn
+        expr: |
+          pg36_shop:sli_freshness_bad_ratio:rate1h > (14.4 * 0.01)
+          and on (service, read_path, environment)
+          pg36_shop:sli_freshness_bad_ratio:rate5m > (14.4 * 0.01)
+        for: 2m
+        labels:
+          class: symptom
+          route: page
+          severity: SEV-2
+          objective_id: SLO-FRESHNESS
+          owner_function: service
+          runbook_id: RB-READ-FRESHNESS
+          governance_status: accepted-ch24
+          observation_dependency: "false"
+        annotations:
+          summary: Commit-correlated reads violate the freshness bound
+          user_impact: Routed reads are missing known committed tokens beyond five seconds
+          first_safe_action: route the affected read-after-write journey to the primary path while preserving probe tokens
+          verification: New commit tokens become visible within five seconds on the declared path
+          dashboard: dashboard://pg36-shop-freshness
+
+      - alert: PG36ShopLatencyFastBurn
+        expr: |
+          pg36_shop:sli_latency_bad_ratio:rate1h > (14.4 * 0.01)
+          and on (service, operation_class, environment)
+          pg36_shop:sli_latency_bad_ratio:rate5m > (14.4 * 0.01)
+        for: 2m
+        labels:
+          class: symptom
+          route: test
+          severity: candidate
+          objective_id: SLO-LATENCY
+          owner_function: service
+          runbook_id: RB-USER-LATENCY-CANDIDATE
+          governance_status: proposed-not-accepted
+          observation_dependency: "false"
+        annotations:
+          summary: Candidate latency burn rule fired in the isolated lab
+          user_impact: Eligible order attempts may exceed the declared latency bound
+          first_safe_action: Correlate the user histogram with entry queueing and database waits without changing the database
+          verification: Governance accepts the policy and both tested windows recover
+          dashboard: dashboard://pg36-shop-slo
+
+  - name: pg36-shop-control-alerts
+    interval: 1m
+    type: prometheus
+    rules:
+      - alert: PG36ShopCorrectnessMismatch
+        expr: pg36_shop_reconciliation_mismatches > 0
+        for: 0m
+        labels:
+          class: integrity
+          route: page
+          severity: SEV-1
+          objective_id: CTRL-CORRECTNESS
+          owner_function: data
+          runbook_id: RB-CORRECTNESS
+          governance_status: accepted-ch24
+          observation_dependency: "false"
+        annotations:
+          summary: Domain reconciliation found unexplained mismatches
+          user_impact: Acknowledged order state may be duplicated invalid cross-tenant or missing
+          first_safe_action: freeze affected writes and preserve the reconciliation boundary before repair
+          verification: An independently reviewed reconciliation returns zero unexplained mismatches
+          dashboard: dashboard://pg36-shop-correctness
+
+      - alert: PG36ShopRestoreEvidenceStale
+        expr: pg36_shop_restore_evidence_age_seconds > (90 * 24 * 60 * 60)
+        for: 15m
+        labels:
+          class: recovery-control
+          route: test
+          severity: candidate
+          objective_id: CTRL-RESTORE-READINESS
+          owner_function: platform
+          runbook_id: RB-RESTORE-EVIDENCE
+          governance_status: proposed-not-accepted
+          observation_dependency: "false"
+        annotations:
+          summary: Candidate restore evidence control is stale
+          user_impact: Recoverability cannot be demonstrated by sufficiently recent evidence
+          first_safe_action: Inspect the immutable restore manifest and schedule an isolated drill
+          verification: A new isolated restore and application check produces reviewed evidence
+          dashboard: dashboard://pg36-shop-recovery
+
+      - alert: PG36ShopCapacityHorizon
+        expr: |
+          pg36_shop_capacity_horizon_days < 14
+          and on (service, environment)
+          pg36_shop_capacity_forecast_reviewed == 1
+        for: 1h
+        labels:
+          class: capacity
+          route: ticket
+          severity: ticket
+          owner_function: platform
+          runbook_id: RB-CAPACITY
+          governance_status: accepted-ch24
+          observation_dependency: "false"
+        annotations:
+          summary: Reviewed capacity horizon is below fourteen days
+          user_impact: No current impact is asserted; avoidable future saturation risk exists
+          first_safe_action: validate demand, headroom, retention, and query mix before changing capacity
+          verification: An owned plan restores the reviewed headroom horizon
+          dashboard: dashboard://pg36-shop-capacity
+
+  - name: pg36-postgresql-proposed-alerts
+    interval: 1m
+    type: prometheus
+    rules:
+      - alert: PG36ArchiveFailureActive
+        expr: |
+          pg36:archive_failures:increase15m > 0
+          and on (cls, ins, ip)
+          (time() - pg_archiver_finish_time) > 900
+        for: 5m
+        labels:
+          class: recovery-risk
+          route: test
+          severity: candidate
+          owner_function: platform
+          runbook_id: RB-ARCHIVE-CANDIDATE
+          governance_status: proposed-not-accepted
+          observation_dependency: "false"
+        annotations:
+          summary: Candidate archive progression rule detected new failures and stale success
+          user_impact: Recovery-point durability may degrade if archive progression remains stalled
+          first_safe_action: Verify the newest WAL archive and pgBackRest check before changing PostgreSQL
+          verification: Successful archive progression resumes and recovery evidence is current
+          dashboard: dashboard://pg36-shop-recovery
+
+      - alert: PG36TransactionAgeHorizon
+        expr: pg36:longest_transaction_seconds:max > 900
+        for: 10m
+        labels:
+          class: capacity
+          route: test
+          severity: candidate
+          owner_function: platform
+          runbook_id: RB-LONG-TRANSACTION-CANDIDATE
+          governance_status: proposed-not-accepted
+          observation_dependency: "false"
+        annotations:
+          summary: Candidate long transaction ticket rule fired
+          user_impact: No user impact is asserted; vacuum and lock progress may be constrained
+          first_safe_action: Identify the owner and queryid then verify whether cancel is safe
+          verification: Transaction age recovers without unexplained rollback or blocked maintenance
+          dashboard: dashboard://pigsty-pgsql-activity
+
+      - alert: PG36FreezeAgeHorizon
+        expr: pg36:table_freeze_age:max > 1000000000
+        for: 1h
+        labels:
+          class: capacity
+          route: test
+          severity: candidate
+          owner_function: platform
+          runbook_id: RB-FREEZE-AGE-CANDIDATE
+          governance_status: proposed-not-accepted
+          observation_dependency: "false"
+        annotations:
+          summary: Candidate transaction ID age ticket rule fired
+          user_impact: No current impact is asserted; anti-wraparound maintenance margin is shrinking
+          first_safe_action: Verify database and table ages autovacuum blockers and maintenance progress
+          verification: Reviewed freeze-age margin recovers without unsafe manual vacuum pressure
+          dashboard: dashboard://pigsty-pgsql-table
+
+  - name: pg36-observation-path-alerts
+    interval: 1m
+    type: prometheus
+    rules:
+      - alert: PG36MonitoringPathBroken
+        expr: pg36_observation_path_broken > 0
+        for: 5m
+        labels:
+          class: metamonitoring
+          route: page
+          severity: SEV-2
+          owner_function: platform
+          runbook_id: RB-METAMONITORING
+          governance_status: accepted-ch24
+          observation_dependency: "false"
+        annotations:
+          summary: Observation or notification path cannot prove it is working
+          user_impact: Service health is unknown because the observation chain is broken
+          first_safe_action: establish an independent blackbox view before changing the monitored database
+          verification: A canary traverses probe ingestion evaluation routing and receipt
+          dashboard: dashboard://pigsty-observability
+
+      - alert: PG36ShopSLIMissing
+        expr: |
+          pg36_expected_service_traffic == 1
+          unless on (service, environment)
+          pg36_sli_sample_fresh == 1
+        for: 5m
+        labels:
+          class: derived-missing
+          route: test
+          severity: candidate
+          owner_function: platform
+          runbook_id: RB-SLI-MISSING-CANDIDATE
+          governance_status: proposed-not-accepted
+          observation_dependency: "true"
+        annotations:
+          summary: Expected service traffic has no fresh SLI sample
+          user_impact: Service health is unknown; this is not a healthy zero
+          first_safe_action: Check the independent probe and ingestion path before changing the service
+          verification: Fresh samples and the independent probe agree
+          dashboard: dashboard://pigsty-observability

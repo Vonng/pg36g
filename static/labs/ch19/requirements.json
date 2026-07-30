@@ -1,0 +1,161 @@
+{
+  "schema": "pg36-ch19-environment-requirements-v1",
+  "release": "2.0-sandbox",
+  "target": {
+    "id": "pg36-l2-vagrant",
+    "kind": "disposable-local-linux-sandbox",
+    "purpose": "deployment and acceptance rehearsal, never production service",
+    "pigsty_version": "v4.4.0",
+    "postgresql_major": 18,
+    "expected_host_count": 4
+  },
+  "business_context": {
+    "service": "pg36_shop",
+    "data_classification": "synthetic teaching data only",
+    "business_owner": "pg36_shop service owner placeholder",
+    "platform_owner": "database platform team placeholder",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false
+  },
+  "service_units": [
+    {
+      "id": "pg-meta",
+      "purpose": "single-node control and validation service",
+      "environment": "l2-sandbox",
+      "members": [
+        {
+          "address": "10.10.10.10",
+          "declared_role": "primary",
+          "offline_query": false
+        }
+      ],
+      "production_slo_claimed": false
+    },
+    {
+      "id": "pg-test",
+      "purpose": "three-node HA topology and application-service rehearsal",
+      "environment": "l2-sandbox",
+      "members": [
+        {
+          "address": "10.10.10.11",
+          "declared_role": "primary",
+          "offline_query": false
+        },
+        {
+          "address": "10.10.10.12",
+          "declared_role": "replica",
+          "offline_query": false
+        },
+        {
+          "address": "10.10.10.13",
+          "declared_role": "replica",
+          "offline_query": true
+        }
+      ],
+      "production_slo_claimed": false
+    }
+  ],
+  "host_contract": {
+    "kernel": "Linux",
+    "os_id": "ubuntu",
+    "os_version_prefix": "24.04",
+    "architecture": "aarch64",
+    "uniform_os_and_architecture": true,
+    "distinct_machine_identity": true,
+    "minimum_cpu_count": 1,
+    "minimum_memory_bytes": 1932735283,
+    "recommended_minimum_cpu_count": 2,
+    "recommended_minimum_memory_bytes": 2147483648,
+    "minimum_root_free_bytes": 8589934592,
+    "timezone": "Etc/UTC",
+    "ntp_synchronized": true,
+    "transparent_hugepage_enabled": "never",
+    "swap_bytes_max": 0
+  },
+  "postgresql_initialization_contract": {
+    "major": 18,
+    "encoding": "UTF8",
+    "locale": "C.UTF-8",
+    "locale_provider": "builtin",
+    "data_checksums": "on",
+    "block_size_bytes": 8192,
+    "wal_segment_size_bytes": 16777216,
+    "timezone": "Etc/UTC",
+    "password_encryption": "scram-sha-256",
+    "ssl": "on"
+  },
+  "topology_contract": {
+    "pg-meta": {
+      "primary": 1,
+      "replica": 0,
+      "offline": 0
+    },
+    "pg-test": {
+      "primary": 1,
+      "replica": 2,
+      "offline": 1
+    },
+    "distinct_postgresql_system_identifiers": true
+  },
+  "required_active_services": {
+    "all_hosts": [
+      "haproxy"
+    ],
+    "postgresql_hosts": [
+      "patroni",
+      "pgbouncer"
+    ],
+    "control_host": [
+      "etcd",
+      "nginx"
+    ]
+  },
+  "hard_rejections": [
+    "target identity or host set differs from the declared sandbox",
+    "two addresses resolve to the same machine identity",
+    "host OS or architecture is heterogeneous",
+    "clock is not synchronized or timezone is not UTC",
+    "minimum CPU, memory, or free-space floor is missed",
+    "PostgreSQL initialization contract differs across members",
+    "inventory and live PostgreSQL or Patroni roles disagree",
+    "a production SLO is claimed from the sandbox topology",
+    "unredacted secret values appear in exported evidence"
+  ],
+  "accepted_sandbox_exceptions": [
+    {
+      "id": "EX19-SHARED-HYPERVISOR",
+      "reason": "all four VMs share one physical laptop, power source, hypervisor, and storage substrate",
+      "production_impact": "node count does not prove independent failure domains"
+    },
+    {
+      "id": "EX19-SINGLE-ETCD",
+      "reason": "the teaching sandbox has one etcd member",
+      "production_impact": "DCS availability is not production representative"
+    },
+    {
+      "id": "EX19-SINGLE-BACKUP-TARGET",
+      "reason": "the teaching sandbox uses one local MinIO/control node",
+      "production_impact": "backup repository failure-domain and disaster recovery are not proven"
+    },
+    {
+      "id": "EX19-VIRTUAL-STORAGE",
+      "reason": "Vagrant virtual disks have no production IOPS, latency, endurance, or redundancy qualification",
+      "production_impact": "capacity and durability conclusions are prohibited"
+    },
+    {
+      "id": "EX19-INVENTORY-SECRETS",
+      "reason": "randomized sandbox secrets are stored in a mode-0600 temporary inventory",
+      "production_impact": "a production secret authority, rotation, and audit path remain required"
+    },
+    {
+      "id": "EX19-LAB-RESOURCE-FLOOR",
+      "reason": "the three pg-test VMs have one vCPU and about 1.9 GiB RAM, below the chapter recommendation of two vCPUs and 2 GiB",
+      "production_impact": "the successful deployment proves only the disposable sandbox acceptance floor; it cannot justify production sizing or concurrency claims"
+    }
+  ],
+  "gate_interpretation": {
+    "sandbox_l2": "may pass with the six named exceptions",
+    "ch19_deployment_baseline": "remains pending for a real pg-ha-standard production target",
+    "next_gate": "ch20-ha"
+  }
+}

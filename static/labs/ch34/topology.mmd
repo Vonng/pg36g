@@ -1,0 +1,26 @@
+flowchart LR
+  subgraph M["Managed Pigsty sandbox — read-only evidence only"]
+    P["pg-test primary"]
+    O["Patroni / SQL / host projection"]
+    P --> O
+  end
+
+  subgraph D["Disposable PostgreSQL on pg-test-3"]
+    S["private Unix socket<br/>no TCP"]
+    F["blind case α<br/>connection storm + lock queue"]
+    R["blind case β<br/>inactive physical slot + retained WAL"]
+    C["classifier<br/>truth/order hidden"]
+    A1["exact session cancel"]
+    A2["preserve evidence<br/>drop exact owned slot"]
+    F --> C
+    R --> C
+    C --> A1
+    C --> A2
+    S --- F
+    S --- R
+  end
+
+  O -. "environment context only" .-> C
+  A1 --> X["post-action validation"]
+  A2 --> X
+  X --> Z["stop server and remove exact root"]

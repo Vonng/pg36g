@@ -1,0 +1,115 @@
+{
+  "schema": "pg36-ch21-recovery-requirements-v1",
+  "release": "1.0-sandbox",
+  "status": "isolated-pitr-contract-not-production-slo",
+  "target": {
+    "id": "pg36-l2-vagrant/pg-test",
+    "pigsty_release": "v4.4.0",
+    "postgresql_major": 18,
+    "postgresql_observed": "18.4",
+    "pgbackrest_observed": "2.59.0",
+    "cluster": "pg-test",
+    "source_primary": "pg-test-1",
+    "source_address": "10.10.10.11",
+    "restore_host": "pg-test-3",
+    "restore_address": "10.10.10.13",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false
+  },
+  "fixture": {
+    "database": "test",
+    "schema": "pg36_ch21",
+    "table": "recovery_probe",
+    "stages": [
+      "base",
+      "keep",
+      "discard"
+    ]
+  },
+  "repository": {
+    "stanza": "pg-test",
+    "repo": 1,
+    "type": "s3",
+    "cipher": "aes-256-cbc",
+    "fresh_backup_type": "full",
+    "status_code": 0,
+    "archive_continuity_required": true,
+    "credential_export_permitted": false
+  },
+  "restore": {
+    "root_prefix": "/data/pg36-ch21-restore",
+    "port": 55432,
+    "listen_addresses": "",
+    "unix_socket_permissions": "0700",
+    "ssl": false,
+    "archive_mode": "off",
+    "target_type": "name",
+    "target_action": "promote",
+    "target_timeline": "latest",
+    "patroni_managed": false,
+    "shared_preload_libraries": "",
+    "root_must_not_preexist": true,
+    "retain_stopped_restore_for_review": true
+  },
+  "objectives": {
+    "maximum_backup_command_ms": 60000,
+    "maximum_restore_copy_ms": 60000,
+    "maximum_start_to_read_only_ms": 30000,
+    "maximum_start_to_promoted_ms": 30000,
+    "minimum_new_timeline_increment": 1,
+    "rto_interpretation": "small synthetic sandbox observation, not a production SLO",
+    "rpo_interpretation": "named restore-point boundary, not worst-case archive loss"
+  },
+  "source_acceptance": {
+    "members": [
+      "pg-test-1",
+      "pg-test-2",
+      "pg-test-3"
+    ],
+    "initial_leader": "pg-test-1",
+    "all_replicas_streaming": true,
+    "maximum_replay_lag_bytes": 1048576,
+    "restore_host_must_remain_live_replica": true
+  },
+  "required_exception_ids": [
+    "EX19-SHARED-HYPERVISOR",
+    "EX19-SINGLE-ETCD",
+    "EX19-SINGLE-BACKUP-TARGET",
+    "EX19-VIRTUAL-STORAGE",
+    "EX19-INVENTORY-SECRETS",
+    "EX19-LAB-RESOURCE-FLOOR",
+    "EX21-SHARED-RESTORE-HOST",
+    "EX21-REPOSITORY-NOT-IMMUTABLE",
+    "EX21-SMALL-SYNTHETIC-DATA",
+    "EX21-NAMED-POINT-ONLY"
+  ],
+  "exceptions": [
+    {
+      "id": "EX21-SHARED-RESTORE-HOST",
+      "reason": "the isolated postmaster uses a private data path, Unix socket, port and configuration but shares the pg-test-3 guest and hypervisor with a live replica",
+      "claim_blocked": "host, kernel, storage-device and failure-domain isolation"
+    },
+    {
+      "id": "EX21-REPOSITORY-NOT-IMMUTABLE",
+      "reason": "the sandbox uses one local MinIO repository and this drill does not prove object lock, independent credentials or regional replication",
+      "claim_blocked": "ransomware-resistant, immutable and region-loss-safe backup"
+    },
+    {
+      "id": "EX21-SMALL-SYNTHETIC-DATA",
+      "reason": "the backup contains a small synthetic teaching database",
+      "claim_blocked": "production restore-duration and capacity sizing"
+    },
+    {
+      "id": "EX21-NAMED-POINT-ONLY",
+      "reason": "the drill restores to one named point after explicitly forcing and checking WAL archival",
+      "claim_blocked": "arbitrary-time recovery and worst-case archive-gap RPO"
+    }
+  ],
+  "decision_boundary": {
+    "sandbox_named_pitr": "may-pass-with-exceptions",
+    "production_ch21_gate": "pending",
+    "regional_disaster_recovery": "not-run",
+    "immutable_repository": "not-proven",
+    "retention_expiry_restore": "not-run"
+  }
+}

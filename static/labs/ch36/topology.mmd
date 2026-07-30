@@ -1,0 +1,20 @@
+flowchart LR
+  C32["ch32 PITR public evidence"]
+  C33["ch33 failover public evidence"]
+  C34["ch34 overload public evidence"]
+  C35["ch35 rescue public evidence"]
+
+  C32 --> P["offline postmortem compiler"]
+  C33 --> P
+  C34 --> P
+  C35 --> P
+
+  P --> F["pointer-bound facts"]
+  F --> I["four incident records"]
+  I --> T["cross-incident control themes"]
+  T --> B["90-day reference backlog"]
+  B --> V["validator + 36 live mutants"]
+  V --> R["closure report"]
+
+  R -. "does not auto-certify" .-> L["learner assessment pending"]
+  R -. "does not approve production" .-> G["production gate pending"]

@@ -1,0 +1,86 @@
+{
+  "schema": "pg36-ch20-failure-model-v1",
+  "release": "1.0-sandbox",
+  "status": "model-with-one-observed-planned-transition",
+  "scenarios": [
+    {
+      "id": "planned-primary-maintenance",
+      "failure_domain": "none; operator-controlled transition",
+      "mechanism": "Patroni switchover to an explicitly named caught-up replica",
+      "expected_service": "bounded write interruption and stable read-write endpoint",
+      "data_risk": "acknowledged commits must remain; unknown outcomes require token reconciliation",
+      "evidence_state": "observed-by-this-lab"
+    },
+    {
+      "id": "postgres-process-crash",
+      "failure_domain": "one database process",
+      "mechanism": "Patroni restart or election depending on recovery",
+      "expected_service": "automatic behavior depends on health timing and candidate eligibility",
+      "data_risk": "asynchronous tail can be absent from candidates",
+      "evidence_state": "not-injected"
+    },
+    {
+      "id": "host-loss",
+      "failure_domain": "one guest or physical host",
+      "mechanism": "DCS lease expiry, election, service reroute, old-host fencing/rejoin",
+      "expected_service": "automatic failover only if control and data failure domains survive",
+      "data_risk": "bounded by candidate WAL position and write acknowledgement policy",
+      "evidence_state": "not-injected"
+    },
+    {
+      "id": "storage-loss-or-stall",
+      "failure_domain": "data volume/controller/storage substrate",
+      "mechanism": "detection, stop/fence, promotion, later rebuild",
+      "expected_service": "unknown until latency, error, and fencing behavior are rehearsed",
+      "data_risk": "correlated storage can invalidate every local replica",
+      "evidence_state": "not-injected"
+    },
+    {
+      "id": "network-partition",
+      "failure_domain": "member-to-DCS, member-to-member, client-to-service, or asymmetric partition",
+      "mechanism": "lease and health decisions plus fencing",
+      "expected_service": "must prefer one writable history over dual availability",
+      "data_risk": "split brain if old primary remains writable and reachable",
+      "evidence_state": "not-injected"
+    },
+    {
+      "id": "dcs-loss",
+      "failure_domain": "single etcd member in this sandbox",
+      "mechanism": "Patroni DCS failsafe policy for an existing leader; no safe new election without authority",
+      "expected_service": "existing database and automatic HA control have different availability",
+      "data_risk": "unsafe manual promotion can create two histories",
+      "evidence_state": "not-injected"
+    },
+    {
+      "id": "shared-hypervisor-loss",
+      "failure_domain": "the one laptop hosting all four guests",
+      "mechanism": "none inside this topology",
+      "expected_service": "all database, DCS, proxy, and backup guests become unavailable",
+      "data_risk": "local HA cannot cover the common dependency",
+      "evidence_state": "accepted-exception"
+    },
+    {
+      "id": "logical-corruption-or-operator-error",
+      "failure_domain": "replicated data history",
+      "mechanism": "backup, PITR, delayed copy, or business repair",
+      "expected_service": "replicas reproduce the bad change",
+      "data_risk": "HA can accelerate propagation rather than recover truth",
+      "evidence_state": "owned-by-chapters-21-and-32"
+    },
+    {
+      "id": "client-session-loss",
+      "failure_domain": "connection, pool, proxy, DNS, or transaction",
+      "mechanism": "bounded reconnect and idempotency/reconciliation",
+      "expected_service": "in-flight commit may be outcome-unknown",
+      "data_risk": "blind retry can duplicate a business action",
+      "evidence_state": "sampled-by-this-lab; full contract deferred-to-chapter-22"
+    }
+  ],
+  "prohibited_inference": [
+    "a successful switchover proves automatic failover",
+    "three guests prove three independent failure domains",
+    "zero missing acknowledged probe rows proves zero-RPO asynchronous replication",
+    "Patroni leader identity proves client routing under every fault",
+    "a replica is a backup against logical corruption"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "pg36-ch35-l3-rebuild-plan-v1",
+  "name": "reset:host",
+  "kind": "book-risk-category-not-a-copy-paste-command",
+  "destructive": true,
+  "executed": false,
+  "purpose": "rebuild a host whose operating-system, storage, package, or PostgreSQL baseline is no longer trustworthy",
+  "required_gates": [
+    "incident commander names the exact host and failure domain",
+    "original evidence and storage snapshots are preserved outside the target",
+    "traffic is drained and database authority is proved elsewhere",
+    "a tested backup or healthy cluster source is named",
+    "inventory, release, package repository, and secrets source are pinned",
+    "replacement capacity and rollback are available",
+    "production destructive approval is recorded"
+  ],
+  "state_machine": [
+    "preserve and hash evidence",
+    "fence the suspect host from database authority and service routes",
+    "provision a clean host or verified clean storage",
+    "apply the pinned Pigsty node and PostgreSQL baseline",
+    "restore from a trusted backup or add as a fresh replica",
+    "validate checksums, lineage, replication, routes, backup, monitoring, and business invariants",
+    "return traffic only after an observation window"
+  ],
+  "forbidden": [
+    "reusing the suspect PGDATA as the recovery source",
+    "formatting or deleting the only evidence copy",
+    "treating a successful service start as proof of trusted data",
+    "running host removal or reinstallation without exact destructive approval"
+  ],
+  "managed_reset_host_executed": false,
+  "production_ch35_gate": "pending"
+}

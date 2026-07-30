@@ -1,0 +1,27 @@
+flowchart TB
+    client["Applications and operators"]
+    service["Service contract<br/>write, read-only, offline, admin"]
+    pg["PostgreSQL authority<br/>transactions, constraints, short atomic logic"]
+    search["In-database search<br/>pg_trgm accepted; vector pilot"]
+    spatial["Spatiotemporal<br/>PostGIS / btree_gist conditional"]
+    summary["Operational summaries<br/>offline replica"]
+    cache["Derived cache<br/>never business authority"]
+    bus["External event delivery<br/>outbox intent stays atomic"]
+    object["Object storage<br/>bytes external; metadata in PostgreSQL"]
+    lake["Versioned analytics projection<br/>watermark and rebuild contract"]
+    observe["Control and observation<br/>inventory, HA, backup, routing, metrics"]
+    gates["Chapters 19–36<br/>18 pending evidence gates"]
+
+    client --> service
+    service --> pg
+    pg --> search
+    pg --> spatial
+    pg --> summary
+    pg --> cache
+    pg --> bus
+    pg --> object
+    pg --> lake
+    observe --> service
+    observe --> pg
+    gates -. "approve or revise" .-> observe
+    gates -. "approve or revise" .-> pg

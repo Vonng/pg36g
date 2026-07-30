@@ -1,0 +1,129 @@
+{
+  "schema": "pg36-ch23-requirements-v1",
+  "release": {
+    "book_chapter": "ch23",
+    "pigsty_release": "v4.4.0",
+    "postgresql_major": 18,
+    "lab_level": "L2",
+    "evidence_contract": "pg36-ch23-security-evidence-v1"
+  },
+  "target": {
+    "id": "pg36-l2-vagrant/pg-test",
+    "cluster": "pg-test",
+    "database": "test",
+    "entry_address": "10.10.10.11",
+    "expected_leader": "pg-test-1",
+    "members": {
+      "pg-test-1": "10.10.10.11",
+      "pg-test-2": "10.10.10.12",
+      "pg-test-3": "10.10.10.13"
+    },
+    "postgresql_observed": "18.4",
+    "pgbouncer_observed": "1.25.2",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false
+  },
+  "entrypoints": {
+    "direct_primary": {
+      "port": 5436,
+      "destination": "postgres",
+      "expected_role": "primary"
+    },
+    "pooled_primary": {
+      "port": 5433,
+      "destination": "pgbouncer",
+      "expected_role": "primary"
+    }
+  },
+  "fixture": {
+    "login_role": "test",
+    "login_role_is_predeclared": true,
+    "schema": "pg36_ch23",
+    "schema_comment": "pg36 chapter 23 security lab; synthetic two-tenant data only",
+    "roles": {
+      "owner": "pg36_ch23_owner",
+      "runtime": "pg36_ch23_runtime",
+      "readonly": "pg36_ch23_readonly",
+      "migrate": "pg36_ch23_migrate",
+      "rotation": "pg36_ch23_rotate"
+    },
+    "role_comment_prefix": "pg36 chapter 23 security lab:",
+    "tenant_a": "11111111-1111-4111-8111-111111111111",
+    "tenant_b": "22222222-2222-4222-8222-222222222222",
+    "rows_per_tenant": 2,
+    "rotation_role_final_state": {
+      "can_login": false,
+      "password_is_null": true
+    }
+  },
+  "postgresql_policy": {
+    "password_encryption": "scram-sha-256",
+    "ssl_required_on_server": true,
+    "minimum_tls_protocol": "TLSv1.2",
+    "hba_parse_errors": 0,
+    "forbid_host_auth_methods": [
+      "trust",
+      "password",
+      "md5"
+    ],
+    "rls_enabled": true,
+    "force_rls": true
+  },
+  "pool_policy": {
+    "pool_mode": "transaction",
+    "client_tls_sslmode_observed": "disable",
+    "server_reset_query": "DISCARD ALL",
+    "server_reset_query_always": 0,
+    "lab_override": {
+      "default_pool_size": 1,
+      "reserve_pool_size": 0,
+      "query_wait_timeout": 15
+    }
+  },
+  "objectives": {
+    "tenant_rows_visible": 2,
+    "missing_context_rows_visible": 0,
+    "cross_tenant_writes_rejected": true,
+    "owner_subject_to_force_rls": true,
+    "runtime_cannot_change_security_ddl": true,
+    "leaky_session_state_counterexample_required": true,
+    "secure_set_local_sequence_required": true,
+    "password_rotation_old_new_connection_rejected": true,
+    "existing_session_survival_observed_not_endorsed": true,
+    "pool_settings_restored": true,
+    "topology_unchanged": true
+  },
+  "expected_transport_findings": {
+    "direct_require_succeeds": true,
+    "direct_verify_full_succeeds": true,
+    "direct_wrong_name_rejected": true,
+    "direct_disable_succeeds": true,
+    "pooled_disable_succeeds": true,
+    "pooled_require_rejected": true,
+    "channel_binding_require_succeeds_direct": true
+  },
+  "known_production_gaps": [
+    "business PostgreSQL HBA permits non-TLS intranet connections",
+    "PgBouncer client TLS is disabled",
+    "server CRL file and directory are unset",
+    "client CA distribution and certificate rotation are outside the retained sandbox evidence",
+    "pgAudit is not installed or preloaded",
+    "non-error statement logging may retain full bind parameters"
+  ],
+  "production_gate": {
+    "expected_status": "pending",
+    "reason": "the retained sandbox deliberately exposes transport, audit, revocation, and secret-governance gaps"
+  },
+  "required_evidence": [
+    "before.json",
+    "inventory-projection.json",
+    "fixture.json",
+    "tls-tests.json",
+    "rls-tests.json",
+    "pool-context.json",
+    "rotation-tests.json",
+    "pool-restore.json",
+    "after.json",
+    "drill-manifest.json"
+  ]
+}

@@ -1,0 +1,60 @@
+# Pigsty 4.4 topology sketches for chapter 17.
+# They are review inputs, not a complete production inventory and were not
+# executed as an L1 validation in the local loopback PostgreSQL fixture.
+
+# Path A: keep one PostgreSQL system and isolate analytical reads on an
+# explicitly offline replica.  Resolve node addresses, package aliases,
+# passwords, backup policy, and all omitted global variables in the target
+# Pigsty inventory.
+all:
+  children:
+    pg-analytics:
+      hosts:
+        10.10.10.11:
+          pg_seq: 1
+          pg_role: primary
+        10.10.10.12:
+          pg_seq: 2
+          pg_role: replica
+          pg_offline_query: true
+      vars:
+        pg_cluster: pg-analytics
+        pg_conf: olap.yml
+
+# Path B: a separate Citus evaluation topology.  Do not merge this fragment
+# blindly with Path A.  The pg_shard/pg_group labels express Citus membership;
+# production still needs coordinator/worker HA, HBA, service routing, backup,
+# restore, rebalance, monitoring, and upgrade design.
+#
+# all:
+#   children:
+#     pg-citus0:
+#       hosts:
+#         10.10.20.10:
+#           pg_seq: 1
+#           pg_role: primary
+#       vars:
+#         pg_cluster: pg-citus0
+#         pg_mode: citus
+#         pg_shard: pg-citus
+#         pg_group: 0
+#     pg-citus1:
+#       hosts:
+#         10.10.20.11:
+#           pg_seq: 1
+#           pg_role: primary
+#       vars:
+#         pg_cluster: pg-citus1
+#         pg_mode: citus
+#         pg_shard: pg-citus
+#         pg_group: 1
+#     pg-citus2:
+#       hosts:
+#         10.10.20.12:
+#           pg_seq: 1
+#           pg_role: primary
+#       vars:
+#         pg_cluster: pg-citus2
+#         pg_mode: citus
+#         pg_shard: pg-citus
+#         pg_group: 2

@@ -1,0 +1,127 @@
+{
+  "schema": "pg36-ch15-release-proposal-v1",
+  "release": "1.3-proposal",
+  "fixture": "ch15-search-v1",
+  "target": {
+    "database": "pg36_shop",
+    "schema": "shop_ch15",
+    "owner": "pg36_owner",
+    "application_role": "pg36_app",
+    "postgresql": "14-18",
+    "validated_on": "18.4",
+    "pg_trgm": "1.6",
+    "vector": "0.8.4",
+    "pigsty_reference": "4.4",
+    "pigsty_l1_validation": "not-run"
+  },
+  "decision": {
+    "primary_candidate_generation": [
+      "PostgreSQL full-text search",
+      "pg_trgm fuzzy matching",
+      "exact pgvector search"
+    ],
+    "fusion": "equal-weight reciprocal rank fusion",
+    "rrf_k": 60,
+    "source_depth": 4,
+    "serving_depth": 3,
+    "quality_path": "exact vector search",
+    "ann_role": "separately measured serving-path candidate"
+  },
+  "contracts": {
+    "products": 17,
+    "active_products": 16,
+    "queries": 8,
+    "judgments": 24,
+    "embedding_model": "pg36-handcrafted-topic-4d-v1",
+    "embedding_dimensions": 4,
+    "distance": "L2",
+    "text_search_configuration": "pg_catalog.english",
+    "title_weight": "A",
+    "description_weight": "B",
+    "fts_index": "GIN",
+    "fuzzy_index": "GIN",
+    "vector_index": "HNSW",
+    "application_write_sqlstate": "42501",
+    "inactive_product_never_ranked": 17
+  },
+  "quality_at_3": {
+    "fuzzy": {
+      "mean_precision": "0.916667",
+      "mean_recall": "0.916667",
+      "mrr": "1.000000",
+      "mean_ndcg": "0.942881",
+      "min_ndcg": "0.842828"
+    },
+    "hybrid_rrf": {
+      "mean_precision": "1.000000",
+      "mean_recall": "1.000000",
+      "mrr": "1.000000",
+      "mean_ndcg": "0.962929",
+      "min_ndcg": "0.759192"
+    },
+    "lexical": {
+      "mean_precision": "0.291667",
+      "mean_recall": "0.291667",
+      "mrr": "0.750000",
+      "mean_ndcg": "0.613043",
+      "min_ndcg": "0.000000"
+    },
+    "vector_exact": {
+      "mean_precision": "1.000000",
+      "mean_recall": "1.000000",
+      "mrr": "1.000000",
+      "mean_ndcg": "0.817314",
+      "min_ndcg": "0.631039"
+    }
+  },
+  "ann_probe": {
+    "query": "q06",
+    "exact_ids": "7,8,9",
+    "hnsw_ids": "7,8,9",
+    "recall_at_3": "1.000000",
+    "claim": "mechanics and measurement path only"
+  },
+  "expected_state": {
+    "business_checksum": "c637abf09edba88b7793f91201a57c34"
+  },
+  "evidence": [
+    "manifest.txt",
+    "corpus.csv",
+    "queries.csv",
+    "judgments.csv",
+    "document-catalog.csv",
+    "fts-analysis.csv",
+    "index-catalog.csv",
+    "size-catalog.csv",
+    "security-catalog.csv",
+    "quality-summary.csv",
+    "quality-detail.csv",
+    "ranking-results.csv",
+    "ann-compare.csv",
+    "fts-plan.txt",
+    "trigram-plan.txt",
+    "vector-exact-plan.txt",
+    "vector-hnsw-plan.txt",
+    "vector-filtered-plan.txt",
+    "app-query.csv",
+    "app-write.stderr",
+    "final-state.csv",
+    "verify.txt"
+  ],
+  "rollback": {
+    "token": "RESET_CH15_SEARCH_LAB",
+    "target": "pg36_shop/shop_ch15",
+    "requires_no_active_workers": true,
+    "requires_exact_markers": true,
+    "uses_cascade": false,
+    "preserves_ch14_extensions": true
+  },
+  "limitations": [
+    "All quality numbers describe only the frozen eight-query synthetic evaluation set.",
+    "The handcrafted vectors do not estimate the quality of any embedding model.",
+    "The tiny corpus cannot establish latency, throughput, memory, WAL, build time, or index-size targets.",
+    "Forced plans establish path availability, not planner preference or performance superiority.",
+    "HNSW recall of one on one query does not establish production ANN recall.",
+    "The direct PostgreSQL fixture does not claim a Pigsty L1 run."
+  ]
+}

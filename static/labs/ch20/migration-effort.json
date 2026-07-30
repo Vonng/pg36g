@@ -1,0 +1,12 @@
+{
+  "schema": "pg36-ch20-effort-v1",
+  "release": "1.0-sandbox",
+  "status": "formal-wrapper-measured",
+  "work_started_at": "2026-07-29T19:17:40Z",
+  "formal_run_started_at": "2026-07-29T19:39:33Z",
+  "formal_run_finished_at": "2026-07-29T19:40:17Z",
+  "formal_machine_elapsed_seconds": 44,
+  "human_authoring_seconds": null,
+  "human_authoring_measurement": "not-instrumented-do-not-infer",
+  "scope_note": "Machine elapsed time will cover the guarded formal wrapper only. Prose design, review, and operator attention were not independently instrumented and must not be fabricated from wall-clock timestamps."
+}

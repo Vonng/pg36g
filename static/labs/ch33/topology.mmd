@@ -1,0 +1,34 @@
+flowchart LR
+  subgraph M["Managed Pigsty sandbox"]
+    D["single etcd<br/>availability exception"]
+    P1["pg-test-1<br/>initial primary"]
+    P2["pg-test-2<br/>eligible replica"]
+    P3["pg-test-3<br/>eligible replica / observer"]
+    S["port 5433 service path"]
+    C["idempotent client probe"]
+    D -. "leader lock" .-> P1
+    D -. "member state" .-> P2
+    D -. "member state" .-> P3
+    P1 -- "streaming WAL" --> P2
+    P1 -- "streaming WAL" --> P3
+    C --> S
+    S --> P1
+  end
+
+  F["guarded systemd stop<br/>process fence"] --> P1
+  P2 -- "Patroni may select" --> N["new timeline"]
+  P3 -- "Patroni may select" --> N
+  N -- "old member starts<br/>and follows" --> P1
+  N -- "planned baseline<br/>switchover" --> P1
+
+  subgraph R["Disposable rebuild lab on pg-test-3"]
+    A["old primary A"]
+    B["promoted source B"]
+    W["pg_rewind A from B"]
+    X["fresh pg_basebackup C"]
+    A -- "common ancestor" --> B
+    B --> W
+    B --> X
+  end
+
+  M -. "same PostgreSQL binaries;<br/>no managed PGDATA reuse" .-> R

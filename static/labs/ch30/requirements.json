@@ -1,0 +1,66 @@
+{
+  "schema": "pg36-ch30-requirements-v1",
+  "chapter": 30,
+  "target": "pg36-l2-vagrant/isolated-pg17-to-pg18",
+  "host": {
+    "service": "pg-meta-1",
+    "cluster": "pg-meta"
+  },
+  "versions": {
+    "old_major": 17,
+    "new_major": 18
+  },
+  "fixture": {
+    "database": "pg36_upgrade",
+    "schema": "app",
+    "table": "app.orders",
+    "initial_rows": 10000,
+    "forward_canary_id": 10001,
+    "collation": "app.en_numeric",
+    "collation_index": "app.orders_order_code_key",
+    "source_locale": "C",
+    "encoding": "UTF8"
+  },
+  "execution": {
+    "old_port": 56417,
+    "new_port": 56418,
+    "listen_addresses": "",
+    "upgrade_method": "copy",
+    "minimum_free_bytes": 2147483648
+  },
+  "upstream": {
+    "extension_adr": "../ch14/baseline-v1.2-proposal.json",
+    "deployment": "../ch19/deployment-run.json",
+    "security": "../ch23/security-run.json",
+    "observability": "../ch25/observability-run.json",
+    "maintenance": "../ch28/maintenance-run.json",
+    "migration": "../ch29/migration-run.json"
+  },
+  "risk": {
+    "capture": "L0-read-only",
+    "exercise": "L2-private-temporary-clusters",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false,
+    "pigsty_inventory_change_permitted": false,
+    "patroni_change_permitted": false,
+    "persistent_cluster_configuration_change_permitted": false,
+    "system_package_install_permitted": false,
+    "external_listener_permitted": false,
+    "pg_upgrade_link_clone_swap_permitted": false,
+    "source_catalog_injection_scope": "exact-disposable-collation-row-only"
+  },
+  "acceptance": {
+    "preflight_source_hash_binding_required": true,
+    "collation_mismatch_must_block_release": true,
+    "dependent_index_must_be_rebuilt_before_refresh": true,
+    "checksum_mismatch_check_must_fail": true,
+    "matching_pg_upgrade_check_must_pass": true,
+    "copy_mode_upgrade_must_complete": true,
+    "baseline_and_upgraded_manifest_must_match": true,
+    "old_cluster_must_restart_before_target_writes": true,
+    "forward_canary_must_mark_reconciliation_boundary": true,
+    "amcheck_must_pass_on_target_indexes": true,
+    "exact_temporary_cleanup_required": true,
+    "production_ch30_gate": "pending"
+  }
+}

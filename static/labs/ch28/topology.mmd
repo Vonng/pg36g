@@ -1,0 +1,12 @@
+flowchart LR
+  A["Codex 工作区<br/>合同、校验器、公开摘要"] -->|SSH/SCP| M["pg-meta-1<br/>实验编排与私有证据"]
+  M -->|service=pg-test-1| P["pg-test-1 / PostgreSQL 18<br/>一次性 pg36_maintenance"]
+  P --> H["受控旧快照"]
+  P --> V["VACUUM / FREEZE<br/>VM / FSM / pgstattuple"]
+  P --> I["amcheck<br/>REINDEX CONCURRENTLY"]
+  P --> R["分区 DETACH<br/>导出与回灌校验"]
+  H --> C["精确释放"]
+  V --> C
+  I --> C
+  R --> C
+  C --> D["普通 DROP<br/>证明数据库与角色均不存在"]

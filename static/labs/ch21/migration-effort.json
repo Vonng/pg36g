@@ -1,0 +1,12 @@
+{
+  "schema": "pg36-ch21-production-effort-v1",
+  "sandbox_named_pitr": "accepted-with-exceptions",
+  "production_ch21_gate": "pending",
+  "required_next_evidence": [
+    "restore a representative production-sized backup on production-class isolated infrastructure",
+    "prove repository immutability, independent credentials and off-site failure-domain separation",
+    "test an arbitrary-time target near the worst observed archive delay",
+    "validate application invariants, external dependencies, secrets, routing and controlled cutover",
+    "exercise expired-backup, missing-WAL, lost-key and regional-loss failure paths"
+  ]
+}

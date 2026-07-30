@@ -1,0 +1,1066 @@
+{
+  "schema_version": 1,
+  "baseline_version": "0.1.0",
+  "published_on": "2026-07-29",
+  "compatibility": {
+    "postgresql": "14-18",
+    "validated_postgresql": "18.4",
+    "pigsty": "4.4.0",
+    "target_os": "Ubuntu 24.04 L1",
+    "local_validation": "PostgreSQL 18.4/Homebrew on macOS",
+    "scope": "pg36_shop teaching application and Pigsty L1 workflow"
+  },
+  "source_chapters": [
+    "ch01",
+    "ch02",
+    "ch03",
+    "ch04",
+    "ch05"
+  ],
+  "future_evidence_chapters": [
+    "ch07",
+    "ch08",
+    "ch09",
+    "ch10",
+    "ch11"
+  ],
+  "levels": {
+    "safety": {
+      "meaning": "违反后可能造成数据错误、越权、不可恢复变更或不可归因事故；默认阻断 merge/deploy。",
+      "exception": "仅允许 none 或有 owner、expiry、补偿控制和事后复核的 breakglass。"
+    },
+    "default": {
+      "meaning": "团队统一采用的工程默认；不同场景可以有证据地偏离。",
+      "exception": "使用 waiver，记录 owner、原因、expiry、检查方式与回归默认的条件。"
+    },
+    "preference": {
+      "meaning": "在多个正确方案之间改善可读性、维护性或成本的偏好。",
+      "exception": "由 reviewer 根据场景证据决定，不作为无条件阻断项。"
+    }
+  },
+  "rules": [
+    {
+      "id": "SAFE-CONN-001",
+      "title": "精确声明并验证连接目标",
+      "level": "safety",
+      "status": "active",
+      "owner": "database-engineering",
+      "scope": [
+        "scripts",
+        "migrations",
+        "operations"
+      ],
+      "statement": "所有自动化在执行 SQL 前必须验证 database、effective role、read/write 状态与预期 search_path；目标由 service/受控配置声明，不依赖交互终端当前连接。",
+      "rationale": "连得上只证明网络和认证成功，不能证明目标 database、role 或 primary 正确；错误目标上的正确 SQL 仍是事故。",
+      "evidence": [
+        {
+          "chapter": "ch02",
+          "artifact": "/labs/ch02/context.sql",
+          "observation": "context guard 对 database、recovery、role 与 search_path 逐项拒绝。"
+        },
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/context.sql",
+          "observation": "并发实验在写入前再次验证 ch04-v1 与 writable target。"
+        }
+      ],
+      "exception": {
+        "mode": "none",
+        "requirements": [
+          "若工具无法执行 preflight，则不得获得写权限；需先发布新的受控入口。"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "automated",
+          "criterion": "quality gate 的 wrong-target probe 必须以非零状态拒绝。"
+        },
+        {
+          "kind": "runtime",
+          "criterion": "证据包保存 current_database、session_user/current_user 与 pg_is_in_recovery。"
+        }
+      ]
+    },
+    {
+      "id": "SAFE-SECR-002",
+      "title": "凭据不进入仓库、命令行或证据包",
+      "level": "safety",
+      "status": "active",
+      "owner": "platform-security",
+      "scope": [
+        "connections",
+        "ci",
+        "evidence"
+      ],
+      "statement": "密码和等价 secret 只能来自权限受控的 passfile、secret provider 或交互提示；禁止嵌入 URI、shell history、source file、manifest 与 stdout/stderr。",
+      "rationale": "命令行、仓库和 CI artifact 的复制面远大于数据库本身，泄露后难以确认所有副本并完成撤销。",
+      "evidence": [
+        {
+          "chapter": "ch02",
+          "artifact": "/labs/ch02/pg_service.conf.example",
+          "observation": "service file 示例只声明连接身份，明确把 password 留给 mode 0600 passfile。"
+        },
+        {
+          "chapter": "ch02",
+          "artifact": "/labs/ch02/task.sh",
+          "observation": "自动化使用 -w，拒绝隐式密码提示与泄露式 fallback。"
+        }
+      ],
+      "exception": {
+        "mode": "none",
+        "requirements": [
+          "需要非交互认证时接入受控 secret provider，不以临时明文替代。"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "automated",
+          "criterion": "扫描受管 source/evidence schema 中的 password assignment、带凭据 URI 与 PGPASSWORD。"
+        },
+        {
+          "kind": "review",
+          "criterion": "确认 manifest 只保存 service name，不保存展开后的连接 secret。"
+        }
+      ]
+    },
+    {
+      "id": "SAFE-ROLE-003",
+      "title": "分离登录角色、对象所有者与运行角色",
+      "level": "safety",
+      "status": "active",
+      "owner": "database-engineering",
+      "scope": [
+        "roles",
+        "schemas",
+        "applications"
+      ],
+      "statement": "对象由 NOLOGIN owner 持有；application/read-only 使用独立 LOGIN role 且不是 superuser、createdb、createrole 或 bypassrls；日常应用不能以 owner 身份登录。",
+      "rationale": "所有权授予隐式 DDL/授权能力；把 owner 当 runtime identity 会让 SQL injection 和应用缺陷越过显式 GRANT 边界。",
+      "evidence": [
+        {
+          "chapter": "ch01",
+          "artifact": "/labs/ch01/setup.sql",
+          "observation": "pg36_owner、pg36_app、pg36_ro 的登录与特权责任被分离。"
+        },
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/verify-v1.sql",
+          "observation": "catalog 验证对象 owner、app/ro table 与 sequence 权限。"
+        }
+      ],
+      "exception": {
+        "mode": "breakglass",
+        "requirements": [
+          "仅限受审计 migration session",
+          "精确时间窗",
+          "非共享身份",
+          "完成后撤销",
+          "保存 catalog 后验"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "runtime",
+          "criterion": "pg_roles 与 has_*_privilege 证明 runtime role 无 owner/superuser 权限。"
+        }
+      ]
+    },
+    {
+      "id": "SAFE-DEFR-004",
+      "title": "SECURITY DEFINER 固定解析上下文并收回 PUBLIC 执行权",
+      "level": "safety",
+      "status": "active",
+      "owner": "database-security",
+      "scope": [
+        "functions",
+        "triggers",
+        "privilege-boundaries"
+      ],
+      "statement": "SECURITY DEFINER function 必须由受控 owner 持有，固定以 pg_catalog 开头且只含可信 schema 的 search_path，schema-qualify 敏感对象，并显式撤销 PUBLIC EXECUTE 后按需授权。",
+      "rationale": "definer function 在高权限身份下解析名称；可写 schema 或 PUBLIC execute 会把 search_path/object replacement 变成提权路径。",
+      "evidence": [
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/migrate-v0-to-v1.sql",
+          "observation": "状态转换 trigger function 固定 pg_catalog, shop_private 并收回 PUBLIC EXECUTE。"
+        },
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/verify-v1.sql",
+          "observation": "prosecdef、proconfig、owner 与 direct execute privilege 均由 catalog 验证。"
+        }
+      ],
+      "exception": {
+        "mode": "none",
+        "requirements": [
+          "无法满足时改用 invoker function 或重新设计权限边界。"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "automated",
+          "criterion": "对 pg_proc.prosecdef 对象验证 owner、proconfig 与 PUBLIC/app direct EXECUTE。"
+        }
+      ]
+    },
+    {
+      "id": "SAFE-CONS-005",
+      "title": "关键不变量由命名约束与反例闭合",
+      "level": "safety",
+      "status": "active",
+      "owner": "data-model-owner",
+      "scope": [
+        "ddl",
+        "business-invariants",
+        "error-contracts"
+      ],
+      "statement": "能由单库 schema 表达的关键值域、唯一性、引用与行内一致性必须使用命名约束；每个关键约束至少有一个验证 constraint identity/SQLSTATE 的反例。",
+      "rationale": "只在 application 校验会留下旁路；只写正向 seed 则不能证明数据库确实拒绝错误或拒绝的是预期规则。",
+      "evidence": [
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/negative-cases.sql",
+          "observation": "反例同时核对 SQLSTATE 和 CONSTRAINT_NAME。"
+        },
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/constraint-lab.sql",
+          "observation": "EXCLUDE 与 DEFERRABLE 行为在 rollback-only transaction 中验证。"
+        }
+      ],
+      "exception": {
+        "mode": "breakglass",
+        "requirements": [
+          "证明不变量跨外部系统或无法由当前数据库表达",
+          "记录 application control",
+          "保留 reconciliation",
+          "设置到期复查"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "runtime",
+          "criterion": "negative suite 只捕获预期 SQLSTATE/constraint，任何意外成功都失败。"
+        },
+        {
+          "kind": "review",
+          "criterion": "明确哪些跨表或外部事实仍未由本次 DDL 保证。"
+        }
+      ]
+    },
+    {
+      "id": "SAFE-MIGR-006",
+      "title": "破坏性迁移先证明可表示并设置停止线",
+      "level": "safety",
+      "status": "active",
+      "owner": "database-change-owner",
+      "scope": [
+        "migrations",
+        "ddl",
+        "data-conversion"
+      ],
+      "statement": "类型收窄、列删除、表重写或约束收紧前必须在写入前完成可表示性 precheck，声明 lock/statement timeout、兼容窗口、失败恢复和 post-state；生产 contract 与 application rollback 共同设计。",
+      "rationale": "直接 cast/drop 会在迁移中途才暴露坏值或依赖，并可能因强锁无限等待；机械 down migration 也无法恢复已丢弃语义。",
+      "evidence": [
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/migrate-v0-to-v1.sql",
+          "observation": "numeric 特殊值、精度、范围与状态时间在 DROP/ALTER 前被拒绝，DDL 在事务和 timeout 内执行。"
+        },
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/physical-decisions.md",
+          "observation": "L1 单事务演练与生产 expand/backfill/switch/contract 边界明确分开。"
+        }
+      ],
+      "exception": {
+        "mode": "breakglass",
+        "requirements": [
+          "incident commander 批准",
+          "可恢复备份/PITR 证据",
+          "精确停止线",
+          "业务影响声明",
+          "事后补齐兼容迁移"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "review",
+          "criterion": "变更说明完整回答 expand、backfill、validate、switch、contract 与 forward repair。"
+        },
+        {
+          "kind": "runtime",
+          "criterion": "污染 fixture 时迁移非零退出且旧 schema/version marker 保持一致。"
+        }
+      ]
+    },
+    {
+      "id": "SAFE-TXNN-007",
+      "title": "首个事务错误触发显式恢复",
+      "level": "safety",
+      "status": "active",
+      "owner": "application-team",
+      "scope": [
+        "transactions",
+        "connection-pools",
+        "error-handling"
+      ],
+      "statement": "显式事务的首个 error 必须被保存；代码只能整体 ROLLBACK，或回到事先建立且语义允许的 savepoint。failed/idle-in-transaction 连接不得归还连接池。",
+      "rationale": "错误后 transaction 进入 failed state，后续普通 SQL 只产生 25P02；若连接泄漏到 pool，还会持锁、持 snapshot 或污染下一请求。",
+      "evidence": [
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/transaction-errors.sql",
+          "observation": "22012 后下一 statement 收到 25P02；ROLLBACK TO SAVEPOINT 才允许局部恢复。"
+        },
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/lab-contract.md",
+          "observation": "worker 正常和失败路径都要求关闭 transaction/session 并后验无残留。"
+        }
+      ],
+      "exception": {
+        "mode": "none",
+        "requirements": [
+          "未知错误不得用 savepoint 吞掉；应结束整个 transaction。"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "automated",
+          "criterion": "transaction test 必须观察原始 SQLSTATE、25P02 和最终 state_restored。"
+        },
+        {
+          "kind": "runtime",
+          "criterion": "连接归还 pool 前执行 framework rollback/cleanliness check。"
+        }
+      ]
+    },
+    {
+      "id": "SAFE-RETR-008",
+      "title": "只按 SQLSTATE 整体重试且副作用幂等",
+      "level": "safety",
+      "status": "active",
+      "owner": "application-team",
+      "scope": [
+        "retries",
+        "transactions",
+        "external-effects"
+      ],
+      "statement": "40001/40P01 等可重试错误从 BEGIN 重新执行完整正确性单元，使用 bounded backoff、jitter 与总 deadline；ambiguous commit 和外部副作用必须由 idempotency key/权威查询闭合。",
+      "rationale": "只重放最后一条 SQL 会复用旧 snapshot 上的决策；连接丢失后盲重试可能重复已经提交的订单或外部支付。",
+      "evidence": [
+        {
+          "chapter": "ch03",
+          "artifact": "/labs/ch03/setup.sql",
+          "observation": "订单与支付模型保留 request/idempotency key 和 fingerprint。"
+        },
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/transaction-errors.sql",
+          "observation": "failed transaction 必须先恢复，不能 statement-level 盲重试。"
+        }
+      ],
+      "exception": {
+        "mode": "none",
+        "requirements": [
+          "确定性 constraint、syntax、permission 错误不得纳入自动重试。"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "review",
+          "criterion": "retry policy 列出 SQLSTATE allowlist、最大次数、deadline、idempotency key 与 ambiguous outcome 查询。"
+        }
+      ]
+    },
+    {
+      "id": "SAFE-DEST-009",
+      "title": "破坏动作使用精确目标、双重令牌与后验",
+      "level": "safety",
+      "status": "active",
+      "owner": "operations-owner",
+      "scope": [
+        "reset",
+        "drop",
+        "session-termination"
+      ],
+      "statement": "DROP/reset/terminate 等破坏动作必须解析到精确对象或 PID+identity，要求独立确认令牌，拒绝 broad target，并在动作后验证目标已移除且无旁路影响。",
+      "rationale": "环境变量、PID 重用、通配符和错误连接会把局部清理扩大为不可恢复事故；执行成功本身不证明范围正确。",
+      "evidence": [
+        {
+          "chapter": "ch01",
+          "artifact": "/labs/ch01/reset.sql",
+          "observation": "教学数据库 reset 要求专用 token，并只删除 chapter-owned database/roles。"
+        },
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/blocking-lab.sh",
+          "observation": "只在 PID、database 与唯一 application_name 同时匹配时取消 blocker。"
+        }
+      ],
+      "exception": {
+        "mode": "breakglass",
+        "requirements": [
+          "事件指挥授权",
+          "记录解析后的目标清单",
+          "保留恢复路径",
+          "执行后人工复核"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "automated",
+          "criterion": "reset 无 token 必须以 usage/nonzero 拒绝；session action 同时匹配 PID 与 identity。"
+        }
+      ]
+    },
+    {
+      "id": "SAFE-PAGE-010",
+      "title": "对外分页必须定义稳定全序",
+      "level": "safety",
+      "status": "active",
+      "owner": "api-owner",
+      "scope": [
+        "queries",
+        "apis",
+        "pagination"
+      ],
+      "statement": "对外分页查询必须显式 ORDER BY，最后包含唯一且方向明确的 tie-breaker；cursor 编码所有排序键并固定 NULL/collation 语义。",
+      "rationale": "没有全序时相同排序值可跨页漂移；OFFSET 在并发插入/删除下还会重复或遗漏，物理返回顺序不是合同。",
+      "evidence": [
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/observe.sql",
+          "observation": "ctid 与 tuple version 可变，不能充当长期分页键。"
+        },
+        {
+          "chapter": "ch03",
+          "artifact": "/labs/ch03/setup.sql",
+          "observation": "模型提供稳定 order_id/order_no 与业务时间字段，可组成显式 cursor。"
+        }
+      ],
+      "exception": {
+        "mode": "none",
+        "requirements": [
+          "无顺序的全集读取不得包装成可继续的 pagination API。"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "automated",
+          "criterion": "query contract 证明 page1/page2 无重叠并以 unique key 终结排序。"
+        },
+        {
+          "kind": "review",
+          "criterion": "API 文档声明 sort direction、NULL、collation 与 cursor 失效语义。"
+        }
+      ]
+    },
+    {
+      "id": "DEFAULT-SESS-001",
+      "title": "声明 application_name 与超时预算",
+      "level": "default",
+      "status": "active",
+      "owner": "service-owner",
+      "scope": [
+        "connections",
+        "observability",
+        "timeouts"
+      ],
+      "statement": "每个 workload 使用可归因 application_name，并显式声明 connect、statement、lock 与 idle-in-transaction 预算；数值按 workload/SLO 配置而非全库套同一常数。",
+      "rationale": "没有 identity 就无法把等待、日志和 dashboard 关联到 owner；没有预算的 lock/query 可能无限占用 request 与 connection。",
+      "evidence": [
+        {
+          "chapter": "ch02",
+          "artifact": "/labs/ch02/pg_service.conf.example",
+          "observation": "service profile 同时声明 application name、connect 与 session timeouts。"
+        },
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/blocking-lab.sh",
+          "observation": "唯一 application_name 让 blocker/waiter 可精确关联和清理。"
+        }
+      ],
+      "exception": {
+        "mode": "waiver",
+        "requirements": [
+          "owner",
+          "workload reason",
+          "alternative attribution",
+          "explicit deadline",
+          "expiry"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "runtime",
+          "criterion": "session profile 输出 application_name 和四类 timeout；值为声明配置。"
+        }
+      ]
+    },
+    {
+      "id": "DEFAULT-CONT-002",
+      "title": "固定编码、时区与名称解析上下文",
+      "level": "default",
+      "status": "active",
+      "owner": "database-engineering",
+      "scope": [
+        "sessions",
+        "scripts",
+        "serialization"
+      ],
+      "statement": "自动化与服务 session 默认使用 UTF8、UTC 和显式 search_path；展示时区、locale/collation 与特殊 search_path 由具体接口显式转换。",
+      "rationale": "会话默认值会改变 timestamp 显示、文本解释和未限定对象解析，使同一 SQL 在不同机器/角色上产生不同证据甚至访问错误对象。",
+      "evidence": [
+        {
+          "chapter": "ch02",
+          "artifact": "/labs/ch02/context.sql",
+          "observation": "脚本将 search_path 固定为 pg_catalog, shop 并核对 effective role。"
+        },
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/verify-v1.sql",
+          "observation": "物理模型验收固定 UTC，时间类型精度与语义明确。"
+        }
+      ],
+      "exception": {
+        "mode": "waiver",
+        "requirements": [
+          "接口明确声明 alternative timezone/encoding/path",
+          "序列化测试",
+          "owner",
+          "expiry"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "runtime",
+          "criterion": "session policy 对 client_encoding、TimeZone 与 current_schemas 逐项断言。"
+        }
+      ]
+    },
+    {
+      "id": "DEFAULT-NAME-003",
+      "title": "用 schema、owner、命名和注释表达对象边界",
+      "level": "default",
+      "status": "active",
+      "owner": "data-model-owner",
+      "scope": [
+        "schemas",
+        "ddl",
+        "catalog"
+      ],
+      "statement": "业务表、对外查询接口和内部实现分别进入明确 schema；对象由一致 owner 持有，关键 relation/column/role 有注释，constraint/index 名可定位语义。",
+      "rationale": "schema 是名称与权限边界而非目录装饰；稳定名字和 comment 让 catalog、错误、迁移及事故证据可归因。",
+      "evidence": [
+        {
+          "chapter": "ch03",
+          "artifact": "/labs/ch03/setup.sql",
+          "observation": "shop、shop_api、shop_private 分别承载业务、接口和 owner-only 实现。"
+        },
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/verify-v1.sql",
+          "observation": "关键对象 owner 与 constraint identity 通过 catalog 验证。"
+        }
+      ],
+      "exception": {
+        "mode": "waiver",
+        "requirements": [
+          "legacy boundary mapping",
+          "owner",
+          "migration plan",
+          "expiry"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "runtime",
+          "criterion": "catalog gate 检查 schema/object owner、private schema 权限与关键 comments。"
+        }
+      ]
+    },
+    {
+      "id": "DEFAULT-TYPE-004",
+      "title": "类型名必须闭合单位、范围和时间语义",
+      "level": "default",
+      "status": "active",
+      "owner": "data-model-owner",
+      "scope": [
+        "columns",
+        "api-contracts",
+        "data-conversion"
+      ],
+      "statement": "为数值声明单位/精度/范围，为文本声明相等与排序语义，为时间声明瞬间、民事时间、日期或持续时间；类型选择与 API 序列化使用同一合同。",
+      "rationale": "numeric、text、timestamp 只是存储类别，不自动表达币种、Unicode identity、timezone 或业务精度；歧义会在迁移和跨系统交换时静默放大。",
+      "evidence": [
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/physical-decisions.md",
+          "observation": "金额固定为 CNY fen bigint，事件时间为 timestamptz(3)，文本身份规则另行声明。"
+        },
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/negative-cases.sql",
+          "observation": "币种、email、金额和时间边界由反例验证。"
+        }
+      ],
+      "exception": {
+        "mode": "waiver",
+        "requirements": [
+          "staging/raw data scope",
+          "downstream normalization point",
+          "retention",
+          "owner",
+          "expiry"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "review",
+          "criterion": "DDL review 回答 dimension、range、precision、comparison、serialization 五项。"
+        }
+      ]
+    },
+    {
+      "id": "DEFAULT-KEYS-005",
+      "title": "分离内部键、业务键、外部引用与幂等键",
+      "level": "default",
+      "status": "active",
+      "owner": "data-model-owner",
+      "scope": [
+        "identifiers",
+        "integrations",
+        "idempotency"
+      ],
+      "statement": "内部 join key、用户可见业务编号、provider reference、request/idempotency key 分列并各自约束；不让一个可变外部字符串同时承担所有身份责任。",
+      "rationale": "不同标识的生成者、稳定期、泄露面和唯一范围不同；混用会让外部重试、内部迁移与公开 API 相互绑死。",
+      "evidence": [
+        {
+          "chapter": "ch03",
+          "artifact": "/labs/ch03/requirements.md",
+          "observation": "订单、支付的内部 ID、业务号、provider reference 与 idempotency requirement 分离。"
+        },
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/migrate-v0-to-v1.sql",
+          "observation": "内部 bigint identity 与既有业务 unique key 并存。"
+        }
+      ],
+      "exception": {
+        "mode": "waiver",
+        "requirements": [
+          "证明单一标识的 authority、lifetime、privacy 与 uniqueness scope 完全一致",
+          "owner",
+          "review"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "review",
+          "criterion": "模型评审为每个标识记录 generator、authority、uniqueness scope 与 exposure。"
+        }
+      ]
+    },
+    {
+      "id": "DEFAULT-QUER-006",
+      "title": "查询显式投影并声明结果合同",
+      "level": "default",
+      "status": "active",
+      "owner": "query-owner",
+      "scope": [
+        "sql",
+        "apis",
+        "prepared-statements"
+      ],
+      "statement": "持久接口查询列出所需列、参数类型、NULL/排序/重复语义；SELECT * 只用于短期交互诊断，不进入稳定 API、view consumer 或 migration copy contract。",
+      "rationale": "隐式列集合会随 DDL 漂移，扩大网络/权限面并破坏 positional decoder；未声明排序和 NULL 语义会让调用方依赖偶然计划。",
+      "evidence": [
+        {
+          "chapter": "ch03",
+          "artifact": "/labs/ch03/setup.sql",
+          "observation": "shop_api.order_summary 使用显式 target list 形成查询边界。"
+        },
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/observe.sql",
+          "observation": "诊断输出显式选择 session、snapshot、tuple 与 WAL 字段。"
+        }
+      ],
+      "exception": {
+        "mode": "waiver",
+        "requirements": [
+          "仅限 ad-hoc/ephemeral tooling",
+          "不形成持久 decoder",
+          "owner",
+          "expiry"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "automated",
+          "criterion": "稳定 query artifact 的 expected column list 与 catalog/API contract 一致。"
+        }
+      ]
+    },
+    {
+      "id": "DEFAULT-TXNN-007",
+      "title": "事务只覆盖保持不变量所需的最短边界",
+      "level": "default",
+      "status": "active",
+      "owner": "application-team",
+      "scope": [
+        "transactions",
+        "locks",
+        "external-calls"
+      ],
+      "statement": "transaction 包含维持数据库不变量所必需的 SQL，不在持锁时等待用户输入或远程 API；大批工作分批并声明 partial progress/restart 语义。",
+      "rationale": "transaction 越长，锁持有、old snapshot、WAL/replication 与 failure blast radius 越大；把远程等待放入事务还会把外部延迟传给数据库并发。",
+      "evidence": [
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/blocking-lab.sh",
+          "observation": "一个故意停留的 transaction 足以让同一行写者等待，普通读则读取旧版本。"
+        },
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/lab-contract.md",
+          "observation": "每个 worker 有 server timeout、精确清理与最终 rollback。"
+        }
+      ],
+      "exception": {
+        "mode": "waiver",
+        "requirements": [
+          "证明一致性需要",
+          "lock/snapshot/WAL budget",
+          "timeout",
+          "owner",
+          "expiry"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "review",
+          "criterion": "transaction diagram 标出首个 lock、外部调用、commit 与最大 duration。"
+        },
+        {
+          "kind": "runtime",
+          "criterion": "监控 idle-in-transaction 和 transaction age，超预算报警。"
+        }
+      ]
+    },
+    {
+      "id": "DEFAULT-FIXT-008",
+      "title": "fixture 可重建且状态由 checksum 验收",
+      "level": "default",
+      "status": "active",
+      "owner": "test-owner",
+      "scope": [
+        "tests",
+        "seeds",
+        "labs"
+      ],
+      "statement": "教学/测试 fixture 使用固定业务值、显式时间与可重入入口；验收比较关键 row count/invariant/checksum，不只依赖脚本退出零。",
+      "rationale": "随机时间、序列和隐式环境会制造不可复现失败；仅看 exit code 无法发现脚本成功但目标状态漂移。",
+      "evidence": [
+        {
+          "chapter": "ch03",
+          "artifact": "/labs/ch03/seed.sql",
+          "observation": "逻辑模型使用固定 ID、时间和样例关系。"
+        },
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/verify-v1.sql",
+          "observation": "fresh install 与 migration 收敛到相同 count/invariant/checksum。"
+        }
+      ],
+      "exception": {
+        "mode": "waiver",
+        "requirements": [
+          "property/fuzz test 记录 seed",
+          "失败可重放",
+          "deterministic oracle",
+          "owner"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "automated",
+          "criterion": "同一 install/all 重跑后 verify 摘要保持一致。"
+        }
+      ]
+    },
+    {
+      "id": "DEFAULT-EVID-009",
+      "title": "每次任务保存输入指纹与前后状态",
+      "level": "default",
+      "status": "active",
+      "owner": "delivery-owner",
+      "scope": [
+        "automation",
+        "ci",
+        "reviews"
+      ],
+      "statement": "任务写入独立 evidence directory，包含 UTC 时刻、action、service、client/server version、source SHA-256、stdout/stderr 与 verify-before/after；动态 ID 不写成 golden value。",
+      "rationale": "没有输入版本和前后状态就无法复盘同名脚本执行了什么；把 PID/XID/LSN 固定成 golden 又会制造虚假失败。",
+      "evidence": [
+        {
+          "chapter": "ch02",
+          "artifact": "/labs/ch02/task.sh",
+          "observation": "task manifest 保存版本、目标与所有输入文件 SHA-256。"
+        },
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/task.sh",
+          "observation": "并发实验分离 before/after、activity、locks、SQLSTATE 与 summary。"
+        }
+      ],
+      "exception": {
+        "mode": "waiver",
+        "requirements": [
+          "敏感输出脱敏方案",
+          "最小替代证据",
+          "retention",
+          "owner",
+          "expiry"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "automated",
+          "criterion": "delivery manifest 列出的 source 均进入 task manifest，before/after 文件存在。"
+        }
+      ]
+    },
+    {
+      "id": "DEFAULT-VERS-010",
+      "title": "DDL 使用版本标记、幂等入口与 forward path",
+      "level": "default",
+      "status": "active",
+      "owner": "database-change-owner",
+      "scope": [
+        "schema-versioning",
+        "migrations",
+        "fresh-install"
+      ],
+      "statement": "fresh install 与 upgrade 复用同一权威 DDL/migration chain；schema version 可查询，重复执行要么幂等成功，要么在不修改状态前明确拒绝；不可逆语义优先 forward repair。",
+      "rationale": "两套独立的 create-latest 与 migrate 脚本会漂移；机械 down migration 可能无法恢复丢弃数据或兼容已经发布的 application。",
+      "evidence": [
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/schema-v1.sql",
+          "observation": "空库先建立 v0 shape，再走同一 v0-to-v1 migration。"
+        },
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/migrate-v0-to-v1.sql",
+          "observation": "schema version marker 支持首次升级、重复跳过和前置拒绝。"
+        }
+      ],
+      "exception": {
+        "mode": "waiver",
+        "requirements": [
+          "vendor-managed schema",
+          "version authority",
+          "drift detection",
+          "recovery path",
+          "owner"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "automated",
+          "criterion": "fresh install、upgrade、rerun 与 rejected-precheck 四条路径均有 test evidence。"
+        }
+      ]
+    },
+    {
+      "id": "PREF-TEXT-001",
+      "title": "无长度合同的文本优先使用 text",
+      "level": "preference",
+      "status": "active",
+      "owner": "data-model-owner",
+      "scope": [
+        "text-columns",
+        "ddl-review"
+      ],
+      "statement": "若协议或业务没有真实字符数上限，优先 text 加语义约束；不以性能传言统一使用 varchar(255)。",
+      "rationale": "任意长度 255 不能表达身份、格式、collation 或存储成本，反而制造无业务依据的截断与迁移。",
+      "evidence": [
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/physical-decisions.md",
+          "observation": "机器键与人类文本分别声明格式/比较语义，而非统一 varchar 长度。"
+        }
+      ],
+      "exception": {
+        "mode": "review",
+        "requirements": [
+          "指出协议/业务长度来源",
+          "说明超长输入失败语义"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "review",
+          "criterion": "varchar(n) review 必须引用具体外部或业务合同。"
+        }
+      ]
+    },
+    {
+      "id": "PREF-SEMI-002",
+      "title": "核心关系事实优先拆表，半结构化字段有边界",
+      "level": "preference",
+      "status": "active",
+      "owner": "data-model-owner",
+      "scope": [
+        "jsonb",
+        "arrays",
+        "relational-model"
+      ],
+      "statement": "需要独立身份、引用、约束、查询、更新或生命周期的事实优先成为 relation；JSONB/array 用于形状可变且整体读写、边界清楚的附属值。",
+      "rationale": "把核心事实塞入 JSON/array 会把 FK、唯一性、统计和局部更新责任推给 application；盲目拆表也会增加无价值 join。",
+      "evidence": [
+        {
+          "chapter": "ch03",
+          "artifact": "/labs/ch03/model.mmd",
+          "observation": "customer/order/item/product/payment 按身份与关系拆分。"
+        },
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/physical-decisions.md",
+          "observation": "v1 核心模型明确不使用 array/JSONB，并记录未来适用边界。"
+        }
+      ],
+      "exception": {
+        "mode": "review",
+        "requirements": [
+          "记录字段 ownership",
+          "query/update pattern",
+          "validation",
+          "index/retention cost"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "review",
+          "criterion": "每个 JSONB/array 列回答是否需要独立约束、引用、更新与生命周期。"
+        }
+      ]
+    },
+    {
+      "id": "PREF-PART-003",
+      "title": "先证明生命周期、规模或裁剪收益再分区",
+      "level": "preference",
+      "status": "active",
+      "owner": "database-engineering",
+      "scope": [
+        "partitioning",
+        "physical-design"
+      ],
+      "statement": "默认不预先分区；只有 retention/drop lifecycle、可测规模瓶颈或稳定 partition pruning 证据出现时，才共同设计 partition key、unique/PK、FK 与迁移路径。",
+      "rationale": "分区会改变约束、索引、查询计划、维护和迁移边界；按预计行数套模板常在收益出现前先支付复杂度。",
+      "evidence": [
+        {
+          "chapter": "ch04",
+          "artifact": "/labs/ch04/partition-adr.md",
+          "observation": "当前样例接受 not-now 决策并记录 ch26 复查触发条件。"
+        }
+      ],
+      "exception": {
+        "mode": "review",
+        "requirements": [
+          "workload/retention evidence",
+          "constraint design",
+          "pruning proof",
+          "migration and rollback plan"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "review",
+          "criterion": "partition ADR 必须包含可观测触发条件与不分区替代方案。"
+        }
+      ]
+    },
+    {
+      "id": "PREF-ASQL-004",
+      "title": "高级 SQL 以关系表达清晰和可测试为准",
+      "level": "preference",
+      "status": "active",
+      "owner": "query-owner",
+      "scope": [
+        "cte",
+        "window-functions",
+        "lateral"
+      ],
+      "statement": "CTE、window function 与 LATERAL 在能清楚表达命名步骤、同一行集分析或逐行依赖时使用；复杂 query 同时提供样例、边界测试和 plan evidence，不以功能炫技或 blanket ban 决策。",
+      "rationale": "这些构造能消除 application N+1 和重复扫描，也可能隐藏 cardinality、排序或 materialization 成本；可读性与运行证据必须同时成立。",
+      "evidence": [
+        {
+          "chapter": "ch03",
+          "artifact": "/labs/ch03/review.sql",
+          "observation": "集合式关系查询用于验证模型不变量而非逐行 application loop。"
+        },
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/observe.sql",
+          "observation": "SQL 结构按单一观察责任拆分，动态证据不依赖隐式执行顺序。"
+        }
+      ],
+      "exception": {
+        "mode": "review",
+        "requirements": [
+          "更简单等价写法比较",
+          "correctness tests",
+          "cardinality/plan evidence"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "review",
+          "criterion": "reviewer 能用一句话说明每个 CTE/window/LATERAL 的关系责任。"
+        }
+      ]
+    },
+    {
+      "id": "PREF-PLAN-005",
+      "title": "计划或索引变更以估算和运行证据驱动",
+      "level": "preference",
+      "status": "active",
+      "owner": "performance-owner",
+      "scope": [
+        "query-plans",
+        "statistics",
+        "indexes"
+      ],
+      "statement": "看到 Seq Scan、Nested Loop 或高 cost 不直接判错；先定位 estimate/actual、loops、buffers、wait 与 workload，再用可回退对照验证 statistics、SQL 或 index 变更。",
+      "rationale": "cost 不是毫秒，节点名也不是性能评价；无证据强制 planner 或堆叠索引会掩盖统计/语义问题并增加写放大。",
+      "evidence": [
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/observe.sql",
+          "observation": "运行状态把 snapshot/wait/WAL 与 plan 概念分层观察。"
+        },
+        {
+          "chapter": "ch05",
+          "artifact": "/labs/ch05/lab-contract.md",
+          "observation": "阻塞样例证明慢时间可来自 wait，而不是 plan node。"
+        }
+      ],
+      "exception": {
+        "mode": "review",
+        "requirements": [
+          "incident 临时缓解需记录原计划、变更、停止线、回退与后续根因分析"
+        ]
+      },
+      "checks": [
+        {
+          "kind": "review",
+          "criterion": "plan/index change 附 before/after SQL、parameters、settings、plan、runtime 与 write-cost evidence。"
+        }
+      ]
+    }
+  ]
+}

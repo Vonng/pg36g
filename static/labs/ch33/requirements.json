@@ -1,0 +1,174 @@
+{
+  "schema": "pg36-ch33-failover-requirements-v1",
+  "chapter": 33,
+  "release": "1.0-sandbox",
+  "target": {
+    "id": "pg36-l2-vagrant/pg-test",
+    "ssh_user": "vagrant",
+    "cluster": "pg-test",
+    "initial_primary": "pg-test-1",
+    "failover_candidate": "selected-at-runtime-by-Patroni",
+    "observer": "pg-test-3",
+    "dcs_host": "10.10.10.10",
+    "postgresql_major": 18,
+    "postgresql_observed": "18.4",
+    "patroni_observed": "4.1.3",
+    "pig_observed": "1.5.1",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false
+  },
+  "members": {
+    "pg-test-1": {
+      "address": "10.10.10.11",
+      "initial_role": "primary",
+      "failed_role": "fenced",
+      "rejoined_role": "replica",
+      "restored_role": "primary"
+    },
+    "pg-test-2": {
+      "address": "10.10.10.12",
+      "initial_role": "replica",
+      "failed_role": "candidate-dependent",
+      "rejoined_role": "primary",
+      "restored_role": "replica"
+    },
+    "pg-test-3": {
+      "address": "10.10.10.13",
+      "initial_role": "replica",
+      "failed_role": "candidate-dependent",
+      "rejoined_role": "replica",
+      "restored_role": "replica"
+    }
+  },
+  "client_probe": {
+    "database": "test",
+    "user": "test",
+    "service_host": "10.10.10.11",
+    "service_port": 5433,
+    "target_session_attrs": "read-write",
+    "sslmode": "prefer",
+    "duration_seconds": 32,
+    "interval_seconds": 0.2,
+    "warmup_seconds": 3,
+    "minimum_acknowledged_attempts": 40,
+    "maximum_observed_write_gap_ms": 20000,
+    "maximum_acknowledged_rows_missing": 0,
+    "maximum_duplicate_tokens": 0,
+    "maximum_unreconciled_unknown_outcomes": 0
+  },
+  "managed_failover": {
+    "fault": "controlled-patroni-service-stop",
+    "fault_host": "pg-test-1",
+    "eligible_candidates": ["pg-test-2", "pg-test-3"],
+    "candidate_selection": "automatic-Patroni-election-no-forced-candidate",
+    "service_stop_executor": "systemctl",
+    "promotion_timeout_seconds": 60,
+    "rejoin_timeout_seconds": 90,
+    "baseline_restore_timeout_seconds": 60,
+    "old_primary_must_be_process_fenced_before_candidate_acceptance": true,
+    "automatic_rejoin_must_stream_before_baseline_restore": true,
+    "baseline_restore_kind": "planned-switchover",
+    "baseline_restore_leader": "runtime-selected-failover-leader",
+    "baseline_restore_candidate": "pg-test-1"
+  },
+  "expected_dynamic_policy": {
+    "ttl_seconds": 30,
+    "loop_wait_seconds": 5,
+    "retry_timeout_seconds": 10,
+    "maximum_lag_on_failover_bytes": 1048576,
+    "synchronous_mode": false,
+    "synchronous_mode_strict": false,
+    "failsafe_mode": true,
+    "use_pg_rewind": true,
+    "use_slots": true,
+    "watchdog_mode": "off",
+    "dcs_kind": "etcd3",
+    "dcs_member_count": 1
+  },
+  "rebuild_lab": {
+    "host": "pg-test-3",
+    "address": "10.10.10.13",
+    "root_prefix": "/tmp/pg36-ch33-rebuild",
+    "source_port": 55434,
+    "rewind_target_port": 55435,
+    "basebackup_target_port": 55436,
+    "listen_addresses": "",
+    "unix_socket_permissions": "0700",
+    "data_checksums": true,
+    "wal_log_hints": true,
+    "full_page_writes": true,
+    "same_system_identifier_required": true,
+    "divergent_timeline_required": true,
+    "never_run_divergent_primaries_concurrently": true,
+    "exact_cleanup_required": true
+  },
+  "dcs_tabletop": {
+    "scenario_count": 6,
+    "draw_count": 1,
+    "live_dcs_fault_injection": false,
+    "live_network_partition_injection": false,
+    "decision_must_name_database_role_evidence": true,
+    "decision_must_name_old_primary_fence": true,
+    "decision_must_not_reset_election_state_blindly": true
+  },
+  "risk": {
+    "capture": "L0-read-only",
+    "managed_exercise": "L2-controlled-service-stop-start-and-planned-baseline-restore",
+    "rebuild_exercise": "L2-disposable-local-postgresql-directories",
+    "fixture": "exact-marker-schema-only",
+    "managed_pgdata_delete_permitted": false,
+    "managed_reinit_permitted": false,
+    "patroni_dynamic_config_change_permitted": false,
+    "dcs_mutation_permitted": false,
+    "network_partition_permitted": false,
+    "route_change_permitted": false,
+    "hardware_fencing_claim_permitted": false,
+    "production_failover_claim_permitted": false
+  },
+  "acceptance": {
+    "initial_topology": "pg-test-1-primary-two-streaming-replicas",
+    "failed_topology": "one-eligible-replica-primary-other-replica-streaming-old-primary-fenced",
+    "rejoined_topology": "runtime-selected-primary-two-streaming-replicas",
+    "restored_topology": "pg-test-1-primary-two-streaming-replicas",
+    "managed_system_identifier_unchanged": true,
+    "forward_timeline_must_advance": true,
+    "baseline_restore_timeline_must_advance": true,
+    "all_acknowledged_tokens_must_exist_once": true,
+    "rebuild_rewind_target_must_follow_new_primary": true,
+    "rebuild_divergent_marker_must_disappear": true,
+    "fresh_basebackup_must_follow_new_primary": true,
+    "production_ch33_gate": "pending"
+  },
+  "exceptions": [
+    {
+      "id": "EX33-CONTROLLED-PROCESS-FAULT",
+      "reason": "the managed drill uses a guarded systemd stop, not power loss, kernel panic, storage failure, or an unresponsive host",
+      "claim_blocked": "host/storage failure equivalence and worst-case detection time"
+    },
+    {
+      "id": "EX33-ASYNC-RPO",
+      "reason": "pg-test uses asynchronous streaming replication",
+      "claim_blocked": "zero data-loss guarantee for acknowledged production transactions"
+    },
+    {
+      "id": "EX33-WATCHDOG-OFF",
+      "reason": "the Vagrant guests have Patroni watchdog mode off",
+      "claim_blocked": "hardware watchdog fencing"
+    },
+    {
+      "id": "EX33-SINGLE-DCS",
+      "reason": "the teaching sandbox has one etcd member",
+      "claim_blocked": "DCS quorum availability and realistic partition behavior"
+    },
+    {
+      "id": "EX33-NO-LIVE-PARTITION",
+      "reason": "network and DCS cases are decision-table exercises only",
+      "claim_blocked": "split-brain exclusion under real asymmetric partitions"
+    },
+    {
+      "id": "EX33-DISPOSABLE-REBUILD",
+      "reason": "pg_rewind and pg_basebackup run against isolated temporary clusters rather than deleting a managed member",
+      "claim_blocked": "managed patronictl reinit elapsed time and storage-integrated rebuild"
+    }
+  ]
+}

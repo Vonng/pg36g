@@ -893,7 +893,7 @@ book_kind: table-of-contents
   - [28.3.1 XID 年龄、冻结与回卷保护](/vacuum-freeze-bloat/03/#item-28-3-1)
   - [28.3.2 长事务、`backend_xmin` 与 idle in transaction](/vacuum-freeze-bloat/03/#item-28-3-2)
   - [28.3.3 复制槽 `xmin` 与孤儿 `pg_prepared_xacts`](/vacuum-freeze-bloat/03/#item-28-3-3)
-  - [28.3.4 紧急态应让冻结完成，不把一般止血当修复](/vacuum-freeze-bloat/03/#item-28-3-4)
+  - [28.3.4 紧急态先解除保留并让 VACUUM 完成](/vacuum-freeze-bloat/03/#item-28-3-4)
 - [28.4 膨胀与重建](/vacuum-freeze-bloat/04/)
   - [28.4.1 表膨胀、索引膨胀与统计误判](/vacuum-freeze-bloat/04/#item-28-4-1)
   - [28.4.2 `VACUUM FULL`、在线重建与额外空间](/vacuum-freeze-bloat/04/#item-28-4-2)

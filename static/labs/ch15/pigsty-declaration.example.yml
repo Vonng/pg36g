@@ -1,0 +1,21 @@
+# Pigsty 4.4 declaration sketch for chapter 15.
+# Merge into an existing, reviewed cluster inventory; this is not a complete
+# standalone production configuration.
+all:
+  vars:
+    pg_version: 18
+    pg_packages:
+      - pgsql-main
+      - pgvector
+    pg_default_extensions:
+      - { name: pg_trgm, schema: public }
+    pg_databases:
+      - name: pg36_shop
+        owner: pg36_owner
+        extensions:
+          - { name: vector, schema: public }
+
+# The direct local fixture deliberately places both extensions in shop_ch14 so
+# namespace and lifecycle boundaries remain visible. Choose one reviewed schema
+# convention for a real cluster, and keep package presence, CREATE EXTENSION,
+# versions, owners, preload requirements, backups, and every L1 node consistent.

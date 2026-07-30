@@ -1,0 +1,30 @@
+flowchart LR
+  subgraph M["Managed Pigsty sandbox — read-only evidence"]
+    P["pg-test-1 primary"]
+    R["pg-test-2/3 replicas"]
+    O["Patroni + SQL projection"]
+    P --> O
+    R --> O
+  end
+
+  subgraph D["Disposable forensic root on pg-test-3"]
+    S["clean checksum-enabled source"]
+    G["stopped known-good snapshot"]
+    H["opaque case<br/>heap byte flip while stopped"]
+    C["opaque case<br/>ICU metadata mismatch"]
+    F["blind classifier"]
+    RH["fresh recovery copy"]
+    RC["separate repair copy<br/>REINDEX then REFRESH"]
+    S --> G
+    G --> H
+    G --> C
+    H --> F
+    C --> F
+    G --> RH
+    C --> RC
+  end
+
+  O -. "boundary verification only" .-> F
+  RH --> V["business invariant + checksum validation"]
+  RC --> V
+  V --> X["stop all and remove exact root"]

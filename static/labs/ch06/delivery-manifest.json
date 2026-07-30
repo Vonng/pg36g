@@ -1,0 +1,37 @@
+{
+  "manifest_version": 1,
+  "baseline_version": "0.1.0",
+  "chapter": "ch06",
+  "canonical_registry": "baseline-v0.1.json",
+  "required_artifacts": [
+    "baseline-schema.json",
+    "baseline-v0.1.json",
+    "baseline-guide.md",
+    "change-template.md",
+    "waiver-template.md",
+    "evidence-ledger.md",
+    "context.sql",
+    "session-profile.sql",
+    "wrong-session.sql",
+    "query-contract.sql",
+    "pigsty-declaration.example.yml",
+    "check_baseline.py",
+    "quality-gate.sh"
+  ],
+  "required_gate_actions": [
+    "static",
+    "live",
+    "negative",
+    "review",
+    "all"
+  ],
+  "v1_exit_chapter": "ch12",
+  "v1_required_evidence": [
+    "ch07-plan-and-statistics",
+    "ch08-slow-query-diagnosis",
+    "ch09-index-validation",
+    "ch10-concurrency-and-retry",
+    "ch11-schema-release",
+    "ch12-application-delivery"
+  ]
+}

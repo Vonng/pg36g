@@ -13,20 +13,53 @@ book_kind: chapter
 book_id: ch30
 book_number: 30
 book_part: part-5
-book_status: scaffold
+book_status: draft
 ---
 
-> **骨架状态**：本章已经建立“章 → 节页面 → 目摘要”的完整索引；当前摘要用于固定写作范围，后续再逐目扩写、验证和审校。
+第 29 章已经把逻辑复制、全量校验、切流和回退组织成迁移状态机。版本升级是在这条主线
+上再增加五个同时变化的维度：
 
-## 本章目标
+```text
+PostgreSQL server
+  + data/catalog format
+      + SQL behavior and defaults
+          + extensions and native libraries
+              + clients, pools, backups, exporters and automation
+```
 
-把升级视为应用、数据库、扩展、排序规则和平台共同参与的迁移项目，通过彩排决定前滚或回退。
+因此，升级不是“换个 RPM/DEB 再重启”，也不是 `pg_upgrade` 返回成功就结束。它是一项
+有兼容性清单、隔离彩排、业务基线、发布门、写入分界和退出窗口的迁移项目。
 
-## 所属位置
+## 学习完成标准
 
-- 卷别：[下卷：运维管理](/lower-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第五篇：运营——用证据驱动日常维护与演进
-- 兼容入口：`/ch30/`、`/volume-2/version-upgrade/`
+完成本章后，读者应能：
+
+1. 区分 minor、安全修复和 major upgrade，并从 release notes 提取行为变化；
+2. 在 `pg_upgrade`、逻辑复制和 dump/restore 之间按停机、空间、回退与重建目标选型；
+3. 盘点扩展的包、动态库、SQL 对象、preload 和 update path；
+4. 发现 collation version 漂移，并坚持先重建依赖对象、再刷新版本；
+5. 用 catalog、checksum、`amcheck`、恢复证据、查询结果和业务不变量建立升级基线；
+6. 在隔离环境复现完整升级，并把软件准备时间与业务不可写时间分开；
+7. 在目标第一笔独占写入前证明回退，在其后切换为对账或前滚策略；
+8. 输出含停止线、观察窗口、owner 与证据包的生产升级 runbook。
+
+## 一张图看懂升级决策
+
+```text
+识别变化
+  -> inventory 数据 / 配置 / 扩展 / 客户端 / collation
+      -> 选择 pg_upgrade / logical / dump-restore
+          -> 克隆与彩排
+              -> compatibility gate
+                  -> stop old writer
+                      -> upgrade and rebuild
+                          -> application-visible validation
+                              -> rollback proof before target writes
+                                  -> release and observe
+```
+
+任一门禁失败，都回到前一个可解释状态；不能用“先上线再看看”跨过 checksum、
+collation、扩展或业务结果不一致。
 
 ## 本章目录
 
@@ -76,6 +109,43 @@ book_status: scaffold
 
 ## 写作与验收提示
 
-- 本章各节是独立页面，目的标题使用稳定锚点；
-- PostgreSQL 结论优先回到原生证据，Pigsty 内容标明参考实现边界；
-- 实验正文补写时必须同时补齐验证、风险等级与复位路径。
+本章提供一个真实、隔离的 PostgreSQL 17.10→18.4 参考实验。它在 Pigsty
+`pg-meta` 主机的随机 `/tmp` 目录中创建两套 Unix-socket-only 临时集群，不接触
+Pigsty 管理的数据目录与服务。正式证据证明：
+
+```text
+fixture rows before / after       10,000 / 10,000
+ordered digest equal              true
+stale ICU collation gate          blocked
+REINDEX then REFRESH VERSION      passed
+checksum-incompatible target      rejected
+pg_upgrade method                 copy
+amcheck and staged ANALYZE        passed
+old PG17 restart before new write passed
+forward canary                    order_id 10001
+remote and fixture cleanup        verified
+```
+
+验证器拒绝了 30 个声明反例和 20 个现场证据变异。公开摘要位于
+[`upgrade-run.json`](/labs/ch30/upgrade-run.json)，完整实验合同位于
+[`lab-contract.md`](/labs/ch30/lab-contract.md)。
+
+这次小型沙箱成功不预测生产停机时长，也不证明第三方扩展、驱动、备份体系或真实应用
+已经兼容。`production_ch30_gate` 始终保持 `pending`；生产授权必须来自真实数据克隆、
+业务彩排、备份恢复与变更审批。
+
+## 参考资料
+
+- [PostgreSQL 18：升级 PostgreSQL 集群](https://www.postgresql.org/docs/18/upgrading.html)
+- [PostgreSQL 18：`pg_upgrade`](https://www.postgresql.org/docs/18/pgupgrade.html)
+- [PostgreSQL 18：逻辑复制集群升级](https://www.postgresql.org/docs/18/logical-replication-upgrade.html)
+- [PostgreSQL 18：`ALTER COLLATION`](https://www.postgresql.org/docs/18/sql-altercollation.html)
+- [PostgreSQL 18：`pg_verifybackup`](https://www.postgresql.org/docs/18/app-pgverifybackup.html)
+- [PostgreSQL 18：版本 18 发行说明](https://www.postgresql.org/docs/18/release-18.html)
+- [Pigsty v4.4：PostgreSQL 大、小版本升级](https://pigsty.io/docs/pgsql/admin/upgrade/)
+- [Pigsty v4.4：数据迁移](https://pigsty.io/docs/pgsql/migration/)
+
+---
+
+[上一章：移花接木：逻辑复制、迁移与异构同步](/logical-replication-migration/) · [返回下卷导读](/lower-volume/) · [下一章：事件分级、现场保护与应急决策——枕戈待旦](/incident-response/) ·
+[查看全书目录](/toc/) · [查看索引中心](/indexes/)

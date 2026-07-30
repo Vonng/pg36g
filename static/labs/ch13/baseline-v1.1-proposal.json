@@ -1,0 +1,92 @@
+{
+  "schema": "pg36-ch13-release-proposal-v1",
+  "release": "1.1-proposal",
+  "fixture": "ch13-routine-guard-v1",
+  "target": {
+    "database": "pg36_shop",
+    "schema": "shop_ch13",
+    "owner": "pg36_owner",
+    "application_role": "pg36_app",
+    "postgresql": "14-18",
+    "validated_on": "18.4"
+  },
+  "decision": {
+    "local_domain": "CHECK",
+    "state_transition": "BEFORE ROW trigger",
+    "cross_table_final_state": "deferred constraint trigger",
+    "command_boundary": "SECURITY DEFINER function",
+    "bulk_maintenance": "SECURITY INVOKER procedure",
+    "cross_system_workflow": "application plus outbox"
+  },
+  "contracts": {
+    "transition_sqlstate": "P3613",
+    "payment_sqlstate": "P3614",
+    "version_sqlstate": "P3616",
+    "payment_command_sqlstate": "P3618",
+    "direct_write_sqlstate": "42501",
+    "transaction_control_sqlstate": "2D000",
+    "procedure_rerun_total": 0,
+    "procedure_batches": [
+      2,
+      2,
+      1
+    ]
+  },
+  "expected_state": {
+    "orders": 13,
+    "created": 3,
+    "paid": 1,
+    "canceled": 4,
+    "expired": 5,
+    "payments": 1,
+    "history_rows": 10,
+    "audit_statements": 6,
+    "audit_affected_rows": 10,
+    "business_checksum": "f045467816a9be6774f30312adc16402"
+  },
+  "security": {
+    "application_table_dml": false,
+    "application_internal_function_execute": false,
+    "application_command_execute": true,
+    "public_execute": false,
+    "definer_search_path": [
+      "pg_catalog",
+      "pg_temp"
+    ]
+  },
+  "evidence": [
+    "routine-catalog.csv",
+    "trigger-catalog.csv",
+    "security-catalog.csv",
+    "transition-matrix.csv",
+    "api-happy.csv",
+    "invalid-transition.stderr",
+    "paid-without-payment.stderr",
+    "version-conflict.stderr",
+    "payment-mismatch.stderr",
+    "delete-payment.stderr",
+    "direct-write.stderr",
+    "exception-probe.csv",
+    "function-stats.csv",
+    "bulk-update.csv",
+    "procedure-in-transaction.stderr",
+    "procedure-run.csv",
+    "procedure-rerun.csv",
+    "final-state.csv",
+    "verify.txt",
+    "manifest.txt"
+  ],
+  "rollback": {
+    "token": "RESET_CH13_ROUTINE_GUARD",
+    "target": "pg36_shop/shop_ch13",
+    "requires_no_active_workers": true,
+    "uses_cascade": false
+  },
+  "limitations": [
+    "The local fixture does not prove production latency or throughput.",
+    "Function counters are cumulative observations, not request traces.",
+    "Deferred trigger checks do not replace an explicit concurrency protocol.",
+    "The procedure is not a scheduler and does not choose when work runs.",
+    "Pooler behavior is outside this direct-PostgreSQL chapter lab."
+  ]
+}

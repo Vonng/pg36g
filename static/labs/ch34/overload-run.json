@@ -1,0 +1,69 @@
+{
+  "common_alert": "postgresql-resource-headroom-at-risk",
+  "decision": {
+    "production_approval": null,
+    "production_ch34_gate": "pending"
+  },
+  "evidence": {
+    "declared_counterexamples": 34,
+    "live_mutants_rejected": 34,
+    "source_files_hash_bound": 12
+  },
+  "experiment": {
+    "blind_classification": true,
+    "case_count": 2,
+    "host": "pg-test-3",
+    "postgresql_version": "18.4 (Ubuntu 18.4-1.pgdg24.04+1)",
+    "randomized_order": [
+      "RETENTION",
+      "FLOW"
+    ],
+    "unix_socket_only": true
+  },
+  "flow_pressure": {
+    "attempted_clients": 30,
+    "classified_route": "RELIEVE_FLOW_PRESSURE",
+    "connection_rejections": 9,
+    "lock_waiters": 20,
+    "mitigation_scope": "exact-application-name-prefix",
+    "observed_sessions": 21,
+    "post_fixture_sessions": 0
+  },
+  "managed_cluster": {
+    "mutations": 0,
+    "system_identifier_unchanged": true,
+    "timeline_unchanged": true,
+    "topology_unchanged": true
+  },
+  "observed_at": "2026-07-30T04:20:48.083950Z",
+  "run_id": "1ae188cd-e7f2-4724-98d8-fe166cf4e33f",
+  "safety": {
+    "exact_root_removed": true,
+    "external_dispatch_count": 0,
+    "filesystem_fill_injected": false,
+    "host_cache_dropped": false,
+    "managed_connection_storm": false,
+    "managed_postgresql_mutated": false,
+    "managed_query_canceled": false,
+    "managed_replication_slot_created": false,
+    "managed_route_changed": false,
+    "managed_service_changed": false,
+    "manual_pg_wal_file_deletion": false,
+    "oom_injected": false,
+    "production_data_touched": false,
+    "production_traffic_touched": false,
+    "wrong_action_executed": false
+  },
+  "schema": "pg36-ch34-public-summary-v1",
+  "status": "completed",
+  "target": "pg36-l2-vagrant/pg-test",
+  "wal_retention": {
+    "classified_route": "PRESERVE_RETENTION_EVIDENCE",
+    "generated_wal_bytes": 42422264,
+    "inactive_physical_slots": 1,
+    "manual_pg_wal_file_deletion": false,
+    "mitigation_scope": "exact-owned-disposable-slot",
+    "post_physical_slots": 0,
+    "retained_wal_bytes": 42611296
+  }
+}

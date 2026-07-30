@@ -1,0 +1,264 @@
+{
+  "schema": "pg36-lower-volume-gates-v1",
+  "release": "1.6-proposal",
+  "status": "pending-evidence",
+  "gates": [
+    {
+      "chapter": 19,
+      "gate_id": "ch19-deployment-baseline",
+      "owner": "database-platform-team",
+      "questions": [
+        "Do compute, memory, storage, network, OS, versions, names, and failure domains satisfy the proposed service classes?",
+        "Does the Pigsty inventory converge on an isolated L2 environment without unreviewed secrets or defaults?"
+      ],
+      "required_evidence": [
+        "versioned inventory and host baseline",
+        "L2 deployment acceptance bundle"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 20,
+      "gate_id": "ch20-ha",
+      "owner": "database-platform-team",
+      "questions": [
+        "Which failures are covered by replication and which are not?",
+        "Do synchronous policy, election, fencing, failover, and rejoin meet the proposed RPO/RTO?"
+      ],
+      "required_evidence": [
+        "topology and failure-domain proof",
+        "planned switchover and failure drill"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 21,
+      "gate_id": "ch21-backup-restore",
+      "owner": "database-platform-team",
+      "questions": [
+        "Can PostgreSQL plus every admitted extension be restored into an isolated empty target?",
+        "Do WAL continuity, repository retention, encryption, and cross-domain copies meet recovery scenarios?"
+      ],
+      "required_evidence": [
+        "backup policy and repository manifest",
+        "isolated restore with business and extension checksums"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 22,
+      "gate_id": "ch22-access-routing",
+      "owner": "database-platform-team",
+      "questions": [
+        "Do write, read-only, offline, and administration endpoints have explicit semantics?",
+        "Are connection budgets, pool modes, failover, cancellation, and session-state behavior proven?"
+      ],
+      "required_evidence": [
+        "endpoint and connection-budget contract",
+        "routing and saturation drill"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 23,
+      "gate_id": "ch23-security",
+      "owner": "security-and-database-platform",
+      "questions": [
+        "Does the threat model cover clients, operators, poolers, replicas, backups, extensions, and external projections?",
+        "Are authentication, least privilege, tenant context, TLS, secrets, RLS, and audit controls effective?"
+      ],
+      "required_evidence": [
+        "threat model and role matrix",
+        "positive and negative tenant-isolation tests"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 24,
+      "gate_id": "ch24-governance",
+      "owner": "service-owner-and-database-platform",
+      "questions": [
+        "Which SLI/SLO, error budget, owner, support window, and escalation apply to each offering?",
+        "Are change, exception, evidence-retention, and decommission workflows assigned?"
+      ],
+      "required_evidence": [
+        "approved service catalog and RACI",
+        "SLO, SOP, runbook, and change-governance package"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 25,
+      "gate_id": "ch25-observability",
+      "owner": "database-platform-team",
+      "questions": [
+        "Can operators detect and explain availability, saturation, replication, backup, query, and extension failures?",
+        "Do alerts link to owners and actionable runbooks rather than dashboard symptoms?"
+      ],
+      "required_evidence": [
+        "signal and alert contract",
+        "alert-to-diagnosis exercise"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 26,
+      "gate_id": "ch26-capacity",
+      "owner": "performance-and-database-platform",
+      "questions": [
+        "Where are the saturation points for the representative OLTP, search, spatial, and analytical mix?",
+        "Does single-node plus offline-replica capacity remain sufficient, or is a new distribution ADR triggered?"
+      ],
+      "required_evidence": [
+        "reproducible workload and noise analysis",
+        "capacity curves, forecast, headroom, and cost model"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 27,
+      "gate_id": "ch27-tuning",
+      "owner": "database-platform-team",
+      "questions": [
+        "Which measured bottleneck justifies each parameter change?",
+        "Are memory, WAL, checkpoint, planner, parallel, and connection budgets safe under peak concurrency?"
+      ],
+      "required_evidence": [
+        "before/after single-variable experiment",
+        "configuration scope, rollout, and rollback record"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 28,
+      "gate_id": "ch28-vacuum",
+      "owner": "database-platform-team",
+      "questions": [
+        "Can autovacuum, freeze, index integrity, and partition lifecycle keep pace with growth and long snapshots?",
+        "Are bloat detection and rebuild actions bounded and recoverable?"
+      ],
+      "required_evidence": [
+        "vacuum/freeze age and debt baseline",
+        "maintenance and amcheck rehearsal"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 29,
+      "gate_id": "ch29-migration",
+      "owner": "database-platform-and-application-teams",
+      "questions": [
+        "Can data and schema move with a stable watermark, validation, retry, and rollback state machine?",
+        "Are CDC slot retention and every external projection's semantic losses governed?"
+      ],
+      "required_evidence": [
+        "migration state machine and cutover gates",
+        "row, aggregate, and checksum reconciliation"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 30,
+      "gate_id": "ch30-upgrade",
+      "owner": "database-platform-team",
+      "questions": [
+        "Can PostgreSQL, extensions, locale/collation, clients, and platform be upgraded in a safe order?",
+        "Is the last reversible point known and rehearsed?"
+      ],
+      "required_evidence": [
+        "isolated upgrade rehearsal",
+        "application golden, extension checks, forward-or-back decision"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 31,
+      "gate_id": "ch31-incident",
+      "owner": "service-incident-commander",
+      "questions": [
+        "Are severity, response objectives, evidence preservation, authority, communication, and escalation defined?",
+        "Can a responder route from symptoms without destroying recovery options?"
+      ],
+      "required_evidence": [
+        "incident framework and communication templates",
+        "blind symptom tabletop"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 32,
+      "gate_id": "ch32-pitr",
+      "owner": "database-platform-team",
+      "questions": [
+        "Can an operator choose the correct recovery target and timeline in isolation?",
+        "Can recovered data be validated and safely returned without overwriting evidence?"
+      ],
+      "required_evidence": [
+        "random-target PITR rehearsal",
+        "business validation and controlled return plan"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 33,
+      "gate_id": "ch33-failover-rebuild",
+      "owner": "database-platform-team",
+      "questions": [
+        "Can responders distinguish database, replication, network, and DCS failure?",
+        "Are fencing, timeline choice, old-primary rejoin, and cluster rebuild safe from split brain?"
+      ],
+      "required_evidence": [
+        "failure-domain diagnosis bundle",
+        "failover and rebuild drill"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 34,
+      "gate_id": "ch34-overload",
+      "owner": "service-and-database-platform",
+      "questions": [
+        "Can responders distinguish traffic overload from retention or durability pressure before shedding load?",
+        "Do connection, query, CPU, memory, I/O, cancellation, and degradation controls preserve correctness?"
+      ],
+      "required_evidence": [
+        "same-symptom dual-cause drill",
+        "bounded load-shedding and recovery evidence"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 35,
+      "gate_id": "ch35-forensics",
+      "owner": "database-platform-and-security",
+      "questions": [
+        "Can original pages, checksums, logs, timelines, and storage evidence be protected before repair?",
+        "Are detection, extraction, rebuild, and business validation separated?"
+      ],
+      "required_evidence": [
+        "immutable forensic evidence manifest",
+        "clone-only classification and recovery exercise"
+      ],
+      "status": "pending"
+    },
+    {
+      "chapter": 36,
+      "gate_id": "ch36-postmortem",
+      "owner": "service-owner",
+      "questions": [
+        "Does the postmortem explain the causal chain and decision quality rather than stop at human error?",
+        "Are actions converted into tested controls and fed back into SLO, SOP, service catalog, and ADR?"
+      ],
+      "required_evidence": [
+        "causal timeline and control-gap analysis",
+        "verified control changes with owners and deadlines"
+      ],
+      "status": "pending"
+    }
+  ],
+  "limitations": [
+    "A pending gate is a question and evidence contract, not a claim that the control exists.",
+    "Chapter completion alone does not pass a gate; the required target-environment evidence must pass.",
+    "Owners are role placeholders and must be mapped to accountable people or teams."
+  ]
+}

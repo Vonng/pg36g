@@ -1,0 +1,47 @@
+{
+  "proposal_version": 1,
+  "base_baseline": "0.1.0",
+  "base_checksum": "bb1404e2b2e47624b17f3a1b0de63a5371f382b67906f1a8ba1cf08e92895a1c",
+  "depends_on_candidates": [
+    {
+      "candidate_baseline": "0.4.0",
+      "proposal": "/labs/ch09/baseline-v0.4-proposal.json",
+      "proposal_checksum": "b5e8cccc12a0d9f849088a62ba346db83cfe4e0670e8a8820fd08c865f5102b7"
+    }
+  ],
+  "candidate_baseline": "0.5.0",
+  "status": "candidate",
+  "rule_id": "DEFAULT-TXNN-007",
+  "change_kind": "statement-and-runtime-check",
+  "statement_change": {
+    "from": "transaction 包含维持数据库不变量所必需的 SQL，不在持锁时等待用户输入或远程 API；大批工作分批并声明 partial progress/restart 语义。",
+    "to": "transaction 包含维持数据库不变量所必需的 SQL，不在持锁时等待用户输入或远程 API；并发写入合同必须声明业务不变量、隔离级别或锁策略、可重试 SQLSTATE、重试预算、幂等键及外部副作用边界；大批工作分批并声明 partial progress/restart 语义。"
+  },
+  "evidence": [
+    {
+      "chapter": "ch10",
+      "artifact": "/labs/ch10/run_concurrency.py",
+      "observation": "确定性屏障分别证明静默丢更新、40001、写偏差、SSI、行锁队列、55P03、40P01 与 advisory lifecycle。"
+    },
+    {
+      "chapter": "ch10",
+      "artifact": "/labs/ch10/payment-worker.sql",
+      "observation": "并发相同请求只产生一条 payment 与一条 outbox，重复调用返回同一结果。"
+    },
+    {
+      "chapter": "ch10",
+      "artifact": "/labs/ch10/payment-mismatch.sql",
+      "observation": "相同 idempotency key 携带不同 fingerprint 必须拒绝且不产生新副作用。"
+    }
+  ],
+  "proposed_check": {
+    "kind": "runtime",
+    "criterion": "对每个并发写用两个以上独立连接验证声明的不变量；retry 只处理列明的整事务错误并使用有界 backoff；相同幂等键同 payload 返回同一结果，不同 payload 拒绝，数据库提交与外部副作用之间通过可重放协议衔接。"
+  },
+  "promotion_conditions": [
+    "ch10 concurrency suite 在 PostgreSQL 14-18 兼容矩阵通过",
+    "至少一个真实 driver/pool 实现通过断连、超时、重复投递和 retry budget 测试",
+    "在 Pigsty L1 负载下记录 serialization/deadlock/lock wait 比率与 tail latency",
+    "先晋升 v0.2-v0.4 依赖链，再生成不可变 baseline v0.5 release artifact"
+  ]
+}

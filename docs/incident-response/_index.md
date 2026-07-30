@@ -13,20 +13,56 @@ book_kind: chapter
 book_id: ch31
 book_number: 31
 book_part: part-6
-book_status: scaffold
+book_status: draft
 ---
 
-> **骨架状态**：本章已经建立“章 → 节页面 → 目摘要”的完整索引；当前摘要用于固定写作范围，后续再逐目扩写、验证和审校。
+前十二章已经建立部署、HA、备份、安全、可观测、容量、调优、维护、迁移与升级能力。
+系统真正出事时，这些能力不会自动拼成一次正确响应：告警只呈现某个观察面的症状，
+自动化可能继续改变拓扑，人在压力下又容易把第一个解释当成根因。
 
-## 本章目标
+本章是第 32～35 章的共同控制平面。它不提前穷举所有故障，而是先回答四个问题：
 
-建立所有事故共用的指挥、保护、取证、变更与升级框架；兼顾单人值守和团队协同，并学会怀疑第一个症状。
+```text
+现在影响了谁，数据与恢复能力是否仍安全？
+哪些状态仍在变化，哪些自动化需要精确暂停？
+已有证据把问题路由到哪类恢复目标？
+下一步动作由谁执行，何时停止，怎样证明结果？
+```
 
-## 所属位置
+事故早期最稀缺的通常不是命令，而是**可信状态与可逆选择**。好的响应不以“最快猜到
+根因”为目标，而以更快降低用户影响、数据风险和不确定性，同时保留恢复路径为目标。
 
-- 卷别：[下卷：运维管理](/lower-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第六篇：出山——按响应目标演练恢复与改进
-- 兼容入口：`/ch31/`、`/volume-2/incident-response/`
+## 学习完成标准
+
+完成本章后，读者应能：
+
+1. 从用户影响、数据风险、范围、变化速度和可恢复性分级事件；
+2. 把“恢复数据、恢复拓扑、释放压力、保护完整性”写成明确响应目标；
+3. 区分严重度与技术判型，不让首发告警直接授权重启、提升或删除；
+4. 有选择地控制 Patroni、调度器、路由与保留任务，而不是笼统“暂停一切”；
+5. 采集带 UTC、拓扑、版本、system identifier、timeline、LSN 与来源散列的最小证据；
+6. 按 PITR、HA、过载和完整性四条路线进入第 32～35 章；
+7. 用“事实—假设—动作—预期—停止线—回退—结果”记录每次决策；
+8. 在单人和团队两种模式下完成前十五分钟响应与可读交接；
+9. 识别必须引入业务、存储、安全、法务或厂商的升级条件；
+10. 组织一次不触碰生产的盲抽桌面演练，并区分工具通过与人员胜任。
+
+## 一张图看懂事故控制面
+
+```text
+detect symptom
+  -> declare incident and start UTC timeline
+      -> quantify impact / data risk / scope / trend / recoverability
+          -> preserve writer identity / WAL / backup / evidence
+              -> collect independent layers
+                  -> choose PITR / HA / OVERLOAD / INTEGRITY
+                      -> authorize one bounded action
+                          -> verify actual result
+                              -> communicate and hand off
+```
+
+若新证据推翻当前路线，应回到 triage；若动作越过了写入、timeline 或不可逆边界，应更新
+回退定义。严重度可以升降，技术路线也可以改变，但每次改变都必须留下事实和时间。
 
 ## 本章目录
 
@@ -69,6 +105,30 @@ book_status: scaffold
 
 ## 写作与验收提示
 
-- 本章各节是独立页面，目的标题使用稳定锚点；
-- PostgreSQL 结论优先回到原生证据，Pigsty 内容标明参考实现边界；
-- 实验正文补写时必须同时补齐验证、风险等级与复位路径。
+本章提供八个盲抽场景，每条后续技术路线各两个。正式参考 run 在 Pigsty `FULL/L3`
+监控环境中对 `pg-test` 做 `L0-read-only` 采集，再离线完成一份 solo 与一份 team
+响应：
+
+```text
+PostgreSQL                         18.4
+Patroni topology                   1 primary + 2 replicas
+timeline                           11
+pgBackRest status / backups        0 / 6
+drawn routes                       INTEGRITY + PITR
+online mutation                    none
+real incident injected             false
+dangerous actions executed         0
+```
+
+验证器拒绝了 31 个声明反例和 18 个现场证据变异，并绑定 12 个实验源文件。公开摘要见
+[`incident-run.json`](/labs/ch31/incident-run.json)，完整边界见
+[`lab-contract.md`](/labs/ch31/lab-contract.md)。
+
+这次通过只证明只读采集、盲包、响应合同和校验器可执行；参考响应由程序生成，**不代表
+任何真人通过了能力考核**，更没有实施 failover、恢复备份或处理真实事故。
+`production_ch31_gate` 保持 `pending`。
+
+---
+
+[上一章：推陈出新：版本升级与回滚策略](/version-upgrade/) · [返回下卷导读](/lower-volume/) · [下一章：PITR 与误操作恢复——妙手回春](/pitr/) ·
+[查看全书目录](/toc/) · [查看索引中心](/indexes/)

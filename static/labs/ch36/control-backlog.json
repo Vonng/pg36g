@@ -1,0 +1,277 @@
+{
+  "schema": "pg36-ch36-control-backlog-v1",
+  "policy": {
+    "scope": "reference-roadmap-requires-local-approval",
+    "production_execution_approved": false,
+    "closure_rule": "An action closes only when its named evidence satisfies its pass condition; implementation or ticket closure alone is insufficient."
+  },
+  "actions": [
+    {
+      "id": "A36-01",
+      "title": "Version the incident observation and evidence manifest schema",
+      "owner_role": "database-platform-reliability",
+      "priority": "P0",
+      "phase": "day-0-30",
+      "due_day": 14,
+      "source_themes": ["T36-OBSERVATION-CONTRACT"],
+      "control_type": "detect",
+      "artifact": "reviewed incident schema with user-impact, database, topology, backup and business fields",
+      "verification": {
+        "type": "static-and-tabletop",
+        "procedure": "validate one historical evidence bundle and one packet with a required field removed",
+        "pass_condition": "the complete bundle passes and the incomplete packet fails before a response route is selected",
+        "evidence_to_close": "validator output, schema revision and review record",
+        "revalidation_days": 90
+      },
+      "failure_condition": "a responder can select a destructive route while required identity or impact fields are absent",
+      "status": "proposed",
+      "production_execution_approved": false
+    },
+    {
+      "id": "A36-02",
+      "title": "Enforce exact target and production approval on destructive workflows",
+      "owner_role": "database-platform-engineering",
+      "priority": "P0",
+      "phase": "day-0-30",
+      "due_day": 21,
+      "source_themes": ["T36-PRODUCTION-GATE", "T36-REVERSIBLE-SCOPE"],
+      "control_type": "prevent",
+      "artifact": "policy gate for target identity, traffic, data class, authority and rollback",
+      "verification": {
+        "type": "negative-test",
+        "procedure": "submit missing, conflicting and production-valued guard combinations in a disposable control test",
+        "pass_condition": "every unsafe combination fails before remote mutation and emits a reviewable reason",
+        "evidence_to_close": "guard matrix, exit codes and zero-mutation capture",
+        "revalidation_days": 30
+      },
+      "failure_condition": "a generic confirmation token can authorize an unresolved or production target",
+      "status": "proposed",
+      "production_execution_approved": false
+    },
+    {
+      "id": "A36-03",
+      "title": "Define idempotency tokens and unknown-outcome reconciliation",
+      "owner_role": "application-platform-engineering",
+      "priority": "P0",
+      "phase": "day-0-30",
+      "due_day": 30,
+      "source_themes": ["T36-UNKNOWN-OUTCOME"],
+      "control_type": "mitigate",
+      "artifact": "request identity contract and reconciliation query or API",
+      "verification": {
+        "type": "failure-injection",
+        "procedure": "interrupt acknowledgements around commit and reconcile every attempt by stable token",
+        "pass_condition": "no acknowledged result is missing, no token is duplicated and every unknown result becomes resolved",
+        "evidence_to_close": "attempt ledger, database manifest and reconciliation report",
+        "revalidation_days": 90
+      },
+      "failure_condition": "the system asks operators to infer commit outcome from client timeout alone",
+      "status": "proposed",
+      "production_execution_approved": false
+    },
+    {
+      "id": "A36-04",
+      "title": "Separate user-impact SLI from diagnostic database telemetry",
+      "owner_role": "service-reliability-owner",
+      "priority": "P0",
+      "phase": "day-0-30",
+      "due_day": 30,
+      "source_themes": ["T36-OBSERVATION-CONTRACT", "T36-PRODUCTION-GATE"],
+      "control_type": "detect",
+      "artifact": "versioned SLI specification, dashboard and page policy",
+      "verification": {
+        "type": "synthetic-signal-test",
+        "procedure": "inject a synthetic user failure and an isolated diagnostic anomaly as separate cases",
+        "pass_condition": "user failure pages from the SLI while the diagnostic-only anomaly remains contextual evidence",
+        "evidence_to_close": "time-series query, alert evaluation and notification trace",
+        "revalidation_days": 30
+      },
+      "failure_condition": "a host or PostgreSQL metric is treated as user impact without an explicit service mapping",
+      "status": "proposed",
+      "production_execution_approved": false
+    },
+    {
+      "id": "A36-05",
+      "title": "Run PITR candidate selection with business-delta reconciliation",
+      "owner_role": "database-recovery-owner",
+      "priority": "P0",
+      "phase": "day-31-60",
+      "due_day": 45,
+      "source_themes": ["T36-BUSINESS-VALIDATION", "T36-LINEAGE-AUTHORITY"],
+      "control_type": "recover",
+      "artifact": "quarterly PITR drill and business reconciliation manifest",
+      "verification": {
+        "type": "isolated-recovery-drill",
+        "procedure": "restore at least two candidate targets, reject the wrong history and reconcile legitimate post-target facts",
+        "pass_condition": "selected history, lineage and all versioned business invariants pass without business cutover",
+        "evidence_to_close": "candidate manifests, source audit, timing decomposition and retained backup identity",
+        "revalidation_days": 90
+      },
+      "failure_condition": "restore success is accepted from PostgreSQL startup or row count alone",
+      "status": "proposed",
+      "production_execution_approved": false
+    },
+    {
+      "id": "A36-06",
+      "title": "Exercise fencing, failover, outcome reconciliation and rejoin",
+      "owner_role": "high-availability-owner",
+      "priority": "P0",
+      "phase": "day-31-60",
+      "due_day": 50,
+      "source_themes": ["T36-UNKNOWN-OUTCOME", "T36-LINEAGE-AUTHORITY", "T36-REVERSIBLE-SCOPE"],
+      "control_type": "recover",
+      "artifact": "topology-specific failover and rejoin drill",
+      "verification": {
+        "type": "controlled-failover-drill",
+        "procedure": "prove old-writer fencing, promotion authority, client outcomes, timeline lineage and replica rejoin",
+        "pass_condition": "one writer is accepted, every client token is reconciled and the restored topology matches the declared baseline",
+        "evidence_to_close": "DCS projection, timeline graph, client ledger and before-after topology",
+        "revalidation_days": 90
+      },
+      "failure_condition": "a promoted endpoint is accepted without proof that the old writer cannot retain authority",
+      "status": "proposed",
+      "production_execution_approved": false
+    },
+    {
+      "id": "A36-07",
+      "title": "Deploy separate flow-pressure and retention-pressure decision routes",
+      "owner_role": "database-observability-owner",
+      "priority": "P1",
+      "phase": "day-31-60",
+      "due_day": 55,
+      "source_themes": ["T36-CLASSIFICATION-STOP", "T36-OBSERVATION-CONTRACT"],
+      "control_type": "mitigate",
+      "artifact": "headroom dashboard, alert projection and evidence-based classifier",
+      "verification": {
+        "type": "blind-tabletop",
+        "procedure": "classify flow, WAL retention, XID retention and ambiguous evidence packets without scenario labels",
+        "pass_condition": "known predicates select scoped routes and ambiguous packets stop without executing a wrong action",
+        "evidence_to_close": "blind packets, classifications, counterexample report and alert links",
+        "revalidation_days": 60
+      },
+      "failure_condition": "one generic resource alert maps directly to cancellation, restart or file deletion",
+      "status": "proposed",
+      "production_execution_approved": false
+    },
+    {
+      "id": "A36-08",
+      "title": "Schedule integrity evidence and clone-only rescue exercises",
+      "owner_role": "data-integrity-owner",
+      "priority": "P1",
+      "phase": "day-31-60",
+      "due_day": 60,
+      "source_themes": ["T36-BUSINESS-VALIDATION", "T36-CLASSIFICATION-STOP", "T36-LINEAGE-AUTHORITY"],
+      "control_type": "detect",
+      "artifact": "checksum, amcheck and collation review policy plus forensic clone runbook",
+      "verification": {
+        "type": "clone-only-integrity-drill",
+        "procedure": "distinguish physical and derived corruption, preserve originals and recover on separate working copies",
+        "pass_condition": "physical, structural and business checks pass on recovery copies while original evidence hashes remain unchanged",
+        "evidence_to_close": "checksum output, amcheck report, collation dependency list, hashes and business manifest",
+        "revalidation_days": 90
+      },
+      "failure_condition": "the only evidence copy is changed or a clean checksum is treated as proof of business correctness",
+      "status": "proposed",
+      "production_execution_approved": false
+    },
+    {
+      "id": "A36-09",
+      "title": "Put Pigsty inventory and dangerous playbook scope behind review",
+      "owner_role": "pigsty-platform-owner",
+      "priority": "P1",
+      "phase": "day-31-60",
+      "due_day": 60,
+      "source_themes": ["T36-PRODUCTION-GATE", "T36-REVERSIBLE-SCOPE"],
+      "control_type": "prevent",
+      "artifact": "reviewed inventory workflow, pinned release and safeguard policy",
+      "verification": {
+        "type": "policy-as-code",
+        "procedure": "submit drift, an unbounded limit and a disabled safeguard as separate review fixtures",
+        "pass_condition": "desired-state drift is visible and every unsafe playbook fixture is blocked before execution",
+        "evidence_to_close": "review checks, rendered diff, exact inventory target and policy decision",
+        "revalidation_days": 30
+      },
+      "failure_condition": "a destructive or broad playbook can run without exact inventory and explicit review",
+      "status": "proposed",
+      "production_execution_approved": false
+    },
+    {
+      "id": "A36-10",
+      "title": "Revise SLO, RPO, RTO, capacity and security assumptions from measured evidence",
+      "owner_role": "service-architecture-owner",
+      "priority": "P1",
+      "phase": "day-61-90",
+      "due_day": 75,
+      "source_themes": ["T36-PRODUCTION-GATE", "T36-BUSINESS-VALIDATION"],
+      "control_type": "prevent",
+      "artifact": "approved SLO policy and architecture decision record",
+      "verification": {
+        "type": "evidence-review",
+        "procedure": "trace every numeric objective to a production measurement or explicitly bounded drill",
+        "pass_condition": "no sandbox timing is promoted to an SLO and every objective has a measurement and breach response",
+        "evidence_to_close": "ADR, SLI queries, recovery drill distribution and approval record",
+        "revalidation_days": 180
+      },
+      "failure_condition": "an objective is copied from a single lab run or vendor default without workload evidence",
+      "status": "proposed",
+      "production_execution_approved": false
+    },
+    {
+      "id": "A36-11",
+      "title": "Review cross-incident control themes and overdue evidence monthly",
+      "owner_role": "reliability-governance-owner",
+      "priority": "P1",
+      "phase": "day-61-90",
+      "due_day": 80,
+      "source_themes": [
+        "T36-OBSERVATION-CONTRACT",
+        "T36-PRODUCTION-GATE",
+        "T36-BUSINESS-VALIDATION",
+        "T36-REVERSIBLE-SCOPE",
+        "T36-UNKNOWN-OUTCOME",
+        "T36-CLASSIFICATION-STOP",
+        "T36-LINEAGE-AUTHORITY"
+      ],
+      "control_type": "detect",
+      "artifact": "control registry with recurrence, owner, evidence age and exception expiry",
+      "verification": {
+        "type": "governance-query",
+        "procedure": "query controls with overdue evidence, expired exceptions or repeated incident tags",
+        "pass_condition": "every result has a named decision owner and dated disposition; silent overdue items are zero",
+        "evidence_to_close": "registry export, review minutes and exception decisions",
+        "revalidation_days": 30
+      },
+      "failure_condition": "postmortems are searchable documents but action status and evidence age cannot be aggregated",
+      "status": "proposed",
+      "production_execution_approved": false
+    },
+    {
+      "id": "A36-12",
+      "title": "Run a 90-day game day and independently verify control effectiveness",
+      "owner_role": "incident-program-owner",
+      "priority": "P1",
+      "phase": "day-61-90",
+      "due_day": 90,
+      "source_themes": [
+        "T36-OBSERVATION-CONTRACT",
+        "T36-BUSINESS-VALIDATION",
+        "T36-REVERSIBLE-SCOPE",
+        "T36-UNKNOWN-OUTCOME",
+        "T36-CLASSIFICATION-STOP",
+        "T36-LINEAGE-AUTHORITY"
+      ],
+      "control_type": "mitigate",
+      "artifact": "blind cross-scenario game day and independent closure review",
+      "verification": {
+        "type": "game-day",
+        "procedure": "draw an unlabeled scenario, require evidence-based routing, restore service and validate every claimed control",
+        "pass_condition": "the team reaches a safe route without hidden answers and an independent reviewer accepts every closure artifact",
+        "evidence_to_close": "scenario seed, timeline, decision log, recovery manifest and signed review",
+        "revalidation_days": 180
+      },
+      "failure_condition": "the team succeeds only when told the scenario or action sequence in advance",
+      "status": "proposed",
+      "production_execution_approved": false
+    }
+  ]
+}

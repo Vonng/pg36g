@@ -1,0 +1,80 @@
+{
+  "schema": "pg36-ch22-negative-cases-v1",
+  "cases": [
+    {
+      "id": "claim-production-from-sandbox",
+      "mutation": "production_claim",
+      "expected_code": "E_PRODUCTION_CLAIM"
+    },
+    {
+      "id": "route-primary-to-replica",
+      "mutation": "primary_read_only",
+      "expected_code": "E_ENDPOINT"
+    },
+    {
+      "id": "route-replica-to-primary",
+      "mutation": "replica_writable",
+      "expected_code": "E_ENDPOINT"
+    },
+    {
+      "id": "route-offline-to-wrong-member",
+      "mutation": "offline_member",
+      "expected_code": "E_ENDPOINT"
+    },
+    {
+      "id": "treat-session-state-as-sticky",
+      "mutation": "session_state_sticky",
+      "expected_code": "E_POOL_SEMANTICS"
+    },
+    {
+      "id": "accept-broken-protocol-prepare",
+      "mutation": "protocol_prepare_failed",
+      "expected_code": "E_PREPARED"
+    },
+    {
+      "id": "accept-sql-prepare-across-backends",
+      "mutation": "sql_prepare_succeeded",
+      "expected_code": "E_PREPARED"
+    },
+    {
+      "id": "exceed-server-pool-cap",
+      "mutation": "pool_cap_exceeded",
+      "expected_code": "E_BACKPRESSURE"
+    },
+    {
+      "id": "claim-no-queue-with-saturation",
+      "mutation": "no_waiters",
+      "expected_code": "E_BACKPRESSURE"
+    },
+    {
+      "id": "leave-pgbouncer-overridden",
+      "mutation": "pool_not_restored",
+      "expected_code": "E_CONFIG_RESTORE"
+    },
+    {
+      "id": "lose-acknowledged-write",
+      "mutation": "ack_missing",
+      "expected_code": "E_COMMIT_EVIDENCE"
+    },
+    {
+      "id": "leave-unknown-outcome-unreconciled",
+      "mutation": "unknown_unreconciled",
+      "expected_code": "E_COMMIT_EVIDENCE"
+    },
+    {
+      "id": "accept-excessive-write-gap",
+      "mutation": "write_gap",
+      "expected_code": "E_RECOVERY_TIME"
+    },
+    {
+      "id": "leave-wrong-final-leader",
+      "mutation": "wrong_final_leader",
+      "expected_code": "E_TOPOLOGY"
+    },
+    {
+      "id": "degrade-source-after-drill",
+      "mutation": "source_degraded",
+      "expected_code": "E_TOPOLOGY"
+    }
+  ]
+}

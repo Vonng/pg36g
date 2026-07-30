@@ -1,0 +1,13 @@
+flowchart LR
+  P["pg-test-1 managed primary"] -->|"fixture + fresh full backup + WAL"| R["pgBackRest repo"]
+  P -->|"safe tx -> damage xid -> legitimate post-target tx"| A["source audit"]
+  R --> I["pg-test-3 side restore: inclusive XID"]
+  I -->|"damage present"| X["reject and remove candidate"]
+  R --> E["pg-test-3 side restore: exclusive XID"]
+  E -->|"safe present, damage/post absent"| V["accepted recovery candidate"]
+  V --> C["recovered values"]
+  A --> L["audited post-target deltas"]
+  C --> Q["conditional reconciliation"]
+  L --> Q
+  Q --> P
+  Q --> Z["verify, drop fixture, remove side roots"]

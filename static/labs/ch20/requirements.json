@@ -1,0 +1,132 @@
+{
+  "schema": "pg36-ch20-ha-requirements-v1",
+  "release": "1.0-sandbox",
+  "status": "planned-switchover-contract-not-production-slo",
+  "target": {
+    "id": "pg36-l2-vagrant/pg-test",
+    "pigsty_release": "v4.4.0",
+    "postgresql_major": 18,
+    "patroni_version": "4.1.3",
+    "cluster": "pg-test",
+    "system_identifier_source": "live chapter-19 evidence",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false
+  },
+  "members": {
+    "pg-test-1": {
+      "address": "10.10.10.11",
+      "initial_role": "primary",
+      "forward_role": "replica",
+      "restored_role": "primary"
+    },
+    "pg-test-2": {
+      "address": "10.10.10.12",
+      "initial_role": "replica",
+      "forward_role": "primary",
+      "restored_role": "replica"
+    },
+    "pg-test-3": {
+      "address": "10.10.10.13",
+      "initial_role": "replica",
+      "forward_role": "replica",
+      "restored_role": "replica",
+      "offline_query": true
+    }
+  },
+  "planned_actions": {
+    "forward": {
+      "leader": "pg-test-1",
+      "candidate": "pg-test-2",
+      "kind": "planned-switchover",
+      "executor": "patronictl"
+    },
+    "restore_teaching_baseline": {
+      "leader": "pg-test-2",
+      "candidate": "pg-test-1",
+      "kind": "planned-switchover",
+      "executor": "patronictl"
+    }
+  },
+  "client_probe": {
+    "database": "test",
+    "user": "test",
+    "service_host": "10.10.10.11",
+    "service_port": 5433,
+    "target_session_attrs": "read-write",
+    "sslmode": "prefer",
+    "duration_seconds": 24,
+    "interval_seconds": 0.2,
+    "warmup_seconds": 3,
+    "minimum_acknowledged_attempts": 30,
+    "maximum_observed_write_gap_ms": 15000,
+    "maximum_acknowledged_rows_missing": 0,
+    "maximum_duplicate_tokens": 0,
+    "maximum_unreconciled_unknown_outcomes": 0,
+    "measurement_resolution_note": "write-gap includes one probe interval and is not a production RTO SLI"
+  },
+  "topology_acceptance": {
+    "maximum_pre_switch_replay_lag_bytes": 1048576,
+    "stable_timeout_seconds": 45,
+    "same_system_identifier_on_all_members": true,
+    "timeline_must_advance_on_forward": true,
+    "timeline_must_advance_on_restore": true,
+    "all_nonleaders_must_be_streaming": true,
+    "final_leader_must_return_to": "pg-test-1"
+  },
+  "expected_dynamic_policy": {
+    "ttl_seconds": 30,
+    "loop_wait_seconds": 5,
+    "retry_timeout_seconds": 10,
+    "maximum_lag_on_failover_bytes": 1048576,
+    "synchronous_mode": false,
+    "synchronous_mode_strict": false,
+    "failsafe_mode": true,
+    "use_pg_rewind": true,
+    "use_slots": true,
+    "watchdog_mode": "off",
+    "dcs_kind": "etcd3",
+    "dcs_member_count": 1
+  },
+  "required_exception_ids": [
+    "EX19-SHARED-HYPERVISOR",
+    "EX19-SINGLE-ETCD",
+    "EX19-SINGLE-BACKUP-TARGET",
+    "EX19-VIRTUAL-STORAGE",
+    "EX19-INVENTORY-SECRETS",
+    "EX19-LAB-RESOURCE-FLOOR",
+    "EX20-ASYNC-BASELINE",
+    "EX20-WATCHDOG-OFF",
+    "EX20-CLIENT-PROXY-NO-TLS",
+    "EX20-PLANNED-ONLY"
+  ],
+  "exceptions": [
+    {
+      "id": "EX20-ASYNC-BASELINE",
+      "reason": "pg-test uses asynchronous streaming replication and synchronous_mode=false",
+      "claim_blocked": "zero RPO and synchronous-commit durability"
+    },
+    {
+      "id": "EX20-WATCHDOG-OFF",
+      "reason": "Patroni watchdog mode is off in the Vagrant guests",
+      "claim_blocked": "hardware-watchdog fencing and automatic isolation of a stalled old primary"
+    },
+    {
+      "id": "EX20-CLIENT-PROXY-NO-TLS",
+      "reason": "the sandbox port-5433 PgBouncer service does not accept TLS from the external probe",
+      "claim_blocked": "production transport-security acceptance for the client service path"
+    },
+    {
+      "id": "EX20-PLANNED-ONLY",
+      "reason": "this formal drill performs healthy planned switchovers and no unplanned process, host, storage, network, or DCS fault",
+      "claim_blocked": "automatic failover, fencing, split-brain exclusion, and failure-time RPO/RTO"
+    }
+  ],
+  "decision_boundary": {
+    "sandbox_planned_switchover": "may-pass-with-exceptions",
+    "production_ch20_gate": "pending",
+    "unplanned_failure_drill": "deferred-to-a-separately-authorized-chapter-33-exercise",
+    "backup_recovery": "chapter-21",
+    "client_routing_contract": "chapter-22",
+    "security": "chapter-23"
+  }
+}

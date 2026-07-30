@@ -1,0 +1,33 @@
+{
+  "schema": "pg36-ch27-negative-cases-v1",
+  "cases": [
+    {"id": "wrong-target", "mutation": "target.cluster=production", "expected": "reject"},
+    {"id": "recovery-target", "mutation": "preflight.in_recovery=true", "expected": "reject"},
+    {"id": "existing-database", "mutation": "preflight.clean_start.database_absent=false", "expected": "reject"},
+    {"id": "existing-role", "mutation": "preflight.clean_start.role_absent=false", "expected": "reject"},
+    {"id": "missing-upstream-run", "mutation": "capacity.run_id=unknown", "expected": "reject"},
+    {"id": "fabricated-knee", "mutation": "capacity.exact_knee_known=true", "expected": "reject"},
+    {"id": "fabricated-production-tps", "mutation": "capacity.production_sustainable_tps=2900", "expected": "reject"},
+    {"id": "two-parameters", "mutation": "candidate.also_changes=work_mem", "expected": "reject"},
+    {"id": "persistent-alter-system", "mutation": "execution.method=ALTER SYSTEM", "expected": "reject"},
+    {"id": "patroni-edit", "mutation": "execution.method=patronictl edit-config", "expected": "reject"},
+    {"id": "restart", "mutation": "execution.restart=true", "expected": "reject"},
+    {"id": "durability-change", "mutation": "synchronous_commit=off", "expected": "reject"},
+    {"id": "statistics-reset", "mutation": "pg_stat_reset=true", "expected": "reject"},
+    {"id": "cache-drop", "mutation": "drop_caches=true", "expected": "reject"},
+    {"id": "unpaired-seeds", "mutation": "candidate.seed differs from baseline", "expected": "reject"},
+    {"id": "fixed-run-order", "mutation": "all baseline runs precede candidates", "expected": "reject"},
+    {"id": "missing-raw-log", "mutation": "one measured transaction log missing", "expected": "reject"},
+    {"id": "averaged-p95", "mutation": "cell p95 is average of run p95", "expected": "reject"},
+    {"id": "failure-hidden", "mutation": "failed transaction removed from summary", "expected": "reject"},
+    {"id": "plan-change-hidden", "mutation": "probe plan fingerprints differ but result says equal", "expected": "reject"},
+    {"id": "global-drift-hidden", "mutation": "global pg_settings changed but result says unchanged", "expected": "reject"},
+    {"id": "weak-benefit-accepted", "mutation": "bootstrap lower=1.00 but decision=accept", "expected": "reject"},
+    {"id": "tail-regression-accepted", "mutation": "p95 ratio=1.10 but decision=accept", "expected": "reject"},
+    {"id": "marker-mismatch-cleanup", "mutation": "cleanup marker mismatch", "expected": "reject"},
+    {"id": "force-drop", "mutation": "DROP DATABASE WITH FORCE used", "expected": "reject"},
+    {"id": "secret-public", "mutation": "public summary contains password or URI", "expected": "reject"},
+    {"id": "raw-query-public", "mutation": "public summary contains raw SQL text", "expected": "reject"},
+    {"id": "production-approved", "mutation": "production_ch27_gate=accepted", "expected": "reject"}
+  ]
+}

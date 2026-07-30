@@ -1,0 +1,25 @@
+flowchart TB
+  client["Application / operator probes"]
+  hypervisor["One local Vagrant hypervisor<br/>accepted shared failure-domain exception"]
+
+  subgraph control["10.10.10.10 · pg-meta-1"]
+    meta["pg-meta<br/>PostgreSQL 18 primary"]
+    etcd["single etcd member"]
+    infra["Pigsty infra + MinIO"]
+  end
+
+  subgraph service["pg-test service unit"]
+    primary["10.10.10.11 · pg-test-1<br/>primary"]
+    replica["10.10.10.12 · pg-test-2<br/>HA replica"]
+    offline["10.10.10.13 · pg-test-3<br/>offline replica"]
+  end
+
+  client --> control
+  client --> service
+  etcd -. Patroni DCS .-> primary
+  etcd -. Patroni DCS .-> replica
+  etcd -. Patroni DCS .-> offline
+  primary -->|streaming replication| replica
+  primary -->|streaming replication| offline
+  hypervisor --- control
+  hypervisor --- service

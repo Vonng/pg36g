@@ -1,0 +1,346 @@
+{
+  "schema": "pg36-ch25-signal-contract-v1",
+  "service_id": "pg36_shop",
+  "environment": "l2-sandbox",
+  "question_layers": [
+    {
+      "layer": "user",
+      "question": "用户旅程是否成功、及时、正确且足够新鲜",
+      "preferred_signals": [
+        "eligible application events",
+        "commit-correlated synthetic probes",
+        "domain reconciliation"
+      ],
+      "may_be_replaced_by_component_health": false
+    },
+    {
+      "layer": "entry",
+      "question": "请求到达了哪个入口，排队、路由、重试和拒绝发生在哪里",
+      "preferred_signals": [
+        "edge request metrics",
+        "HAProxy and PgBouncer metrics",
+        "bounded structured access logs",
+        "release and routing events"
+      ],
+      "may_be_replaced_by_component_health": false
+    },
+    {
+      "layer": "database",
+      "question": "PostgreSQL 的会话、等待、I/O、WAL、维护和对象状态能否解释症状",
+      "preferred_signals": [
+        "PostgreSQL cumulative statistics",
+        "current activity and locks",
+        "pg_stat_statements aggregates",
+        "bounded PostgreSQL logs"
+      ],
+      "may_be_replaced_by_component_health": false
+    },
+    {
+      "layer": "host",
+      "question": "CPU、内存、磁盘、网络和时钟是否构成资源或基础设施约束",
+      "preferred_signals": [
+        "node metrics",
+        "filesystem and block-device metrics",
+        "kernel and service events"
+      ],
+      "may_be_replaced_by_component_health": false
+    }
+  ],
+  "signal_roles": [
+    {
+      "kind": "metric",
+      "best_for": "连续趋势、聚合、预算计算和自动规则",
+      "weak_for": "高维上下文和单个请求叙事",
+      "required_controls": [
+        "bounded labels",
+        "declared units and type",
+        "reset semantics",
+        "missing-data semantics",
+        "retention and freshness"
+      ]
+    },
+    {
+      "kind": "log",
+      "best_for": "离散事件、错误上下文、状态迁移和审计线索",
+      "weak_for": "无界扫描、精确总体比率和秘密安全",
+      "required_controls": [
+        "structured fields",
+        "sampling and retention",
+        "redaction",
+        "restricted access",
+        "no raw body in evidence"
+      ]
+    },
+    {
+      "kind": "event",
+      "best_for": "发布、配置、切换、扩缩容和所有权变更时间线",
+      "weak_for": "独立证明因果关系",
+      "required_controls": [
+        "actor and target",
+        "monotonic identifier",
+        "timestamp source",
+        "result and rollback reference"
+      ]
+    },
+    {
+      "kind": "trace",
+      "best_for": "跨入口、服务、连接池和数据库调用的单次路径",
+      "weak_for": "完整总体统计和未采样请求",
+      "required_controls": [
+        "sampling policy",
+        "baggage allowlist",
+        "PII and secret exclusion",
+        "metric and log correlation keys"
+      ]
+    }
+  ],
+  "identity": {
+    "pigsty_required": [
+      "cls",
+      "ins",
+      "ip"
+    ],
+    "service_required": [
+      "service",
+      "operation_class",
+      "environment"
+    ],
+    "bounded_optional": [
+      "read_path",
+      "invariant",
+      "recovery_class",
+      "objective_id",
+      "release"
+    ],
+    "forbidden_unbounded": [
+      "customer_id",
+      "tenant_id",
+      "order_id",
+      "idempotency_token",
+      "trace_id",
+      "raw_query_text",
+      "raw_sql",
+      "error_message",
+      "client_addr",
+      "password",
+      "token"
+    ],
+    "query_identity": "Pigsty pg_query_* may use a label named query only when its value is the numeric queryid and cardinality is bounded by pg_stat_statements.max; raw query text is restricted to approved interactive inspection and never copied into chapter evidence"
+  },
+  "application_slis": [
+    {
+      "objective_id": "SLO-AVAILABILITY",
+      "source": "pg36_shop_request_outcomes_total",
+      "type": "counter",
+      "expected_live_status": "absent-until-application-instrumented",
+      "missing_semantics": "unknown plus observation-path failure when expected traffic or an independent probe exists",
+      "recording_windows": [
+        "5m",
+        "30m",
+        "1h",
+        "6h",
+        "3d"
+      ],
+      "required_dimensions": [
+        "service",
+        "operation_class",
+        "environment"
+      ]
+    },
+    {
+      "objective_id": "SLO-LATENCY",
+      "source": "pg36_shop_request_duration_seconds_bucket",
+      "type": "histogram",
+      "expected_live_status": "absent-until-application-instrumented",
+      "missing_semantics": "unknown; an absent histogram is never zero latency",
+      "recording_windows": [
+        "5m",
+        "1h"
+      ],
+      "required_dimensions": [
+        "service",
+        "operation_class",
+        "environment"
+      ]
+    },
+    {
+      "objective_id": "SLO-FRESHNESS",
+      "source": "pg36_shop_commit_visibility_probes_total",
+      "type": "counter",
+      "expected_live_status": "absent-until-probe-implemented",
+      "missing_semantics": "unknown and probe-path failure; replay timestamp age is not a substitute",
+      "recording_windows": [
+        "5m",
+        "1h"
+      ],
+      "required_dimensions": [
+        "service",
+        "read_path",
+        "environment"
+      ]
+    },
+    {
+      "objective_id": "CTRL-CORRECTNESS",
+      "source": "pg36_shop_reconciliation_mismatches",
+      "type": "gauge",
+      "expected_live_status": "absent-until-reconciliation-implemented",
+      "missing_semantics": "unknown; stale or missing reconciliation is a separate control failure",
+      "required_dimensions": [
+        "service",
+        "invariant",
+        "environment"
+      ]
+    },
+    {
+      "objective_id": "CTRL-RESTORE-READINESS",
+      "source": "pg36_shop_restore_evidence_age_seconds",
+      "type": "gauge",
+      "expected_live_status": "absent-until-evidence-export-implemented",
+      "missing_semantics": "failed control; absence cannot prove recoverability",
+      "required_dimensions": [
+        "service",
+        "recovery_class",
+        "environment"
+      ]
+    }
+  ],
+  "postgresql_native": [
+    {
+      "question": "当前谁在运行、空闲、等待或持有锁",
+      "sources": [
+        "pg_stat_activity",
+        "pg_locks"
+      ],
+      "snapshot_semantics": "current activity is dynamic, but a statistics snapshot can remain stable within a transaction",
+      "caution": "state and wait_event are independent; active plus wait means executing but blocked"
+    },
+    {
+      "question": "数据库工作量、命中、临时文件、冲突和错误如何累计",
+      "sources": [
+        "pg_stat_database"
+      ],
+      "snapshot_semantics": "cumulative counters require stats_reset and elapsed time",
+      "caution": "counter value is not a rate and a reset is not an improvement"
+    },
+    {
+      "question": "后端类型在何种对象和上下文产生 I/O",
+      "sources": [
+        "pg_stat_io"
+      ],
+      "snapshot_semantics": "cumulative by backend_type, object and context",
+      "caution": "cannot distinguish physical disk from operating-system page cache; combine with host evidence"
+    },
+    {
+      "question": "WAL、检查点和归档是否推进",
+      "sources": [
+        "pg_stat_wal",
+        "pg_stat_checkpointer",
+        "pg_stat_archiver"
+      ],
+      "snapshot_semantics": "cumulative counts plus last-success and last-failure timestamps",
+      "caution": "failed_count greater than zero is historical; alert on new failures and stalled success, then verify pgBackRest"
+    },
+    {
+      "question": "复制发送和回放位置是否收敛",
+      "sources": [
+        "pg_stat_replication",
+        "pg_stat_wal_receiver",
+        "WAL LSN distance"
+      ],
+      "snapshot_semantics": "current sender/receiver state and positions",
+      "caution": "zero WAL distance does not prove a particular committed token is visible on the routed read path"
+    },
+    {
+      "question": "表维护、冻结风险和对象增长是否受控",
+      "sources": [
+        "pg_stat_user_tables",
+        "pg_class",
+        "pg_database",
+        "pg_stat_progress_vacuum"
+      ],
+      "snapshot_semantics": "mix of estimates, cumulative counters and current progress",
+      "caution": "dead tuples and bloat estimates are evidence for investigation, not interchangeable facts"
+    }
+  ],
+  "sql_observation": {
+    "pg_stat_statements": {
+      "required_preload": true,
+      "required_extension": true,
+      "aggregation_key": [
+        "dbid",
+        "userid",
+        "queryid",
+        "toplevel"
+      ],
+      "evidence_fields": [
+        "queryid",
+        "calls",
+        "total_exec_time",
+        "mean_exec_time",
+        "rows",
+        "shared_blks_read",
+        "shared_blks_hit",
+        "temp_blks_written",
+        "wal_bytes",
+        "stats_since",
+        "minmax_stats_since"
+      ],
+      "forbidden_evidence_fields": [
+        "query",
+        "representative bind values",
+        "client address"
+      ],
+      "reset_requirements": [
+        "pg_stat_statements_info.stats_reset",
+        "pg_stat_statements_info.dealloc",
+        "per-row stats_since",
+        "per-row minmax_stats_since"
+      ],
+      "cautions": [
+        "queryid is a hash and collisions are possible",
+        "normalized text can hide constants but does not make exported query text safe",
+        "planning statistics and execution statistics need not have one-to-one calls",
+        "track_planning is not enabled merely because total_plan_time is present"
+      ]
+    },
+    "logging": {
+      "required_events": [
+        "bounded slow statements",
+        "lock waits",
+        "temporary files above policy threshold",
+        "errors and state transitions"
+      ],
+      "forbidden_export": [
+        "passwords",
+        "tokens",
+        "full bind parameters",
+        "raw SQL",
+        "log bodies"
+      ],
+      "file_mode_expectation": "not world-readable; group read is allowed only for a declared least-privilege collector group",
+      "sampling_is_not_total": true
+    },
+    "auto_explain": {
+      "default_lab_action": "configuration inspection only",
+      "production_enablement": "bounded change requiring load test, sampling, duration threshold and rollback",
+      "required_controls": [
+        "log_min_duration",
+        "sample_rate",
+        "log_analyze decision",
+        "log_timing decision",
+        "log_parameter_max_length",
+        "nested statement decision"
+      ],
+      "forbidden_capture_action": "enable or reload auto_explain during this chapter exercise"
+    }
+  },
+  "missing_and_cost": {
+    "missing_is_healthy": false,
+    "timing_disabled_means_zero": false,
+    "cardinality_budget_required": true,
+    "query_timeout_required": true,
+    "evidence_size_limit_required": true,
+    "retention_is_part_of_semantics": true,
+    "sampling_must_be_declared": true
+  }
+}

@@ -1,0 +1,16 @@
+flowchart LR
+    C["client probe<br/>idempotency tokens"] --> S["Pigsty read-write service<br/>10.10.10.11:5433"]
+    S --> H["HAProxy health routing"]
+    H --> P1["pg-test-1<br/>primary before and after"]
+    H -. "forward switchover" .-> P2["pg-test-2<br/>temporary primary"]
+    P1 <-->|"physical WAL streaming<br/>timeline lineage"| P2
+    P1 <-->|"physical WAL streaming"| P3["pg-test-3<br/>offline-query replica"]
+    P2 <-->|"physical WAL streaming"| P3
+    D["single etcd member<br/>sandbox exception"] --- P1
+    D --- P2
+    D --- P3
+    O["Patroni authority<br/>explicit leader + candidate"] --> P1
+    O --> P2
+    E["evidence<br/>SQL + Patroni + client reconciliation"] --> P1
+    E --> P2
+    E --> P3

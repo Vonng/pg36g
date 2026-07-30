@@ -1,0 +1,91 @@
+{
+  "schema": "pg36-ch09-index-decisions-v1",
+  "fixture": "ch09-index-v1",
+  "decisions": [
+    {
+      "candidate": "ch09_order_placed_cover_idx",
+      "workload": "placed orders by customer ordered by placed_at desc limit 20",
+      "decision": "retain",
+      "reason": "partial predicate matches the stable literal workload and INCLUDE supports a narrow index-only result",
+      "evidence": [
+        "order-before.json",
+        "order-after.json",
+        "order-custom.json",
+        "order-generic.json"
+      ]
+    },
+    {
+      "candidate": "ch09_inventory_sku_cover_idx",
+      "workload": "one SKU across all warehouses",
+      "decision": "retain",
+      "reason": "the warehouse-first primary key has the wrong leading order for this access path; the reverse key also covers returned quantities",
+      "evidence": [
+        "inventory-before.json",
+        "inventory-after.json"
+      ]
+    },
+    {
+      "candidate": "ch09_search_document_gin_idx",
+      "workload": "full-text search over the generated simple-config document",
+      "decision": "retain",
+      "reason": "the query uses the same tsvector semantics and GIN operator class as the indexed document",
+      "evidence": [
+        "search-before.json",
+        "search-after.json"
+      ]
+    },
+    {
+      "candidate": "ch09_event_occurred_brin_idx",
+      "workload": "time ranges on a physically time-correlated append relation",
+      "decision": "retain",
+      "reason": "BRIN supports the range while remaining far smaller than the B-tree comparison",
+      "evidence": [
+        "event-before.json",
+        "event-brin.json",
+        "event-btree.json",
+        "catalog-before-rejection.csv"
+      ]
+    },
+    {
+      "candidate": "ch09_event_occurred_btree_idx",
+      "workload": "same event time range",
+      "decision": "reject",
+      "reason": "the B-tree is a useful comparison but its extra precision and size are not justified by this declared workload",
+      "evidence": [
+        "event-btree.json",
+        "catalog-before-rejection.csv",
+        "catalog-final.csv"
+      ]
+    },
+    {
+      "candidate": "warehouse_id_only_btree",
+      "workload": "inventory rows by warehouse",
+      "decision": "reject",
+      "reason": "the existing primary key already has warehouse_id as its leading key",
+      "evidence": [
+        "catalog-before-rejection.csv"
+      ]
+    },
+    {
+      "candidate": "attributes_generic_jsonb_gin",
+      "workload": "no declared JSONB containment query",
+      "decision": "reject",
+      "reason": "indexing every attribute token has no measured consumer and would add write, pending-list, space, and vacuum cost",
+      "evidence": [
+        "search-before.json",
+        "search-after.json"
+      ]
+    },
+    {
+      "candidate": "ch09_write_indexed_counter_idx",
+      "workload": "frequently updated counter with no declared read predicate",
+      "decision": "reject",
+      "reason": "the index prevents HOT updates and increases WAL without a demonstrated read benefit",
+      "evidence": [
+        "write-base.json",
+        "write-indexed.json",
+        "write-stats.csv"
+      ]
+    }
+  ]
+}

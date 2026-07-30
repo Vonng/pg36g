@@ -1,0 +1,52 @@
+{
+  "schema": "pg36-ch16-fixture-manifest-v1",
+  "fixture": "ch16-spatiotemporal-v1",
+  "frozen_at": "2026-07-29T00:00:00Z",
+  "attempts": {
+    "path": "frozen-attempts.csv",
+    "rows": 13,
+    "distinct_events": 12,
+    "sha256": "7fa1aadbba029061fbc7eb34c9f6285eabb38b438e7d0c0c8c6b820cdc738ccf"
+  },
+  "geofences": {
+    "path": "frozen-geofences.csv",
+    "rows": 4,
+    "zones": 3,
+    "sha256": "b2da791c7adba720cf9f4fc1123546eb08036bb60ed8ed778ae5b8dc60435c66"
+  },
+  "hubs": {
+    "path": "frozen-hubs.csv",
+    "rows": 3,
+    "sha256": "bd56e0f8f978495bc1e677270f285628163a3edc1656fe99a2a7173ffe8e18af"
+  },
+  "loader": {
+    "path": "fixture.sql",
+    "sha256": "b254bf5d695cf1ab738fc71b573544ef526146355b18d60b99f342ca1536a860"
+  },
+  "time": {
+    "event_time": "occurred_at",
+    "ingest_time": "received_at",
+    "valid_time": "valid_during",
+    "storage_timezone": "UTC",
+    "display_timezone_probe": "America/New_York",
+    "range_bounds": "[)"
+  },
+  "space": {
+    "coordinates": "project-authored synthetic longitude/latitude",
+    "srid": 4326,
+    "geometry_role": "topology, predicates, and planar index probes",
+    "geography_role": "meter-based distance predicates",
+    "external_geodata": false
+  },
+  "license": {
+    "text": "project-owned synthetic fixture; repository terms apply",
+    "coordinates": "synthetic coordinates; no external geodata license"
+  },
+  "limitations": [
+    "The events and coordinates are synthetic and intentionally tiny.",
+    "The fixture proves semantics, routing, constraints, and index path availability, not production performance.",
+    "The coordinates resemble a city grid but are not an authoritative map or routing data set.",
+    "The direct PostgreSQL run does not claim a Pigsty L1 deployment.",
+    "TimescaleDB is a documented optional decision branch and is not part of this frozen fixture."
+  ]
+}

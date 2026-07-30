@@ -1,0 +1,67 @@
+# Pigsty v4.4 declaration fragment for the ch13 routine-guard example.
+#
+# Merge this fragment into the intended PGSQL cluster vars. It contains no
+# credential value. Keep the pg36_owner role NOLOGIN, and deliver the
+# pg36_app secret through the controlled inventory or secret overlay.
+
+pg_users:
+  - name: pg36_owner
+    login: false
+    superuser: false
+    createdb: false
+    createrole: false
+    replication: false
+    bypassrls: false
+    comment: pg36_shop object owner; never used by applications
+
+  - name: pg36_app
+    login: true
+    superuser: false
+    createdb: false
+    createrole: false
+    replication: false
+    bypassrls: false
+    connlimit: 40
+    pgbouncer: true
+    pool_mode: transaction
+    pool_connlimit: 32
+    comment: pg36 application role with routine-only ch13 access
+
+pg_databases:
+  - name: pg36_shop
+    owner: pg36_owner
+    comment: PostgreSQL 36 Strategies teaching database
+    encoding: UTF8
+    locale: C
+    revokeconn: true
+    pgbouncer: true
+    pool_mode: transaction
+    pool_size: 32
+    pool_reserve: 8
+    pool_connlimit: 64
+    schemas:
+      - { name: shop, owner: pg36_owner }
+      - { name: shop_api, owner: pg36_owner }
+      - { name: shop_private, owner: pg36_owner }
+      - { name: shop_ch12, owner: pg36_owner }
+      - { name: shop_ch13, owner: pg36_owner }
+    parameters:
+      TimeZone: UTC
+      statement_timeout: 30s
+      lock_timeout: 5s
+      idle_in_transaction_session_timeout: 60s
+
+# Optional cluster-wide observation during a reviewed diagnostic window:
+#
+# pg_parameters:
+#   track_functions: pl
+#
+# Function tracking adds overhead. Treat it as an explicit observation
+# decision, verify the live value, and revert it when the window closes.
+#
+# Access decision:
+#   application calls: pg-<cluster>:5433 primary service -> PgBouncer 6432
+#   reviewed DDL/catalog: pg-<cluster>:5436 default -> PostgreSQL 5432
+#
+# The declaration creates roles and schemas. The reviewed SQL migration owns
+# function definitions, SECURITY DEFINER hardening, ACLs, markers, and tests.

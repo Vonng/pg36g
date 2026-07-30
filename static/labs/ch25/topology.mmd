@@ -1,0 +1,21 @@
+flowchart LR
+    U["用户与独立探针"] --> E["服务入口<br/>HAProxy / PgBouncer / 应用"]
+    E --> P["PostgreSQL<br/>activity / locks / I/O / WAL / maintenance"]
+    P --> X["pg_exporter 与 Vector"]
+    E --> X
+    X --> M["VictoriaMetrics"]
+    X --> L["VictoriaLogs"]
+    U --> T["VictoriaTraces<br/>仅声明后端存在，不声称已有应用 span"]
+    M --> R["VMAlert<br/>记录规则与告警规则"]
+    R --> A["Alertmanager<br/>分组 / 路由 / 抑制"]
+    M --> G["Grafana<br/>探索与关联"]
+    L --> G
+    T --> G
+    A --> N["真实通知渠道<br/>本章不接入、不发送"]
+    R -. "本章规则仅隔离测试" .-> S["loopback VictoriaMetrics<br/>vmalert-tool"]
+    A -. "本章路由仅离线解析" .-> O["空 receiver sink<br/>amtool"]
+    C["第 24 章观察契约"] --> R
+    D["诊断包<br/>只保存脱敏聚合与时间线"] --> G
+    R --> D
+    P --> D
+    C --> D

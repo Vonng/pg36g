@@ -1,0 +1,157 @@
+{
+  "schema": "pg36-ch25-diagnostic-pack-v1",
+  "service_id": "pg36_shop",
+  "purpose": "preserve a bounded, secret-safe incident starting point without pretending to prove root cause",
+  "trigger_input": {
+    "required": [
+      "alertname",
+      "service",
+      "environment",
+      "objective_id or control id",
+      "starts_at",
+      "rule_evaluation_time",
+      "source_url without credentials"
+    ],
+    "forbidden": [
+      "password",
+      "token",
+      "authorization header",
+      "raw SQL",
+      "bind values",
+      "log body",
+      "customer_id",
+      "tenant_id",
+      "order_id",
+      "client_addr"
+    ]
+  },
+  "time_window": {
+    "before_alert": "30m",
+    "after_alert": "15m",
+    "clock_basis": "UTC",
+    "required_clock_checks": [
+      "collector timestamp",
+      "database timestamp",
+      "rule evaluation timestamp"
+    ]
+  },
+  "sections": [
+    {
+      "id": "manifest",
+      "fields": [
+        "run_id",
+        "captured_at",
+        "target identities",
+        "tool versions",
+        "source hashes",
+        "risk and mutation statement"
+      ],
+      "maximum_bytes": 65536
+    },
+    {
+      "id": "symptom",
+      "fields": [
+        "SLI values and event counts",
+        "long and short windows",
+        "missing-data status",
+        "independent probe result"
+      ],
+      "maximum_bytes": 262144
+    },
+    {
+      "id": "topology",
+      "fields": [
+        "entrypoints",
+        "cluster and instance roles",
+        "declared dependencies",
+        "replication state without client addresses"
+      ],
+      "maximum_bytes": 262144
+    },
+    {
+      "id": "change_timeline",
+      "fields": [
+        "release ids",
+        "configuration change ids",
+        "failover and maintenance events",
+        "actor role ids without personal secrets"
+      ],
+      "maximum_bytes": 262144
+    },
+    {
+      "id": "postgresql",
+      "fields": [
+        "activity aggregates by state and wait type",
+        "lock aggregates",
+        "database cumulative counters with reset timestamps",
+        "I/O aggregates",
+        "WAL, checkpointer, archiver and replication facts",
+        "queryid-level pg_stat_statements aggregates without query text"
+      ],
+      "maximum_bytes": 1048576
+    },
+    {
+      "id": "platform",
+      "fields": [
+        "exporter freshness and reachability",
+        "VMAlert evaluation errors and missed iterations",
+        "Alertmanager notification failure counters",
+        "host resource trends",
+        "log query counts without bodies"
+      ],
+      "maximum_bytes": 1048576
+    },
+    {
+      "id": "hypotheses",
+      "fields": [
+        "first observed symptom",
+        "correlated phenomena",
+        "candidate explanations",
+        "falsifying evidence",
+        "next safe query"
+      ],
+      "maximum_bytes": 262144
+    }
+  ],
+  "query_controls": {
+    "database_statement_timeout": "5s",
+    "database_lock_timeout": "500ms",
+    "metrics_query_timeout": "10s",
+    "log_query_limit": 1000,
+    "top_query_limit": 50,
+    "explain_analyze_allowed": false,
+    "statistics_reset_allowed": false,
+    "load_generation_allowed": false,
+    "parallel_capture_limit": 4
+  },
+  "access": {
+    "database_role": "pg_read_all_stats or a narrower reviewed monitoring role",
+    "filesystem_mode": "0600 files under a 0700 directory",
+    "retention": "30d for chapter private evidence; production policy must be separately approved",
+    "redaction_required": true,
+    "public_summary_allowlist": [
+      "versions",
+      "counts",
+      "pass or fail",
+      "declared blind spots",
+      "run id",
+      "production gate"
+    ]
+  },
+  "causal_language": {
+    "allowed": [
+      "first observed",
+      "correlated with",
+      "consistent with",
+      "falsified by",
+      "requires further test"
+    ],
+    "root_cause_requires": [
+      "mechanism",
+      "reproducible or independently corroborated evidence",
+      "falsification attempts",
+      "repair verification"
+    ],
+    "dashboard_spike_is_root_cause": false
+  }
+}

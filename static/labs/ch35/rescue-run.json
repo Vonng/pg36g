@@ -1,0 +1,77 @@
+{
+  "collation_derived": {
+    "actual_version": "153.121",
+    "offline_bad_checksums": 0,
+    "original_case_preserved": true,
+    "recovered_invariants_match": true,
+    "reindex_before_refresh": true,
+    "repair_elapsed_ms": 267.719,
+    "route": "REINDEX_AND_REFRESH_COLLATION",
+    "stored_version_injected": "0.pg36-ch35-278fcd34",
+    "structural_amcheck_before": true,
+    "version_mismatch_after": false
+  },
+  "decision": {
+    "production_approval": null,
+    "production_ch35_gate": "pending"
+  },
+  "evidence": {
+    "declared_counterexamples": 35,
+    "live_mutants_rejected": 35,
+    "source_files_hash_bound": 13
+  },
+  "experiment": {
+    "blind_classification": true,
+    "fixture_digest": "5c04d26539b8fa55f52e13e6a78f8bdd",
+    "fixture_rows": 12000,
+    "host": "pg-test-3",
+    "postgresql_version": "18.4 (Ubuntu 18.4-1.pgdg24.04+1)",
+    "randomized_order": [
+      "COLLATION_METADATA",
+      "PHYSICAL_HEAP_PAGE"
+    ],
+    "unix_socket_only": true
+  },
+  "managed_cluster": {
+    "mutations": 0,
+    "system_identifier_unchanged": true,
+    "timeline_unchanged": true,
+    "topology_unchanged": true
+  },
+  "observed_at": "2026-07-30T04:37:43.683016Z",
+  "physical_page": {
+    "bytes_changed": 1,
+    "in_place_repair": false,
+    "mutated_block": 2,
+    "offline_bad_checksums": 1,
+    "online_scan_sqlstate": "XX001",
+    "online_scan_succeeded": false,
+    "original_case_preserved": true,
+    "recovered_bad_checksums": 0,
+    "recovered_invariants_match": true,
+    "relation_kind": "heap",
+    "route": "RESTORE_FROM_KNOWN_GOOD_COPY"
+  },
+  "run_id": "278fcd34-48af-49e0-97c9-c5e5e4161c78",
+  "safety": {
+    "exact_root_removed": true,
+    "external_dispatch_count": 0,
+    "ignore_checksum_failure_used": false,
+    "known_good_snapshot_unchanged": true,
+    "managed_pgdata_mutated": false,
+    "managed_postgresql_mutated": false,
+    "managed_reset_host_executed": false,
+    "managed_route_changed": false,
+    "managed_service_changed": false,
+    "manual_pg_wal_file_deletion": false,
+    "pg_resetwal_used": false,
+    "production_data_touched": false,
+    "production_traffic_touched": false,
+    "unique_source_mutated": false,
+    "wrong_action_executed": false,
+    "zero_damaged_pages_used": false
+  },
+  "schema": "pg36-ch35-public-summary-v1",
+  "status": "completed",
+  "target": "pg36-l2-vagrant/pg-test"
+}

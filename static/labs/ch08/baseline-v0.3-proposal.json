@@ -1,0 +1,43 @@
+{
+  "proposal_version": 1,
+  "base_baseline": "0.1.0",
+  "base_checksum": "bb1404e2b2e47624b17f3a1b0de63a5371f382b67906f1a8ba1cf08e92895a1c",
+  "depends_on_candidates": [
+    {
+      "candidate_baseline": "0.2.0",
+      "proposal": "/labs/ch07/baseline-v0.2-proposal.json",
+      "proposal_checksum": "449447c6743f2deddf698fdd6605e72d901917441b892c9cb1bba78e576d71a8"
+    }
+  ],
+  "candidate_baseline": "0.3.0",
+  "status": "candidate",
+  "rule_id": "DEFAULT-EVID-009",
+  "change_kind": "evidence-and-runtime-check",
+  "statement_change": "none",
+  "evidence": [
+    {
+      "chapter": "ch08",
+      "artifact": "/labs/ch08/lab-contract.md",
+      "observation": "同一用户症状按范围、wait、blocking edge、计划与客户端边界组织证据。"
+    },
+    {
+      "chapter": "ch08",
+      "artifact": "/labs/ch08/diagnose.py",
+      "observation": "诊断器只读取中性 signals，在答案隔离时区分三类根因并记录反证。"
+    },
+    {
+      "chapter": "ch08",
+      "artifact": "/labs/ch08/review.py",
+      "observation": "负对照、seed 可复现、答案权限、worker 清零与业务 checksum 进入自动验收。"
+    }
+  ],
+  "proposed_check": {
+    "kind": "runtime",
+    "criterion": "慢请求 evidence 必须同时保存影响范围和 UTC 时间窗、activity/wait/blocking edge、query/parameter identity、竞争假设与复位结果；诊断结论不得读取盲测答案，错误负对照必须失败。"
+  },
+  "promotion_conditions": [
+    "ch08 三类诊断器在 PostgreSQL 14-18 兼容矩阵通过",
+    "以真实 Pigsty 时间窗复测 query、session、log 与应用 SLI 关联",
+    "先将依赖的 v0.2 candidate 晋升，再合并为不可变 baseline v0.3 release artifact"
+  ]
+}

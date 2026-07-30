@@ -1,0 +1,76 @@
+{
+  "schema": "pg36-ch22-reference-run-v1",
+  "release": "1.0-sandbox",
+  "executed_at": "2026-07-29T20:52:29.972Z",
+  "completed_at": "2026-07-29T20:53:07.467Z",
+  "run_id": "87a63891-d6bf-46b3-bb65-d70a8d7bac3a",
+  "versions": {
+    "pigsty": "v4.4.0",
+    "postgresql": "18.4",
+    "pgbouncer": "1.25.2",
+    "haproxy": "3.4.2"
+  },
+  "services": {
+    "entry_address": "10.10.10.11",
+    "endpoint_count": 4,
+    "primary_port": 5433,
+    "replica_port": 5434,
+    "default_port": 5436,
+    "offline_port": 5438
+  },
+  "pool": {
+    "mode": "transaction",
+    "clients": 12,
+    "temporary_server_cap": 2,
+    "maximum_server_active": 2,
+    "maximum_client_waiting": 10,
+    "minimum_client_duration_ms": 254.451458,
+    "maximum_client_duration_ms": 1519.423208,
+    "session_state_visible_to_other_client": true,
+    "session_state_not_sticky": true,
+    "protocol_prepare_iterations": 12,
+    "protocol_prepare_cross_backend": true,
+    "sql_prepare_cross_backend_sqlstate": "26000",
+    "settings_restored_before_switch": true
+  },
+  "replica_visibility": {
+    "visible": true,
+    "delay_ms": 11.092,
+    "selected_member": "pg-test-2",
+    "claim": "one asynchronous observation, not a read-your-writes guarantee"
+  },
+  "switch": {
+    "initial_leader": "pg-test-1",
+    "forward_leader": "pg-test-2",
+    "final_leader": "pg-test-1",
+    "initial_timeline": 9,
+    "forward_timeline": 10,
+    "restored_timeline": 11,
+    "forward_command_ms": 2773.841375,
+    "restore_command_ms": 2765.953084,
+    "pool_refresh_members_per_transition": 3,
+    "acknowledged": 339,
+    "unknown": 48,
+    "acknowledged_rows_missing": 0,
+    "unknown_committed": 0,
+    "unknown_absent": 48,
+    "unreconciled_unknown_outcomes": 0,
+    "duplicate_tokens": 0,
+    "forward_conservative_write_gap_ms": 6995.203208,
+    "restore_conservative_write_gap_ms": 8510.066875,
+    "maximum_conservative_write_gap_ms": 8510.066875
+  },
+  "counterexamples_rejected": 15,
+  "sandbox_service_contract": "accepted-with-exceptions",
+  "production_ch22_gate": "pending",
+  "final_leader": "pg-test-1",
+  "production_approval": false,
+  "unplanned_failure_injected": false,
+  "secret_values_exported": 0,
+  "interpretation": {
+    "capacity": "small synthetic queueing evidence, not a production capacity result",
+    "consistency": "one asynchronous replica visibility sample, not bounded staleness",
+    "recovery": "healthy planned role changes with explicit pool refresh, not unplanned failover",
+    "entrypoint": "one HAProxy address, not a redundant client-discovery proof"
+  }
+}

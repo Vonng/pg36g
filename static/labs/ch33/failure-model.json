@@ -1,0 +1,100 @@
+{
+  "schema": "pg36-ch33-failure-model-v1",
+  "failure_domains": [
+    {
+      "id": "postgres-process",
+      "signals": ["Patroni REST unavailable on one member", "postmaster absent", "host SSH reachable"],
+      "safe_first_action": "prove the failed member cannot write, then let the existing HA policy elect an eligible replica",
+      "not_proven": ["host power fencing", "storage integrity"]
+    },
+    {
+      "id": "host-or-storage",
+      "signals": ["host unreachable or I/O errors", "process state cannot be trusted"],
+      "safe_first_action": "obtain an external fence before accepting another writable primary",
+      "not_proven": ["the unreachable host is powered off"]
+    },
+    {
+      "id": "client-or-proxy",
+      "signals": ["database primary healthy", "service path rejects or misroutes clients"],
+      "safe_first_action": "repair or bypass the exact routing layer; do not promote another database",
+      "not_proven": ["database failure"]
+    },
+    {
+      "id": "replication",
+      "signals": ["primary serves writes", "receiver/replay positions stall or lag grows"],
+      "safe_first_action": "protect WAL retention and diagnose the replica; do not fail over merely to clear lag",
+      "not_proven": ["candidate eligibility"]
+    },
+    {
+      "id": "dcs-control-plane",
+      "signals": ["DCS operations fail or time out", "database roles may remain temporarily stable"],
+      "safe_first_action": "preserve role and fence evidence; do not delete leader keys or bootstrap a new DCS blindly",
+      "not_proven": ["which side of a partition holds authority"]
+    }
+  ],
+  "dcs_scenarios": [
+    {
+      "id": "dcs-unreachable-from-all-members",
+      "observation": "all Patroni members lose DCS while REST reachability among every known member remains intact",
+      "expected_decision": "with failsafe_mode already enabled, observe the incumbent primary and all-member acknowledgements; do not initiate a new leader race",
+      "promotion_permitted": false,
+      "required_evidence": ["current SQL roles", "failsafe key membership", "all Patroni REST reachability", "leader-lock error class"]
+    },
+    {
+      "id": "primary-loses-dcs-only",
+      "observation": "the incumbent primary loses DCS but reaches every known replica; replicas still reach DCS",
+      "expected_decision": "observe failsafe handshakes and retain the incumbent only while every known member acknowledges it",
+      "promotion_permitted": false,
+      "required_evidence": ["current SQL roles", "all-member REST acknowledgement", "replicas excluded from leader race"]
+    },
+    {
+      "id": "primary-isolated-from-dcs-and-one-replica",
+      "observation": "the incumbent primary loses DCS and cannot reach every member in the failsafe set",
+      "expected_decision": "require demotion or external fencing of the old primary before any candidate is accepted",
+      "promotion_permitted": "only-after-fence",
+      "required_evidence": ["old-primary write refusal", "DCS authority on surviving side", "candidate WAL position"]
+    },
+    {
+      "id": "replica-loses-dcs",
+      "observation": "one replica loses DCS while the incumbent leader lock remains healthy",
+      "expected_decision": "exclude the isolated replica from candidacy and repair its control-plane path without changing the primary",
+      "promotion_permitted": false,
+      "required_evidence": ["leader-lock health", "primary SQL write probe", "replica recovery state"]
+    },
+    {
+      "id": "dcs-latency-near-timeout",
+      "observation": "DCS latency approaches retry_timeout and leader-loop deadlines",
+      "expected_decision": "treat it as a control-plane incident, preserve clocks and latency evidence, and stop manual promotions until authority is unambiguous",
+      "promotion_permitted": false,
+      "required_evidence": ["DCS latency distribution", "Patroni loop timestamps", "leader-lock revisions"]
+    },
+    {
+      "id": "proxy-path-failure-masquerades-as-database-failure",
+      "observation": "clients cannot write through one service endpoint while Patroni, SQL roles, and direct probes are healthy",
+      "expected_decision": "repair the service path; database failover is not justified",
+      "promotion_permitted": false,
+      "required_evidence": ["direct primary SQL", "Patroni topology", "proxy health checks", "client endpoint identity"]
+    }
+  ],
+  "promotion_invariants": [
+    "exactly one accepted writable primary",
+    "old primary has a demonstrated fence or a valid incumbent leader lease",
+    "candidate is not paused, not nofailover, and is within the declared lag budget",
+    "candidate belongs to the same system identifier and an admissible timeline history",
+    "client routing is changed only after database authority is established"
+  ],
+  "rebuild_decision": [
+    {
+      "when": "same system identifier, common ancestor available, target cleanly stopped, checksums or wal_log_hints enabled, required WAL reachable",
+      "action": "attempt pg_rewind"
+    },
+    {
+      "when": "rewind precondition or execution fails, target files may be inconsistent, lineage is uncertain, or validation fails",
+      "action": "discard only the explicitly authorized target and take a fresh base backup"
+    },
+    {
+      "when": "no trustworthy primary or backup lineage exists",
+      "action": "stop and return to incident command; do not improvise a source"
+    }
+  ]
+}

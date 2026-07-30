@@ -1,0 +1,68 @@
+{
+  "schema": "pg36-ch31-incident-requirements-v1",
+  "chapter": 31,
+  "target": {
+    "id": "pg36-l0-vagrant/pg-test",
+    "bastion": "10.10.10.10",
+    "ssh_user": "vagrant",
+    "service": "pg-test",
+    "cluster": "pg-test",
+    "postgresql_major": 18,
+    "patroni_members": [
+      "10.10.10.11",
+      "10.10.10.12",
+      "10.10.10.13"
+    ],
+    "pgbackrest_stanza": "pg-test",
+    "pigsty_monitoring_mode": "FULL-L3"
+  },
+  "upstream": {
+    "observability": "../ch25/observability-run.json",
+    "backup_restore": "../ch21/restore-run.json",
+    "migration": "../ch29/migration-run.json",
+    "upgrade": "../ch30/upgrade-run.json"
+  },
+  "exercise": {
+    "scenario_count": 8,
+    "draw_count": 2,
+    "modes": [
+      "solo",
+      "team"
+    ],
+    "first_response_minutes": 15,
+    "required_routes": [
+      "PITR",
+      "HA",
+      "OVERLOAD",
+      "INTEGRITY"
+    ],
+    "reference_seed": "pg36-ch31-reference-v1"
+  },
+  "risk": {
+    "capture": "L0-read-only",
+    "exercise": "offline-tabletop-only",
+    "database_mutation": "none",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false,
+    "raw_query_text_permitted": false,
+    "raw_log_export_permitted": false,
+    "patroni_pause_permitted": false,
+    "failover_permitted": false,
+    "restart_permitted": false,
+    "process_termination_permitted": false,
+    "route_change_permitted": false,
+    "backup_restore_permitted": false
+  },
+  "acceptance": {
+    "live_snapshot_read_only": true,
+    "one_primary_two_replicas": true,
+    "backup_identity_matches_cluster": true,
+    "blind_packet_must_not_leak_answer": true,
+    "severity_must_not_select_route": true,
+    "required_evidence_must_precede_route": true,
+    "dangerous_action_must_not_execute": true,
+    "decision_log_complete": true,
+    "solo_and_team_modes_both_required": true,
+    "production_ch31_gate": "pending"
+  }
+}

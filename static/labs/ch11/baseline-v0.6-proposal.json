@@ -1,0 +1,62 @@
+{
+  "proposal_version": 1,
+  "base_baseline": "0.1.0",
+  "base_checksum": "bb1404e2b2e47624b17f3a1b0de63a5371f382b67906f1a8ba1cf08e92895a1c",
+  "depends_on_candidates": [
+    {
+      "candidate_baseline": "0.5.0",
+      "proposal": "/labs/ch10/baseline-v0.5-proposal.json",
+      "proposal_checksum": "9289323c2270f1d690c89b385cd0dc3a3178eb62ce4e0f6803d820e1444d9193"
+    }
+  ],
+  "candidate_baseline": "0.6.0",
+  "status": "candidate",
+  "rule_changes": [
+    {
+      "rule_id": "SAFE-MIGR-006",
+      "change_kind": "statement-and-runtime-check",
+      "statement_change": {
+        "from": "类型收窄、列删除、表重写或约束收紧前必须在写入前完成可表示性 precheck，声明 lock/statement timeout、兼容窗口、失败恢复和 post-state；生产 contract 与 application rollback 共同设计。",
+        "to": "跨应用版本的 DDL 必须按 expand、migrate、validate、switch、contract 划分可查询状态；执行前验证目标并声明 lock/statement timeout、兼容窗口、扫描/重写/WAL/副本延迟预算、批次与停止线、重入和 post-state。contract 只在旧读写依赖清零且观察窗口证据成立后执行；删除语义只能 forward repair 或 restore，不能用空壳 down migration 冒充恢复。"
+      }
+    },
+    {
+      "rule_id": "DEFAULT-VERS-010",
+      "change_kind": "runtime-check",
+      "statement_change": "none",
+      "check_change": "每个迁移阶段使用稳定 migration identity 和单调状态标记；中止后从已提交 checkpoint 继续，重跑不得跳过未处理数据。"
+    }
+  ],
+  "evidence": [
+    {
+      "chapter": "ch11",
+      "artifact": "/labs/ch11/run_lock_case.py",
+      "observation": "ACCESS SHARE holder 使元数据 fast-path ADD COLUMN 在锁预算内以 55P03 失败，目录保持未变，释放后才进入 expand。"
+    },
+    {
+      "chapter": "ch11",
+      "artifact": "/labs/ch11/backfill.py",
+      "observation": "兼容桥保护新写入，keyset 批次与 checkpoint 在同一事务提交；两批后以 75 中止，再从精确水位恢复到零遗漏。"
+    },
+    {
+      "chapter": "ch11",
+      "artifact": "/labs/ch11/contract-gate.sql",
+      "observation": "本地演练停在 switched；缺少精确目标、动作令牌或真实观察证据时 contract 以 P3612 拒绝。"
+    },
+    {
+      "chapter": "ch11",
+      "artifact": "/labs/ch11/partition_lab.py",
+      "observation": "预验证 CHECK 后 ATTACH 的父/子锁被实测，PG14+ DETACH CONCURRENTLY 在事务块外运行并保留全部数据。"
+    }
+  ],
+  "proposed_check": {
+    "kind": "runtime-and-release",
+    "criterion": "至少验证一次锁预算失败且 schema 未变、旧/新写路径共存、分批中止与精确续跑、NOT VALID 到 VALIDATE、切换后的影子一致性和 contract 缺证拒绝；生产发布另须保存 WAL、复制延迟、资源水位及旧依赖清零证据。"
+  },
+  "promotion_conditions": [
+    "ch11 release suite 在 PostgreSQL 14-18 兼容矩阵通过，并显式隔离 PostgreSQL 18 NOT NULL catalog 差异",
+    "在至少一个真实 Pigsty HA 集群的发布窗口测量锁等待、WAL 速率、复制延迟、磁盘和 tail latency",
+    "由应用 owner 证明旧读写版本退出并完成不少于约定时长的 rollback observation window",
+    "先晋升 v0.2-v0.5 依赖链，再生成不可变 baseline v0.6 release artifact"
+  ]
+}

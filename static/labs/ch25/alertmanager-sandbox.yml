@@ -1,0 +1,70 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: pg36-default-sink
+  group_by:
+    - service
+    - environment
+    - alertname
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    - receiver: pg36-proposed-rule-sink
+      matchers:
+        - environment = "isolated-lab"
+        - route = "test"
+    - receiver: pg36-platform-page-sink
+      matchers:
+        - environment = "isolated-lab"
+        - class = "metamonitoring"
+        - route = "page"
+    - receiver: pg36-shop-page-sink
+      matchers:
+        - environment = "isolated-lab"
+        - owner_function =~ "service|data"
+        - route = "page"
+    - receiver: pg36-shop-ticket-sink
+      matchers:
+        - environment = "isolated-lab"
+        - owner_function = "service"
+        - route = "ticket"
+    - receiver: pg36-platform-ticket-sink
+      matchers:
+        - environment = "isolated-lab"
+        - owner_function = "platform"
+        - route = "ticket"
+    - receiver: pg36-null-sink
+      matchers:
+        - environment = "isolated-lab"
+        - route = "dashboard"
+
+inhibit_rules:
+  - source_matchers:
+      - alertname = "PG36ShopAvailabilityFastBurn"
+      - severity = "SEV-1"
+    target_matchers:
+      - alertname =~ "PG36ShopAvailabilitySlowBurn|PG36ShopAvailabilityBudgetTicket"
+    equal:
+      - service
+      - environment
+      - objective_id
+  - source_matchers:
+      - alertname = "PG36MonitoringPathBroken"
+      - class = "metamonitoring"
+    target_matchers:
+      - class = "derived-missing"
+      - observation_dependency = "true"
+    equal:
+      - service
+      - environment
+
+receivers:
+  - name: pg36-default-sink
+  - name: pg36-proposed-rule-sink
+  - name: pg36-platform-page-sink
+  - name: pg36-shop-page-sink
+  - name: pg36-shop-ticket-sink
+  - name: pg36-platform-ticket-sink
+  - name: pg36-null-sink

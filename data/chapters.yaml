@@ -3436,7 +3436,7 @@
       title: 复制槽 `xmin` 与孤儿 `pg_prepared_xacts`
     - id: item-28-3-4
       number: 28.3.4
-      title: 紧急态应让冻结完成，不把一般止血当修复
+      title: 紧急态先解除保留并让 VACUUM 完成
   - id: ch28-s04
     number: '28.4'
     index: 4

@@ -1,0 +1,12 @@
+flowchart LR
+  U["已认证的应用请求"] -->|"TLS 与身份门禁"| E["服务入口"]
+  E -->|"5433；本沙箱客户端 TLS 关闭"| P["PgBouncer transaction pool"]
+  E -->|"5436；PostgreSQL TLS"| D["PostgreSQL primary"]
+  P --> D
+  L["session_user = test<br/>沙箱复用登录"] -->|"BEGIN + SET LOCAL ROLE"| R["current_user = runtime / readonly"]
+  R -->|"SET LOCAL app.tenant_id"| Q["对象 ACL + FORCE RLS"]
+  Q --> A["tenant A rows"]
+  Q --> B["tenant B rows"]
+  M["migrate NOLOGIN"] -->|"SET ROLE；无 ADMIN"| O["owner NOLOGIN"]
+  O -->|"拥有对象；仍受 FORCE RLS"| Q
+  X["postgres / break-glass"] -.->|"可绕过；必须外部审批与审计"| Q

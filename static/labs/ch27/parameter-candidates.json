@@ -1,0 +1,66 @@
+{
+  "schema": "pg36-ch27-parameter-candidates-v1",
+  "upstream_claim": "chapter 26 observed high server CPU at c8, but did not prove a parameter-specific root cause",
+  "candidates": [
+    {
+      "parameter": "plan_cache_mode",
+      "proposed_value": "force_generic_plan",
+      "mechanism": "avoid repeated custom planning for prepared statements",
+      "upstream_support": "prepared protocol and CPU pressure make planning overhead falsifiable",
+      "upstream_gap": "chapter 26 did not measure planning time and PostgreSQL auto mode may already select generic plans",
+      "test_scope": "session",
+      "tested": true,
+      "eligible_for_persistent_change": false
+    },
+    {
+      "parameter": "work_mem",
+      "proposed_value": "increase",
+      "mechanism": "avoid sort or hash spill",
+      "upstream_support": "none",
+      "upstream_gap": "all six chapter 26 cells reported zero temp bytes",
+      "test_scope": "none",
+      "tested": false,
+      "rejection": "no spill mechanism was observed"
+    },
+    {
+      "parameter": "shared_buffers",
+      "proposed_value": "increase",
+      "mechanism": "retain more relation blocks in PostgreSQL shared buffers",
+      "upstream_support": "L cells recorded block reads",
+      "upstream_gap": "server iowait was low and OS cache/device latency attribution is absent",
+      "test_scope": "none",
+      "tested": false,
+      "rejection": "I/O was not established as the limiting service center; restart and memory-budget effects are material"
+    },
+    {
+      "parameter": "max_connections",
+      "proposed_value": "increase",
+      "mechanism": "admit more database backends",
+      "upstream_support": "none",
+      "upstream_gap": "only eight persistent clients were used and the exact knee is unknown",
+      "test_scope": "none",
+      "tested": false,
+      "rejection": "connection slots are not throughput and can amplify memory and queueing"
+    },
+    {
+      "parameter": "synchronous_commit",
+      "proposed_value": "off",
+      "mechanism": "return before local WAL flush",
+      "upstream_support": "write transactions generate WAL",
+      "upstream_gap": "WAL flush was not proven to be the bottleneck",
+      "test_scope": "none",
+      "tested": false,
+      "rejection": "changes the durability contract"
+    },
+    {
+      "parameter": "wal_compression",
+      "proposed_value": "change",
+      "mechanism": "trade CPU for reduced full-page-image WAL",
+      "upstream_support": "WAL per transaction was measured",
+      "upstream_gap": "WAL I/O was not proven limiting and CPU already had pressure",
+      "test_scope": "none",
+      "tested": false,
+      "rejection": "mechanism and tradeoff do not match the observed constraint"
+    }
+  ]
+}

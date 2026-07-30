@@ -1,0 +1,221 @@
+{
+  "schema": "pg36-ch20-negative-cases-v1",
+  "release": "1.0-sandbox",
+  "cases": [
+    {
+      "id": "claim-production-from-sandbox",
+      "expected_code": "E_PRODUCTION_CLAIM",
+      "patches": [
+        {
+          "target": "requirements",
+          "op": "replace",
+          "path": [
+            "target",
+            "production_data_permitted"
+          ],
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "switch-to-unreviewed-candidate",
+      "expected_code": "E_ACTION",
+      "patches": [
+        {
+          "target": "evidence",
+          "op": "replace",
+          "path": [
+            "forward_action",
+            "candidate"
+          ],
+          "value": "pg-test-3"
+        }
+      ]
+    },
+    {
+      "id": "ignore-switchover-command-failure",
+      "expected_code": "E_ACTION",
+      "patches": [
+        {
+          "target": "evidence",
+          "op": "replace",
+          "path": [
+            "forward_action",
+            "return_code"
+          ],
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "accept-a-foreign-system-identifier",
+      "expected_code": "E_LINEAGE",
+      "patches": [
+        {
+          "target": "evidence",
+          "op": "replace",
+          "path": [
+            "phases",
+            "after-forward",
+            "postgres",
+            "10.10.10.13",
+            "system_identifier"
+          ],
+          "value": "9999999999999999999"
+        }
+      ]
+    },
+    {
+      "id": "accept-two-leaders-after-switch",
+      "expected_code": "E_TOPOLOGY",
+      "patches": [
+        {
+          "target": "evidence",
+          "op": "replace",
+          "path": [
+            "phases",
+            "after-forward",
+            "patroni",
+            "members",
+            0,
+            "role"
+          ],
+          "value": "primary"
+        }
+      ]
+    },
+    {
+      "id": "accept-no-timeline-advance",
+      "expected_code": "E_TIMELINE",
+      "patches": [
+        {
+          "target": "evidence",
+          "op": "copy",
+          "from": [
+            "phases",
+            "before",
+            "patroni",
+            "members",
+            0,
+            "timeline"
+          ],
+          "path": [
+            "phases",
+            "after-forward",
+            "patroni",
+            "members",
+            0,
+            "timeline"
+          ]
+        },
+        {
+          "target": "evidence",
+          "op": "copy",
+          "from": [
+            "phases",
+            "before",
+            "patroni",
+            "members",
+            0,
+            "timeline"
+          ],
+          "path": [
+            "phases",
+            "after-forward",
+            "patroni",
+            "members",
+            1,
+            "timeline"
+          ]
+        },
+        {
+          "target": "evidence",
+          "op": "copy",
+          "from": [
+            "phases",
+            "before",
+            "patroni",
+            "members",
+            0,
+            "timeline"
+          ],
+          "path": [
+            "phases",
+            "after-forward",
+            "patroni",
+            "members",
+            2,
+            "timeline"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "leave-old-primary-out-of-cluster",
+      "expected_code": "E_TOPOLOGY",
+      "patches": [
+        {
+          "target": "evidence",
+          "op": "replace",
+          "path": [
+            "phases",
+            "after-forward",
+            "patroni",
+            "members",
+            0,
+            "state"
+          ],
+          "value": "stopped"
+        }
+      ]
+    },
+    {
+      "id": "lose-an-acknowledged-token",
+      "expected_code": "E_COMMIT_EVIDENCE",
+      "patches": [
+        {
+          "target": "evidence",
+          "op": "replace",
+          "path": [
+            "reconciliation",
+            "counts",
+            "acknowledged_rows_missing"
+          ],
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "leave-unknown-commit-unreconciled",
+      "expected_code": "E_COMMIT_EVIDENCE",
+      "patches": [
+        {
+          "target": "evidence",
+          "op": "replace",
+          "path": [
+            "reconciliation",
+            "counts",
+            "unreconciled_unknown_outcomes"
+          ],
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "accept-write-gap-over-objective",
+      "expected_code": "E_WRITE_GAP",
+      "patches": [
+        {
+          "target": "evidence",
+          "op": "replace",
+          "path": [
+            "reconciliation",
+            "metrics",
+            "conservative_write_gap_ms"
+          ],
+          "value": 15001
+        }
+      ]
+    }
+  ]
+}

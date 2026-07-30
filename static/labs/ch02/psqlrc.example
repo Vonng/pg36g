@@ -1,0 +1,7 @@
+\set QUIET 1
+\set PROMPT1 '%n@%m:%>/%/%R%x%# '
+\set PROMPT2 '%n@%m:%>/%/%R%x%# '
+\pset null '∅'
+\pset pager_min_lines 20
+\set HISTCONTROL ignoreboth
+\set QUIET 0

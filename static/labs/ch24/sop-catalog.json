@@ -1,0 +1,217 @@
+{
+  "schema": "pg36-ch24-sop-catalog-v1",
+  "service_id": "pg36_shop",
+  "catalog_status": "teaching-reference",
+  "production_approval": false,
+  "documents": [
+    {
+      "id": "SOP-BACKUP-RESTORE",
+      "capability": "backup_and_restore",
+      "kind": "recovery-drill",
+      "owner_function": "platform",
+      "approver_function": "data",
+      "risk_class": "L3",
+      "trigger": "scheduled quarterly drill, recovery-path change, or recovery incident",
+      "exact_target_required": true,
+      "blast_radius_required": true,
+      "prerequisites": [
+        "named source cluster and backup repository",
+        "selected recovery objective and target time",
+        "isolated destination with no production listener",
+        "application verification queries and expected invariants",
+        "space, WAL coverage, authority, and stop conditions"
+      ],
+      "procedure_phases": [
+        "freeze evidence inputs and identify the backup plus required WAL",
+        "restore into an isolated path and private socket",
+        "prove recovery state before promotion",
+        "promote only inside the isolated boundary",
+        "verify identity, schema, retained rows, discarded rows, and application invariants",
+        "stop the isolated postmaster and retain or dispose of evidence by policy"
+      ],
+      "stop_conditions": [
+        "source system identifier or recovery target is ambiguous",
+        "destination can accept production traffic",
+        "required WAL is absent or integrity checks fail",
+        "verification expectations were not fixed before restore"
+      ],
+      "verification": [
+        "target marker is present and post-target marker is absent",
+        "database identity matches the declared source",
+        "the restored server is stopped after verification",
+        "evidence records durations as observations, not production RTO"
+      ],
+      "rollback_or_roll_forward": "abort the isolated restore, stop its process, preserve logs, and select a reviewed alternate backup or recovery target",
+      "evidence": [
+        "chapter-21 restore manifest",
+        "source and destination identity relation",
+        "WAL coverage",
+        "application verification",
+        "process and listener isolation",
+        "review decision"
+      ],
+      "reference_artifact": "ch21/restore-run.json",
+      "reference_run_id": "run_20260729T201040Z_961665aa",
+      "reference_is_production_proof": false,
+      "review_interval_days": 90
+    },
+    {
+      "id": "SOP-ROLE-CHANGE",
+      "capability": "planned_switchover_and_failover",
+      "kind": "incident-and-change-runbook",
+      "owner_function": "platform",
+      "approver_function": "service",
+      "risk_class": "L3",
+      "trigger": "planned maintenance, primary impairment, or control-plane-approved recovery",
+      "exact_target_required": true,
+      "blast_radius_required": true,
+      "prerequisites": [
+        "distinguish planned switchover from unplanned failover",
+        "prove current leader, replicas, timeline, lag, and control-plane quorum",
+        "define fencing authority and split-brain stop conditions",
+        "start idempotency-token traffic probe",
+        "record application and pool entrypoints"
+      ],
+      "procedure_phases": [
+        "capture preflight topology and client-entry state",
+        "stop concurrent topology changes",
+        "execute one approved role change",
+        "wait for one stable leader and streaming replicas",
+        "refresh or validate routing and pooling",
+        "reconcile acknowledged and unknown probe outcomes",
+        "decide whether to retain the new leader or perform a separately approved return"
+      ],
+      "stop_conditions": [
+        "more than one writable primary is possible",
+        "DCS authority or fencing state is unknown",
+        "candidate cannot meet the declared durability policy",
+        "unknown write outcomes cannot be reconciled"
+      ],
+      "verification": [
+        "exactly one leader and the expected timeline progression",
+        "acknowledged probe rows are not missing",
+        "unknown outcomes are classified committed or absent",
+        "pools route new writes to the current leader",
+        "production approval remains independent of a sandbox result"
+      ],
+      "rollback_or_roll_forward": "prefer a safe roll-forward to one fenced leader; a planned return is a new change with a new preflight and authority",
+      "evidence": [
+        "topology before and after",
+        "command and stabilization timestamps",
+        "client write-gap observation",
+        "probe reconciliation",
+        "routing refresh",
+        "decision and exceptions"
+      ],
+      "reference_artifact": "ch20/drill-run.json",
+      "reference_run_id": "475e9b47-bc35-4687-87da-012f1d5ea455",
+      "reference_is_production_proof": false,
+      "review_interval_days": 90
+    },
+    {
+      "id": "SOP-ACCESS-ROTATION",
+      "capability": "access_and_credential_rotation",
+      "kind": "routine-and-incident-procedure",
+      "owner_function": "security_privacy",
+      "approver_function": "platform",
+      "risk_class": "L2",
+      "trigger": "scheduled credential age, staff or workload change, suspected disclosure, or policy change",
+      "exact_target_required": true,
+      "blast_radius_required": true,
+      "prerequisites": [
+        "identify login, effective role, clients, pool declarations, and secret authority",
+        "separate credential material from ticket and command-line arguments",
+        "define dual-version compatibility and revocation time",
+        "prove an independent break-glass path",
+        "state whether existing sessions must be terminated"
+      ],
+      "procedure_phases": [
+        "create and distribute a new version through the approved secret path",
+        "test a new connection with the new version",
+        "move clients and pool declarations in bounded batches",
+        "prove the old version no longer opens new sessions",
+        "revoke login or credential as required",
+        "terminate existing sessions when the incident boundary requires it",
+        "verify final role attributes, pool state, and secret-free evidence"
+      ],
+      "stop_conditions": [
+        "credential value would enter shell history, logs, or exported evidence",
+        "client inventory is incomplete",
+        "new and break-glass paths both fail",
+        "the operator cannot distinguish new authentication from an existing session"
+      ],
+      "verification": [
+        "new authentication succeeds before cutover",
+        "old authentication fails after revocation",
+        "existing-session behavior is explicitly observed",
+        "final role and pool declarations match the contract",
+        "no secret material appears in evidence"
+      ],
+      "rollback_or_roll_forward": "during the dual-version window restore the previous approved declaration; after suspected disclosure, roll forward to another new version rather than re-enable the exposed one",
+      "evidence": [
+        "identity and role metadata without verifier",
+        "connection outcomes and SQLSTATE",
+        "client migration counts",
+        "revocation timestamp",
+        "session-termination decision",
+        "secret scanner result"
+      ],
+      "reference_artifact": "ch23/security-run.json",
+      "reference_run_id": "64b857a6-8d8f-46e2-9462-3f097a95a69f",
+      "reference_is_production_proof": false,
+      "review_interval_days": 90
+    },
+    {
+      "id": "SOP-SCHEMA-RELEASE",
+      "capability": "schema_release",
+      "kind": "change-plan",
+      "owner_function": "service",
+      "approver_function": "platform",
+      "risk_class": "L2",
+      "trigger": "an application release requires a PostgreSQL schema or data-contract change",
+      "exact_target_required": true,
+      "blast_radius_required": true,
+      "prerequisites": [
+        "expand-and-contract compatibility matrix",
+        "lock and rewrite analysis on production-shaped data",
+        "statement and lock timeout",
+        "replica, WAL, backup, and disk headroom",
+        "rollback or roll-forward decision point",
+        "application feature flag and observability"
+      ],
+      "procedure_phases": [
+        "publish an additive schema compatible with old and new application versions",
+        "deploy readers and writers that tolerate both representations",
+        "backfill in bounded idempotent batches",
+        "validate constraints and reconciliation",
+        "switch application behavior under observation",
+        "remove the old representation only after the compatibility window"
+      ],
+      "stop_conditions": [
+        "unexpected blocking exceeds the timeout",
+        "WAL, replica lag, disk, or error budget crosses the stop line",
+        "the old application can no longer operate before cutover",
+        "backfill is not resumable and idempotent"
+      ],
+      "verification": [
+        "both application versions pass the compatibility matrix",
+        "constraint and row-count reconciliation pass",
+        "lock duration and WAL effects remain within reviewed bounds",
+        "old columns or code are removed only after evidence closes the window"
+      ],
+      "rollback_or_roll_forward": "before semantic cutover disable new writes and retain the additive schema; after irreversible data use begins, fix forward with a versioned compensating migration",
+      "evidence": [
+        "DDL and migration hash",
+        "query-plan and lock-risk review",
+        "batch progress",
+        "compatibility tests",
+        "SLO and component telemetry",
+        "closeout decision"
+      ],
+      "reference_artifact": "chapter-11 schema change contract",
+      "reference_run_id": null,
+      "reference_is_production_proof": false,
+      "review_interval_days": 90
+    }
+  ]
+}

@@ -1,33 +1,17 @@
-/* 调整左侧导航栏的宽度 */
-/* 增加宽度以确保文本不换行 */
-
-/* 左侧导航栏宽度调整 - 增加到 28rem 以避免换行 */
-.hextra-sidebar {
-  width: 28rem !important;
-  min-width: 28rem !important;
+/* Hextra 左侧导航栏：移动端沿用主题默认宽度，桌面端适度加宽。 */
+@media (min-width: 48rem) {
+  .hextra-sidebar-container {
+    width: 20rem;
+    min-width: 20rem;
+  }
 }
 
-/* 确保导航内容正确显示 */
-.hextra-sidebar nav {
-  width: 100%;
-}
-
-/* 防止导航项文字换行 */
-.hextra-sidebar li {
-  white-space: nowrap;
-}
-
-.sidebar-container {
-    width: 20rem !important;
-    white-space: nowrap;
-}
-
-/* 确保导航链接不换行 */
-.hextra-sidebar a {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
+/* 宽屏下为深层级长标题保留足够空间，避免折行或省略。 */
+@media (min-width: 80rem) {
+  .hextra-sidebar-container {
+    width: 25rem;
+    min-width: 25rem;
+  }
 }
 
 /* 调整右侧页内目录（On This Page）的宽度 */

@@ -1,0 +1,211 @@
+{
+  "schema": "pg36-ch25-route-tests-v1",
+  "config": "alertmanager-sandbox.yml",
+  "tests": [
+    {
+      "id": "ROUTE-AVAILABILITY-PAGE",
+      "labels": {
+        "alertname": "PG36ShopAvailabilityFastBurn",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "symptom",
+        "route": "page",
+        "owner_function": "service",
+        "severity": "SEV-1"
+      },
+      "expected_receivers": [
+        "pg36-shop-page-sink"
+      ]
+    },
+    {
+      "id": "ROUTE-CORRECTNESS-PAGE",
+      "labels": {
+        "alertname": "PG36ShopCorrectnessMismatch",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "integrity",
+        "route": "page",
+        "owner_function": "data",
+        "severity": "SEV-1"
+      },
+      "expected_receivers": [
+        "pg36-shop-page-sink"
+      ]
+    },
+    {
+      "id": "ROUTE-SERVICE-TICKET",
+      "labels": {
+        "alertname": "PG36ShopAvailabilityBudgetTicket",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "symptom",
+        "route": "ticket",
+        "owner_function": "service",
+        "severity": "ticket"
+      },
+      "expected_receivers": [
+        "pg36-shop-ticket-sink"
+      ]
+    },
+    {
+      "id": "ROUTE-PLATFORM-TICKET",
+      "labels": {
+        "alertname": "PG36ShopCapacityHorizon",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "capacity",
+        "route": "ticket",
+        "owner_function": "platform",
+        "severity": "ticket"
+      },
+      "expected_receivers": [
+        "pg36-platform-ticket-sink"
+      ]
+    },
+    {
+      "id": "ROUTE-META-PAGE",
+      "labels": {
+        "alertname": "PG36MonitoringPathBroken",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "metamonitoring",
+        "route": "page",
+        "owner_function": "platform",
+        "severity": "SEV-2"
+      },
+      "expected_receivers": [
+        "pg36-platform-page-sink"
+      ]
+    },
+    {
+      "id": "ROUTE-DIAGNOSTIC",
+      "labels": {
+        "alertname": "PG36ReplicaReplayDistance",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "cause",
+        "route": "dashboard",
+        "owner_function": "platform",
+        "severity": "info"
+      },
+      "expected_receivers": [
+        "pg36-null-sink"
+      ]
+    },
+    {
+      "id": "ROUTE-PROPOSED",
+      "labels": {
+        "alertname": "PG36ShopLatencyFastBurn",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "symptom",
+        "route": "test",
+        "owner_function": "service",
+        "severity": "candidate"
+      },
+      "expected_receivers": [
+        "pg36-proposed-rule-sink"
+      ]
+    },
+    {
+      "id": "ROUTE-UNSCOPED",
+      "labels": {
+        "alertname": "UnknownSyntheticAlert",
+        "environment": "isolated-lab"
+      },
+      "expected_receivers": [
+        "pg36-default-sink"
+      ]
+    }
+  ],
+  "inhibition_tests": [
+    {
+      "id": "INHIBIT-FAST-OVER-SLOW",
+      "source": {
+        "alertname": "PG36ShopAvailabilityFastBurn",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "objective_id": "SLO-AVAILABILITY",
+        "severity": "SEV-1"
+      },
+      "target": {
+        "alertname": "PG36ShopAvailabilitySlowBurn",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "objective_id": "SLO-AVAILABILITY",
+        "severity": "SEV-2"
+      },
+      "expected_inhibited": true
+    },
+    {
+      "id": "INHIBIT-META-DERIVED-MISSING",
+      "source": {
+        "alertname": "PG36MonitoringPathBroken",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "metamonitoring"
+      },
+      "target": {
+        "alertname": "PG36ShopSLIMissing",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "derived-missing",
+        "observation_dependency": "true"
+      },
+      "expected_inhibited": true
+    },
+    {
+      "id": "DO-NOT-INHIBIT-USER-SYMPTOM",
+      "source": {
+        "alertname": "PG36MonitoringPathBroken",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "metamonitoring"
+      },
+      "target": {
+        "alertname": "PG36ShopAvailabilityFastBurn",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "symptom",
+        "observation_dependency": "false"
+      },
+      "expected_inhibited": false
+    },
+    {
+      "id": "DO-NOT-INHIBIT-CORRECTNESS",
+      "source": {
+        "alertname": "PG36MonitoringPathBroken",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "metamonitoring"
+      },
+      "target": {
+        "alertname": "PG36ShopCorrectnessMismatch",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "class": "integrity"
+      },
+      "expected_inhibited": false
+    },
+    {
+      "id": "DO-NOT-CROSS-SERVICE",
+      "source": {
+        "alertname": "PG36ShopAvailabilityFastBurn",
+        "service": "pg36_shop",
+        "environment": "isolated-lab",
+        "objective_id": "SLO-AVAILABILITY",
+        "severity": "SEV-1"
+      },
+      "target": {
+        "alertname": "PG36ShopAvailabilitySlowBurn",
+        "service": "other_service",
+        "environment": "isolated-lab",
+        "objective_id": "SLO-AVAILABILITY",
+        "severity": "SEV-2"
+      },
+      "expected_inhibited": false
+    }
+  ],
+  "real_receiver": false,
+  "live_alertmanager_used": false
+}

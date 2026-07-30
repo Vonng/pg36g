@@ -1,0 +1,62 @@
+{
+  "schema": "pg36-ch32-recovery-contract-v1",
+  "states": [
+    "PREFLIGHT",
+    "FIXTURE_BASE",
+    "BACKUP_READY",
+    "SAFE_BEFORE",
+    "DAMAGE_COMMITTED",
+    "POST_TARGET_WRITES",
+    "WAL_ARCHIVED",
+    "INCLUSIVE_REJECTED",
+    "EXCLUSIVE_ACCEPTED",
+    "RECONCILED",
+    "CLEANED"
+  ],
+  "transitions": [
+    ["PREFLIGHT", "FIXTURE_BASE"],
+    ["FIXTURE_BASE", "BACKUP_READY"],
+    ["BACKUP_READY", "SAFE_BEFORE"],
+    ["SAFE_BEFORE", "DAMAGE_COMMITTED"],
+    ["DAMAGE_COMMITTED", "POST_TARGET_WRITES"],
+    ["POST_TARGET_WRITES", "WAL_ARCHIVED"],
+    ["WAL_ARCHIVED", "INCLUSIVE_REJECTED"],
+    ["INCLUSIVE_REJECTED", "EXCLUSIVE_ACCEPTED"],
+    ["EXCLUSIVE_ACCEPTED", "RECONCILED"],
+    ["RECONCILED", "CLEANED"]
+  ],
+  "allowed_mutations": [
+    "create exact pg36_ch32 fixture schema in the test database",
+    "take one fresh full pgBackRest backup without expiring prior backups",
+    "commit one safe fixture transaction before the incident",
+    "commit one bounded wrong update and fixture-only pending outbox batch",
+    "commit one bounded legitimate post-target fixture transaction",
+    "force one WAL switch and run pgBackRest check",
+    "use pig pitr plan and side restore below the marker-bound restore root",
+    "start one Unix-socket-only isolated postmaster at a time",
+    "repair the exact fixture from recovered values plus audited post-target deltas",
+    "drop only the marker-owned fixture schema and remove exact stopped restore roots"
+  ],
+  "forbidden_mutations": [
+    "restore over /pg/data or any Pigsty-managed data directory",
+    "pause or stop Patroni or modify DCS",
+    "promote or rewind a Pigsty-managed member",
+    "change HAProxy, PgBouncer, VIP, DNS, firewall, HBA, or production route",
+    "enable TCP on an isolated recovery",
+    "archive WAL from a recovered fork into the source repository",
+    "expire or delete backups or archived WAL",
+    "terminate unrelated sessions or use forced database drop",
+    "dispatch fixture outbox events to an external system",
+    "delete an unmarked path or manually change pg_wal files"
+  ],
+  "decision_gates": {
+    "target_without_audit_xid": "blocked",
+    "inclusive_candidate_contains_damage": "rejected",
+    "exclusive_candidate_missing_safe_transaction": "blocked",
+    "exclusive_candidate_contains_damage": "blocked",
+    "post_target_write_set_unknown": "blocked",
+    "conditional_repair_row_count_mismatch": "blocked",
+    "business_cutover": "not-performed",
+    "production_ch32_gate": "pending"
+  }
+}

@@ -2,7 +2,7 @@
 ---
 title: PostgreSQL 36 计
 subtitle: 从 SQL 到生产：PostgreSQL 与 Pigsty 实战
-status: scaffold
+status: draft
 source_outline: plan/book-outline-final.md
 navigation: flat-chapters-with-volume-overviews
 volume_hierarchy: false

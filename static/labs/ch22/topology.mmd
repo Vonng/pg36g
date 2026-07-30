@@ -1,0 +1,22 @@
+flowchart LR
+    client["pg36_shop client contract"]
+    entry["one sandbox entry<br/>10.10.10.11 HAProxy"]
+    primary["5433 primary<br/>HAProxy → PgBouncer 6432<br/>/primary"]
+    replica["5434 replica<br/>HAProxy → PgBouncer 6432<br/>/read-only"]
+    direct["5436 default<br/>HAProxy → PostgreSQL 5432<br/>/primary"]
+    offline["5438 offline<br/>HAProxy → PostgreSQL 5432<br/>/replica"]
+    p1["pg-test-1"]
+    p2["pg-test-2"]
+    p3["pg-test-3<br/>offline_query=true"]
+
+    client --> entry
+    entry --> primary
+    entry --> replica
+    entry --> direct
+    entry --> offline
+    primary --> p1
+    primary -. "after switchover" .-> p2
+    replica --> p2
+    replica --> p3
+    direct --> p1
+    offline --> p3

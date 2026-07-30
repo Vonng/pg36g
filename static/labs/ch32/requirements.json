@@ -1,0 +1,85 @@
+{
+  "schema": "pg36-ch32-pitr-requirements-v1",
+  "chapter": 32,
+  "target": {
+    "id": "pg36-l2-vagrant/pg-test",
+    "ssh_user": "vagrant",
+    "cluster": "pg-test",
+    "source_primary": "pg-test-1",
+    "source_address": "10.10.10.11",
+    "restore_host": "pg-test-3",
+    "restore_address": "10.10.10.13",
+    "postgresql_major": 18,
+    "postgresql_observed": "18.4",
+    "pgbackrest_observed": "2.59.0",
+    "pig_observed": "1.5.1",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false
+  },
+  "upstream": {
+    "deployment": "../ch19/deployment-run.json",
+    "backup_restore": "../ch21/restore-run.json",
+    "incident_response": "../ch31/incident-run.json"
+  },
+  "fixture": {
+    "database": "test",
+    "schema": "pg36_ch32",
+    "account_count": 5000,
+    "victim_count": 1000,
+    "post_target_legitimate_count": 100,
+    "safe_delta_cents": 100,
+    "post_target_delta_cents": 700,
+    "wrong_outbox_events": 1000,
+    "external_dispatch_enabled": false
+  },
+  "repository": {
+    "stanza": "pg-test",
+    "repo": 1,
+    "fresh_backup_type": "full",
+    "archive_continuity_required": true,
+    "fresh_backup_retained": true,
+    "expire_permitted": false
+  },
+  "restore": {
+    "root_prefix": "/data/pg36-ch32-restore",
+    "port": 55433,
+    "target_type": "xid",
+    "target_inclusive_candidate_required": true,
+    "accepted_target_exclusive": true,
+    "target_action": "promote",
+    "target_timeline": "current",
+    "side_restore": true,
+    "pig_no_restart": true,
+    "listen_addresses": "",
+    "unix_socket_permissions": "0700",
+    "ssl": false,
+    "archive_mode": "off",
+    "patroni_managed": false,
+    "cleanup_restore_roots": true
+  },
+  "risk": {
+    "preflight": "L0-read-only",
+    "exercise": "L2-bounded-disposable-fixture-and-side-restore",
+    "managed_pgdata_permitted": false,
+    "patroni_change_permitted": false,
+    "dcs_change_permitted": false,
+    "service_route_change_permitted": false,
+    "unrelated_connection_termination_permitted": false,
+    "force_drop_permitted": false,
+    "manual_wal_file_change_permitted": false,
+    "source_schema_cleanup": "exact marker-bound fixture only"
+  },
+  "acceptance": {
+    "damage_xid_must_be_derived_from_source_audit": true,
+    "inclusive_candidate_must_contain_damage": true,
+    "exclusive_candidate_must_exclude_damage": true,
+    "safe_before_transaction_must_survive": true,
+    "post_target_transaction_must_be_absent_from_restore": true,
+    "reconciliation_must_preserve_post_target_legitimate_writes": true,
+    "external_dispatch_count_must_remain_zero": true,
+    "source_topology_must_remain_healthy": true,
+    "exact_cleanup_required": true,
+    "business_cutover_performed": false,
+    "production_ch32_gate": "pending"
+  }
+}

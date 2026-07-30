@@ -1,0 +1,223 @@
+{
+  "schema": "pg36-ch25-negative-cases-v1",
+  "cases": [
+    {
+      "id": "NEG-PRODUCTION-DATA",
+      "artifact": "requirements.json",
+      "operation": "set",
+      "path": "target.production_data",
+      "value": true,
+      "expect_rejection_contains": "sandbox scope"
+    },
+    {
+      "id": "NEG-LIVE-DEPLOYMENT",
+      "artifact": "requirements.json",
+      "operation": "set",
+      "path": "exercise.live_rule_deployment",
+      "value": true,
+      "expect_rejection_contains": "live rule deployment"
+    },
+    {
+      "id": "NEG-REAL-NOTIFICATION",
+      "artifact": "requirements.json",
+      "operation": "set",
+      "path": "exercise.real_notification",
+      "value": true,
+      "expect_rejection_contains": "real notification"
+    },
+    {
+      "id": "NEG-PRODUCTION-GATE",
+      "artifact": "requirements.json",
+      "operation": "set",
+      "path": "production_ch25_gate",
+      "value": "approved",
+      "expect_rejection_contains": "production gate"
+    },
+    {
+      "id": "NEG-MISSING-IS-HEALTHY",
+      "artifact": "signal-contract.json",
+      "operation": "set",
+      "path": "missing_and_cost.missing_is_healthy",
+      "value": true,
+      "expect_rejection_contains": "missing data"
+    },
+    {
+      "id": "NEG-DISABLED-TIMING-ZERO",
+      "artifact": "signal-contract.json",
+      "operation": "set",
+      "path": "missing_and_cost.timing_disabled_means_zero",
+      "value": true,
+      "expect_rejection_contains": "timing instrumentation"
+    },
+    {
+      "id": "NEG-TENANT-LABEL",
+      "artifact": "signal-contract.json",
+      "operation": "delete_value",
+      "path": "identity.forbidden_unbounded",
+      "value": "tenant_id",
+      "expect_rejection_contains": "forbidden labels"
+    },
+    {
+      "id": "NEG-QUERY-TEXT-EVIDENCE",
+      "artifact": "signal-contract.json",
+      "operation": "append",
+      "path": "sql_observation.pg_stat_statements.evidence_fields",
+      "value": "query",
+      "expect_rejection_contains": "query text"
+    },
+    {
+      "id": "NEG-APP-METRIC-CLAIMED-LIVE",
+      "artifact": "coverage-matrix.json",
+      "operation": "set",
+      "path": "rows.0.live_expected",
+      "value": true,
+      "expect_rejection_contains": "application SLI gap"
+    },
+    {
+      "id": "NEG-RULES-CLAIMED-DEPLOYED",
+      "artifact": "coverage-matrix.json",
+      "operation": "set",
+      "path": "deployment.chapter_alert_rules_live",
+      "value": true,
+      "expect_rejection_contains": "chapter rules live"
+    },
+    {
+      "id": "NEG-PAGER-CLAIMED",
+      "artifact": "coverage-matrix.json",
+      "operation": "set",
+      "path": "deployment.real_notification_exercised",
+      "value": true,
+      "expect_rejection_contains": "real notification exercised"
+    },
+    {
+      "id": "NEG-EXPLAIN-ANALYZE",
+      "artifact": "diagnostic-pack-contract.json",
+      "operation": "set",
+      "path": "query_controls.explain_analyze_allowed",
+      "value": true,
+      "expect_rejection_contains": "EXPLAIN ANALYZE"
+    },
+    {
+      "id": "NEG-PUBLIC-MODE",
+      "artifact": "diagnostic-pack-contract.json",
+      "operation": "set",
+      "path": "access.filesystem_mode",
+      "value": "0644 files under a 0755 directory",
+      "expect_rejection_contains": "private evidence"
+    },
+    {
+      "id": "NEG-RAW-SQL-PACK",
+      "artifact": "diagnostic-pack-contract.json",
+      "operation": "append",
+      "path": "sections.4.fields",
+      "value": "raw SQL and bind values",
+      "expect_rejection_contains": "diagnostic pack secrets"
+    },
+    {
+      "id": "NEG-FAST-ROUTE-TEST",
+      "artifact": "alert-rules.yml",
+      "operation": "set",
+      "path": "groups.0.rules.0.labels.route",
+      "value": "test",
+      "expect_rejection_contains": "accepted alert policy"
+    },
+    {
+      "id": "NEG-FAST-FOR-DRIFT",
+      "artifact": "alert-rules.yml",
+      "operation": "set",
+      "path": "groups.0.rules.0.for",
+      "value": "30s",
+      "expect_rejection_contains": "accepted alert policy"
+    },
+    {
+      "id": "NEG-SLOW-SINGLE-WINDOW",
+      "artifact": "alert-rules.yml",
+      "operation": "set",
+      "path": "groups.0.rules.1.expr",
+      "value": "pg36_shop:sli_availability_bad_ratio:rate6h > 0.006",
+      "expect_rejection_contains": "multiwindow"
+    },
+    {
+      "id": "NEG-CAPACITY-PAGE",
+      "artifact": "alert-rules.yml",
+      "operation": "set",
+      "path": "groups.1.rules.2.labels.route",
+      "value": "page",
+      "expect_rejection_contains": "capacity must ticket"
+    },
+    {
+      "id": "NEG-ARCHIVE-HISTORICAL-COUNT",
+      "artifact": "alert-rules.yml",
+      "operation": "set",
+      "path": "groups.2.rules.0.expr",
+      "value": "pg_archiver_failed_count > 0",
+      "expect_rejection_contains": "archive cumulative counter"
+    },
+    {
+      "id": "NEG-ACCEPTED-MARKED-PROPOSED",
+      "artifact": "alert-rules.yml",
+      "operation": "set",
+      "path": "groups.3.rules.0.labels.governance_status",
+      "value": "proposed-not-accepted",
+      "expect_rejection_contains": "accepted alert policy"
+    },
+    {
+      "id": "NEG-ALERT-IN-RECORDING-GROUP",
+      "artifact": "recording-rules.yml",
+      "operation": "append",
+      "path": "groups.0.rules",
+      "value": {
+        "alert": "BadChainedAlert",
+        "expr": "pg36_shop:sli_availability_bad_ratio:rate5m > 0"
+      },
+      "expect_rejection_contains": "recording group"
+    },
+    {
+      "id": "NEG-REAL-WEBHOOK",
+      "artifact": "alertmanager-sandbox.yml",
+      "operation": "set",
+      "path": "receivers.0.webhook_configs",
+      "value": [
+        {
+          "url": "https://example.invalid/real-receiver"
+        }
+      ],
+      "expect_rejection_contains": "receiver integration"
+    },
+    {
+      "id": "NEG-INHIBIT-CORRECTNESS",
+      "artifact": "alertmanager-sandbox.yml",
+      "operation": "append",
+      "path": "inhibit_rules",
+      "value": {
+        "source_matchers": [
+          "alertname = \"PG36MonitoringPathBroken\""
+        ],
+        "target_matchers": [
+          "alertname = \"PG36ShopCorrectnessMismatch\""
+        ],
+        "equal": [
+          "service",
+          "environment"
+        ]
+      },
+      "expect_rejection_contains": "correctness inhibition"
+    },
+    {
+      "id": "NEG-LIVE-ALERTMANAGER",
+      "artifact": "route-tests.json",
+      "operation": "set",
+      "path": "live_alertmanager_used",
+      "value": true,
+      "expect_rejection_contains": "live Alertmanager"
+    },
+    {
+      "id": "NEG-ROUTE-TO-REAL-NAME",
+      "artifact": "route-tests.json",
+      "operation": "set",
+      "path": "tests.0.expected_receivers.0",
+      "value": "real-pager",
+      "expect_rejection_contains": "route expectation"
+    }
+  ]
+}

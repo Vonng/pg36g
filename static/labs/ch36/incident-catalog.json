@@ -1,0 +1,462 @@
+{
+  "schema": "pg36-ch36-incident-catalog-v1",
+  "epistemic_rule": "Every observed fact resolves to a frozen source pointer. Causal interpretations and production gaps remain explicitly labeled as hypotheses until separately verified.",
+  "incidents": [
+    {
+      "id": "INC32-ACCIDENTAL-DATA-CHANGE",
+      "chapter": 32,
+      "source": "../ch32/pitr-run.json",
+      "source_schema": "pg36-ch32-pitr-run-v1",
+      "exercise_scope": "sandbox-fixture",
+      "impact": {
+        "kind": "simulated",
+        "statement": "The fixture represented 1,000 affected accounts and 1,000 wrong outbox rows; no external event was dispatched.",
+        "source_fact_ids": ["F32-VICTIMS", "F32-WRONG-OUTBOX", "F32-DISPATCH"]
+      },
+      "facts": [
+        {
+          "id": "F32-VICTIMS",
+          "source_pointer": "/incident/victims",
+          "expected": 1000,
+          "knowledge_stage": "during-response",
+          "interpretation": "fixture rows selected by the audited destructive transaction"
+        },
+        {
+          "id": "F32-WRONG-OUTBOX",
+          "source_pointer": "/incident/wrong_outbox_events",
+          "expected": 1000,
+          "knowledge_stage": "during-response",
+          "interpretation": "fixture outbox rows that represented undesired side effects"
+        },
+        {
+          "id": "F32-DISPATCH",
+          "source_pointer": "/incident/external_dispatch_count",
+          "expected": 0,
+          "knowledge_stage": "during-response",
+          "interpretation": "the exercise did not send an external side effect"
+        },
+        {
+          "id": "F32-INCLUSIVE",
+          "source_pointer": "/candidates/inclusive/accepted",
+          "expected": false,
+          "knowledge_stage": "after-validation",
+          "interpretation": "the inclusive recovery candidate retained the destructive transaction"
+        },
+        {
+          "id": "F32-EXCLUSIVE",
+          "source_pointer": "/candidates/exclusive/accepted",
+          "expected": true,
+          "knowledge_stage": "after-validation",
+          "interpretation": "the exclusive candidate passed the fixture recovery predicates"
+        },
+        {
+          "id": "F32-RAW-MISSING",
+          "source_pointer": "/reconciliation/raw_exclusive_missing_legitimate_writes",
+          "expected": 100,
+          "knowledge_stage": "after-validation",
+          "interpretation": "raw PITR alone omitted legitimate post-target writes"
+        },
+        {
+          "id": "F32-LOSS",
+          "source_pointer": "/reconciliation/reconciled_fixture_data_loss_rows",
+          "expected": 0,
+          "knowledge_stage": "after-validation",
+          "interpretation": "the audited delta reconciled the deterministic fixture"
+        },
+        {
+          "id": "F32-GATE",
+          "source_pointer": "/decision/production_ch32_gate",
+          "expected": "pending",
+          "knowledge_stage": "after-validation",
+          "interpretation": "the sandbox result is not a production approval"
+        }
+      ],
+      "decision": {
+        "route": "EXCLUSIVE_PITR_PLUS_AUDITED_DELTA",
+        "basis_fact_ids": ["F32-INCLUSIVE", "F32-EXCLUSIVE", "F32-RAW-MISSING", "F32-LOSS"]
+      },
+      "timeline": [
+        {"sequence": 1, "kind": "observation", "summary": "derive the destructive XID from source audit"},
+        {"sequence": 2, "kind": "experiment", "summary": "restore independent inclusive and exclusive candidates"},
+        {"sequence": 3, "kind": "decision", "summary": "reject inclusive history and accept exclusive history"},
+        {"sequence": 4, "kind": "validation", "summary": "reconcile audited post-target legitimate writes and business manifest"}
+      ],
+      "control_theme_ids": [
+        "T36-OBSERVATION-CONTRACT",
+        "T36-PRODUCTION-GATE",
+        "T36-BUSINESS-VALIDATION",
+        "T36-REVERSIBLE-SCOPE",
+        "T36-UNKNOWN-OUTCOME",
+        "T36-LINEAGE-AUTHORITY"
+      ],
+      "claims_not_made": [
+        "sandbox timings are a production RTO",
+        "a database-only rollback reverses external side effects",
+        "the exercise authorized a business cutover"
+      ]
+    },
+    {
+      "id": "INC33-PRIMARY-FAILURE",
+      "chapter": 33,
+      "source": "../ch33/failover-run.json",
+      "source_schema": "pg36-ch33-reference-run-v1",
+      "exercise_scope": "managed-sandbox-and-disposable-clone",
+      "impact": {
+        "kind": "observed-sandbox",
+        "statement": "The client made 160 attempts, received 130 acknowledgements and observed a maximum acknowledgement gap of 6,211.692334 ms; all 30 unknown attempts were reconciled.",
+        "source_fact_ids": ["F33-ATTEMPTS", "F33-ACK", "F33-GAP", "F33-UNKNOWN"]
+      },
+      "facts": [
+        {
+          "id": "F33-ATTEMPTS",
+          "source_pointer": "/client/attempts",
+          "expected": 160,
+          "knowledge_stage": "during-response",
+          "interpretation": "sandbox client attempts during controlled failover"
+        },
+        {
+          "id": "F33-ACK",
+          "source_pointer": "/client/acknowledged",
+          "expected": 130,
+          "knowledge_stage": "during-response",
+          "interpretation": "client-visible acknowledgements"
+        },
+        {
+          "id": "F33-GAP",
+          "source_pointer": "/client/maximum_ack_gap_ms",
+          "expected": 6211.692334,
+          "knowledge_stage": "after-validation",
+          "interpretation": "observed sandbox acknowledgement gap, not a production SLO"
+        },
+        {
+          "id": "F33-UNKNOWN",
+          "source_pointer": "/client/unreconciled_unknown_outcomes",
+          "expected": 0,
+          "knowledge_stage": "after-validation",
+          "interpretation": "all unknown outcomes were reconciled by token"
+        },
+        {
+          "id": "F33-FENCE",
+          "source_pointer": "/safety/old_primary_process_fenced_before_acceptance",
+          "expected": true,
+          "knowledge_stage": "during-response",
+          "interpretation": "the old primary process was stopped before accepting the promoted authority"
+        },
+        {
+          "id": "F33-REJOIN",
+          "source_pointer": "/managed_failover/old_primary_rejoined_streaming",
+          "expected": true,
+          "knowledge_stage": "after-validation",
+          "interpretation": "the old primary rejoined as a streaming replica"
+        },
+        {
+          "id": "F33-DCS",
+          "source_pointer": "/environment/dcs_members",
+          "expected": 1,
+          "knowledge_stage": "before-action",
+          "interpretation": "the teaching sandbox had one DCS member and cannot prove quorum behavior"
+        },
+        {
+          "id": "F33-GATE",
+          "source_pointer": "/decision/production_ch33_gate",
+          "expected": "pending",
+          "knowledge_stage": "after-validation",
+          "interpretation": "the controlled exercise is not a production failover approval"
+        }
+      ],
+      "decision": {
+        "route": "FENCE_PROMOTE_RECONCILE_REJOIN",
+        "basis_fact_ids": ["F33-FENCE", "F33-UNKNOWN", "F33-REJOIN", "F33-DCS"]
+      },
+      "timeline": [
+        {"sequence": 1, "kind": "fault", "summary": "stop the old primary Patroni process under an exact sandbox guard"},
+        {"sequence": 2, "kind": "authority", "summary": "observe fencing and accept the eligible promoted candidate"},
+        {"sequence": 3, "kind": "validation", "summary": "reconcile acknowledged and unknown client outcomes"},
+        {"sequence": 4, "kind": "recovery", "summary": "rejoin the old primary and restore the planned teaching baseline"}
+      ],
+      "control_theme_ids": [
+        "T36-OBSERVATION-CONTRACT",
+        "T36-PRODUCTION-GATE",
+        "T36-BUSINESS-VALIDATION",
+        "T36-REVERSIBLE-SCOPE",
+        "T36-UNKNOWN-OUTCOME",
+        "T36-LINEAGE-AUTHORITY"
+      ],
+      "claims_not_made": [
+        "a real power, storage or asymmetric network failure was injected",
+        "the one-member teaching DCS proves production quorum availability",
+        "the observed gap is a production RTO"
+      ]
+    },
+    {
+      "id": "INC34-RESOURCE-PRESSURE",
+      "chapter": 34,
+      "source": "../ch34/overload-run.json",
+      "source_schema": "pg36-ch34-public-summary-v1",
+      "exercise_scope": "disposable-postgresql-on-sandbox-host",
+      "impact": {
+        "kind": "observed-sandbox",
+        "statement": "The flow case admitted 21 of 30 sessions and rejected 9, while the retention case retained 42,611,296 bytes of WAL behind one disposable inactive physical slot.",
+        "source_fact_ids": ["F34-ATTEMPTS", "F34-SESSIONS", "F34-REJECTS", "F34-RETAINED"]
+      },
+      "facts": [
+        {
+          "id": "F34-ATTEMPTS",
+          "source_pointer": "/flow_pressure/attempted_clients",
+          "expected": 30,
+          "knowledge_stage": "during-response",
+          "interpretation": "bounded disposable flow attempts"
+        },
+        {
+          "id": "F34-SESSIONS",
+          "source_pointer": "/flow_pressure/observed_sessions",
+          "expected": 21,
+          "knowledge_stage": "during-response",
+          "interpretation": "sessions admitted before the fixture ceiling"
+        },
+        {
+          "id": "F34-REJECTS",
+          "source_pointer": "/flow_pressure/connection_rejections",
+          "expected": 9,
+          "knowledge_stage": "during-response",
+          "interpretation": "connection admission rejected excess work"
+        },
+        {
+          "id": "F34-RETAINED",
+          "source_pointer": "/wal_retention/retained_wal_bytes",
+          "expected": 42611296,
+          "knowledge_stage": "during-response",
+          "interpretation": "WAL retained behind the owned disposable slot"
+        },
+        {
+          "id": "F34-FLOW-ROUTE",
+          "source_pointer": "/flow_pressure/classified_route",
+          "expected": "RELIEVE_FLOW_PRESSURE",
+          "knowledge_stage": "during-response",
+          "interpretation": "classifier selected work admission and exact-session relief"
+        },
+        {
+          "id": "F34-RETENTION-ROUTE",
+          "source_pointer": "/wal_retention/classified_route",
+          "expected": "PRESERVE_RETENTION_EVIDENCE",
+          "knowledge_stage": "during-response",
+          "interpretation": "classifier preserved owner evidence before exact cleanup"
+        },
+        {
+          "id": "F34-MANAGED",
+          "source_pointer": "/managed_cluster/mutations",
+          "expected": 0,
+          "knowledge_stage": "after-validation",
+          "interpretation": "managed PostgreSQL was only observed"
+        },
+        {
+          "id": "F34-GATE",
+          "source_pointer": "/decision/production_ch34_gate",
+          "expected": "pending",
+          "knowledge_stage": "after-validation",
+          "interpretation": "the synthetic resource cases do not authorize production mitigation"
+        }
+      ],
+      "decision": {
+        "route": "CLASSIFY_FLOW_SEPARATELY_FROM_RETENTION",
+        "basis_fact_ids": ["F34-FLOW-ROUTE", "F34-RETENTION-ROUTE", "F34-MANAGED"]
+      },
+      "timeline": [
+        {"sequence": 1, "kind": "experiment", "summary": "randomize opaque retention and flow cases"},
+        {"sequence": 2, "kind": "classification", "summary": "route flow pressure to admission relief"},
+        {"sequence": 3, "kind": "classification", "summary": "route WAL retention to owner evidence preservation"},
+        {"sequence": 4, "kind": "validation", "summary": "remove only exact fixtures and prove managed topology unchanged"}
+      ],
+      "control_theme_ids": [
+        "T36-OBSERVATION-CONTRACT",
+        "T36-PRODUCTION-GATE",
+        "T36-REVERSIBLE-SCOPE",
+        "T36-CLASSIFICATION-STOP"
+      ],
+      "claims_not_made": [
+        "a production connection storm, OOM or full filesystem was injected",
+        "dropping arbitrary replication slots is safe",
+        "sandbox thresholds are production capacity limits"
+      ]
+    },
+    {
+      "id": "INC35-DATA-INTEGRITY",
+      "chapter": 35,
+      "source": "../ch35/rescue-run.json",
+      "source_schema": "pg36-ch35-public-summary-v1",
+      "exercise_scope": "disposable-forensic-clones-on-sandbox-host",
+      "impact": {
+        "kind": "observed-sandbox",
+        "statement": "One stopped heap clone had one changed byte, one bad checksum and SQLSTATE XX001; a separate catalog clone had a collation version mismatch with clean checksums.",
+        "source_fact_ids": ["F35-BYTES", "F35-CHECKSUM", "F35-SQLSTATE", "F35-COLLATION-CLEAN"]
+      },
+      "facts": [
+        {
+          "id": "F35-BYTES",
+          "source_pointer": "/physical_page/bytes_changed",
+          "expected": 1,
+          "knowledge_stage": "after-validation",
+          "interpretation": "controlled one-byte mutation on a stopped clone"
+        },
+        {
+          "id": "F35-CHECKSUM",
+          "source_pointer": "/physical_page/offline_bad_checksums",
+          "expected": 1,
+          "knowledge_stage": "during-response",
+          "interpretation": "offline checksum evidence for physical corruption"
+        },
+        {
+          "id": "F35-SQLSTATE",
+          "source_pointer": "/physical_page/online_scan_sqlstate",
+          "expected": "XX001",
+          "knowledge_stage": "during-response",
+          "interpretation": "online sequential scan failed on the damaged clone"
+        },
+        {
+          "id": "F35-COLLATION-CLEAN",
+          "source_pointer": "/collation_derived/offline_bad_checksums",
+          "expected": 0,
+          "knowledge_stage": "during-response",
+          "interpretation": "the metadata mismatch did not create a page checksum error"
+        },
+        {
+          "id": "F35-PHYSICAL-ROUTE",
+          "source_pointer": "/physical_page/route",
+          "expected": "RESTORE_FROM_KNOWN_GOOD_COPY",
+          "knowledge_stage": "during-response",
+          "interpretation": "physical damage used a fresh trusted source rather than in-place repair"
+        },
+        {
+          "id": "F35-COLLATION-ROUTE",
+          "source_pointer": "/collation_derived/route",
+          "expected": "REINDEX_AND_REFRESH_COLLATION",
+          "knowledge_stage": "during-response",
+          "interpretation": "derived state was rebuilt before metadata refresh"
+        },
+        {
+          "id": "F35-INVARIANTS",
+          "source_pointer": "/physical_page/recovered_invariants_match",
+          "expected": true,
+          "knowledge_stage": "after-validation",
+          "interpretation": "the recovered fixture matched all declared business invariants"
+        },
+        {
+          "id": "F35-GATE",
+          "source_pointer": "/decision/production_ch35_gate",
+          "expected": "pending",
+          "knowledge_stage": "after-validation",
+          "interpretation": "the clone exercise is not a production rescue approval"
+        }
+      ],
+      "decision": {
+        "route": "CLASSIFY_PHYSICAL_SEPARATELY_FROM_DERIVED",
+        "basis_fact_ids": [
+          "F35-CHECKSUM",
+          "F35-COLLATION-CLEAN",
+          "F35-PHYSICAL-ROUTE",
+          "F35-COLLATION-ROUTE",
+          "F35-INVARIANTS"
+        ]
+      },
+      "timeline": [
+        {"sequence": 1, "kind": "preservation", "summary": "freeze one known-good source and independent original cases"},
+        {"sequence": 2, "kind": "classification", "summary": "classify blind physical and collation evidence"},
+        {"sequence": 3, "kind": "recovery", "summary": "restore a fresh physical copy and rebuild derived collation state"},
+        {"sequence": 4, "kind": "validation", "summary": "verify checksum, amcheck, business invariants and original-case preservation"}
+      ],
+      "control_theme_ids": [
+        "T36-OBSERVATION-CONTRACT",
+        "T36-PRODUCTION-GATE",
+        "T36-BUSINESS-VALIDATION",
+        "T36-REVERSIBLE-SCOPE",
+        "T36-CLASSIFICATION-STOP",
+        "T36-LINEAGE-AUTHORITY"
+      ],
+      "claims_not_made": [
+        "real disk, controller, memory or ICU semantic drift was injected",
+        "a unique damaged production PGDATA was repaired",
+        "the exercise proved a production recovery percentage"
+      ]
+    }
+  ],
+  "cross_incident_themes": [
+    {
+      "id": "T36-OBSERVATION-CONTRACT",
+      "title": "User impact and technical state need a versioned observation contract",
+      "incident_ids": [
+        "INC32-ACCIDENTAL-DATA-CHANGE",
+        "INC33-PRIMARY-FAILURE",
+        "INC34-RESOURCE-PRESSURE",
+        "INC35-DATA-INTEGRITY"
+      ],
+      "status": "production-assessment-required",
+      "basis": "exercise-exposed-risk-not-confirmed-production-deficiency"
+    },
+    {
+      "id": "T36-PRODUCTION-GATE",
+      "title": "Sandbox evidence must not silently become production approval or SLO",
+      "incident_ids": [
+        "INC32-ACCIDENTAL-DATA-CHANGE",
+        "INC33-PRIMARY-FAILURE",
+        "INC34-RESOURCE-PRESSURE",
+        "INC35-DATA-INTEGRITY"
+      ],
+      "status": "production-assessment-required",
+      "basis": "exercise-exposed-risk-not-confirmed-production-deficiency"
+    },
+    {
+      "id": "T36-BUSINESS-VALIDATION",
+      "title": "Recovery needs business invariants in addition to process and topology checks",
+      "incident_ids": [
+        "INC32-ACCIDENTAL-DATA-CHANGE",
+        "INC33-PRIMARY-FAILURE",
+        "INC35-DATA-INTEGRITY"
+      ],
+      "status": "production-assessment-required",
+      "basis": "exercise-exposed-risk-not-confirmed-production-deficiency"
+    },
+    {
+      "id": "T36-REVERSIBLE-SCOPE",
+      "title": "Mutation, mitigation and cleanup need exact targets, guards and rollback",
+      "incident_ids": [
+        "INC32-ACCIDENTAL-DATA-CHANGE",
+        "INC33-PRIMARY-FAILURE",
+        "INC34-RESOURCE-PRESSURE",
+        "INC35-DATA-INTEGRITY"
+      ],
+      "status": "production-assessment-required",
+      "basis": "exercise-exposed-risk-not-confirmed-production-deficiency"
+    },
+    {
+      "id": "T36-UNKNOWN-OUTCOME",
+      "title": "Client acknowledgements and unknown outcomes need idempotent reconciliation",
+      "incident_ids": [
+        "INC32-ACCIDENTAL-DATA-CHANGE",
+        "INC33-PRIMARY-FAILURE"
+      ],
+      "status": "production-assessment-required",
+      "basis": "exercise-exposed-risk-not-confirmed-production-deficiency"
+    },
+    {
+      "id": "T36-CLASSIFICATION-STOP",
+      "title": "Symptom classifiers need an explicit unknown route that stops unsafe action",
+      "incident_ids": [
+        "INC34-RESOURCE-PRESSURE",
+        "INC35-DATA-INTEGRITY"
+      ],
+      "status": "production-assessment-required",
+      "basis": "exercise-exposed-risk-not-confirmed-production-deficiency"
+    },
+    {
+      "id": "T36-LINEAGE-AUTHORITY",
+      "title": "Recovery sources and writable authority need explicit lineage evidence",
+      "incident_ids": [
+        "INC32-ACCIDENTAL-DATA-CHANGE",
+        "INC33-PRIMARY-FAILURE",
+        "INC35-DATA-INTEGRITY"
+      ],
+      "status": "production-assessment-required",
+      "basis": "exercise-exposed-risk-not-confirmed-production-deficiency"
+    }
+  ]
+}

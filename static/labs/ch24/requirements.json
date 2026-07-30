@@ -1,0 +1,108 @@
+{
+  "schema": "pg36-ch24-governance-requirements-v1",
+  "release": "1.0-sandbox",
+  "chapter": 24,
+  "target": {
+    "id": "pg36-l2-vagrant/pg-test",
+    "service_id": "pg36_shop",
+    "environment": "l2-sandbox",
+    "data_classification": "synthetic teaching data only",
+    "production_data": false,
+    "production_traffic": false,
+    "production_slo_claimed": false
+  },
+  "required_artifacts": [
+    "service-card.json",
+    "slo-policy.json",
+    "observation-contract.json",
+    "alert-candidates.json",
+    "sop-catalog.json",
+    "change-policy.json",
+    "evidence-retention.json",
+    "governance-adr.md",
+    "dependency-map.mmd"
+  ],
+  "required_owner_functions": [
+    "service",
+    "data",
+    "platform",
+    "security_privacy"
+  ],
+  "required_health_layers": [
+    "process",
+    "endpoint",
+    "authentication",
+    "transaction",
+    "correctness",
+    "durability_and_recovery"
+  ],
+  "required_objective_ids": [
+    "SLO-AVAILABILITY",
+    "SLO-LATENCY",
+    "SLO-FRESHNESS",
+    "CTRL-CORRECTNESS",
+    "CTRL-RESTORE-READINESS"
+  ],
+  "required_sop_capabilities": [
+    "backup_and_restore",
+    "planned_switchover_and_failover",
+    "access_and_credential_rotation",
+    "schema_release"
+  ],
+  "required_evidence_categories": [
+    "configuration",
+    "change",
+    "access",
+    "recovery",
+    "slo_and_alert",
+    "incident"
+  ],
+  "upstream_reference_contract": {
+    "ch20": {
+      "path": "ch20/drill-run.json",
+      "schema": "pg36-ch20-drill-run-v1",
+      "run_id": "475e9b47-bc35-4687-87da-012f1d5ea455",
+      "production_gate_field": "decision.production_ch20_gate",
+      "production_gate_value": "pending"
+    },
+    "ch21": {
+      "path": "ch21/restore-run.json",
+      "schema": "pg36-ch21-reference-run-v1",
+      "run_id": "run_20260729T201040Z_961665aa",
+      "production_gate_field": "production_ch21_gate",
+      "production_gate_value": "pending"
+    },
+    "ch22": {
+      "path": "ch22/connection-run.json",
+      "schema": "pg36-ch22-reference-run-v1",
+      "run_id": "87a63891-d6bf-46b3-bb65-d70a8d7bac3a",
+      "production_gate_field": "production_ch22_gate",
+      "production_gate_value": "pending"
+    },
+    "ch23": {
+      "path": "ch23/security-run.json",
+      "schema": "pg36-ch23-reference-run-v1",
+      "run_id": "64b857a6-8d8f-46e2-9462-3f097a95a69f",
+      "production_gate_field": "production_ch23_gate",
+      "production_gate_value": "pending"
+    }
+  },
+  "hard_rejections": [
+    "a process, PostgreSQL instance, or cluster-health probe is presented as the user-facing availability SLI",
+    "a 100 percent ratio SLO is used to erase the distinction between aspiration and error budget",
+    "planned maintenance is silently removed from the user-facing SLO",
+    "missing telemetry is interpreted as healthy without an independently justified fallback",
+    "a paging alert lacks user impact, owner, runbook, first safe action, or verification",
+    "a cause metric pages independently while the user-visible symptom remains healthy",
+    "a capacity forecast pages as an immediate incident without present user impact",
+    "a high-risk change can be requested, approved, and executed by the same identity",
+    "backup completion is accepted as restore-readiness evidence",
+    "secret values or unrestricted personal data enter governance evidence",
+    "sandbox observations are promoted to a production SLO or production approval"
+  ],
+  "interpretation": {
+    "positive_validation": "the chapter artifacts form one internally consistent, machine-checkable teaching contract",
+    "live_gate": "the retained chapter-19 sandbox still matches its accepted-with-exceptions deployment baseline",
+    "production_gate": "pending until real owners, traffic, failure domains, retention authority, and repeated production evidence exist"
+  }
+}

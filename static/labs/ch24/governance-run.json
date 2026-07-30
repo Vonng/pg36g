@@ -1,0 +1,97 @@
+{
+  "schema": "pg36-ch24-reference-run-v1",
+  "release": "1.0-sandbox",
+  "captured_at": "2026-07-29T21:57:40.539Z",
+  "run_id": "34909737-527a-460c-927c-d9d71c93aa13",
+  "target": "pg36-l2-vagrant/pg-test",
+  "service_id": "pg36_shop",
+  "mode": "read-only-contract-and-live-baseline-binding",
+  "mutation": "none",
+  "live_baseline": {
+    "pigsty_version": "v4.4.0",
+    "postgresql_major": 18,
+    "hosts": 4,
+    "postgresql_members": 4,
+    "sandbox_l2": "accepted-with-exceptions",
+    "accepted_exception_count": 6,
+    "production_ch19_gate": "pending"
+  },
+  "service_catalog": {
+    "owner_functions": 4,
+    "dependencies": 6,
+    "health_layers": 6,
+    "production_slo_claimed": false
+  },
+  "objectives": {
+    "ratio_slos": 3,
+    "control_objectives": 2,
+    "availability_target": 0.999,
+    "availability_window_days": 28,
+    "sample_eligible_events": 10000000,
+    "sample_error_budget_events": 10000,
+    "equivalent_time_budget_minutes": 40.32,
+    "planned_maintenance_excluded": false,
+    "missing_data_interpreted_healthy": false
+  },
+  "alerts": {
+    "accepted": 7,
+    "symptom_and_integrity_pages": 4,
+    "metamonitoring_pages": 1,
+    "tickets": 2,
+    "diagnostic_only": 3,
+    "actionless_candidate_rejected": 1,
+    "multiwindow_burn_starting_points": [
+      "14.4x over 1h and 5m",
+      "6x over 6h and 30m",
+      "1x over 3d and 6h"
+    ]
+  },
+  "governance": {
+    "sops": 4,
+    "risk_classes": 4,
+    "high_risk_identity_separation": true,
+    "break_glass_may_skip_target_or_evidence": false,
+    "evidence_categories": 6,
+    "secret_values_permitted": false
+  },
+  "upstream_references": {
+    "ch20": {
+      "run_id": "475e9b47-bc35-4687-87da-012f1d5ea455",
+      "sha256": "602e932b7f0b82f2532269ba55abcf9e8f3f59ee97d44e9b13d4bfbaaf9d9a5d",
+      "production_gate": "pending"
+    },
+    "ch21": {
+      "run_id": "run_20260729T201040Z_961665aa",
+      "sha256": "c0b3589d17bcf7c968afaccd08d97c53bdd3600e2f14f502f1ec95b584a212ca",
+      "production_gate": "pending"
+    },
+    "ch22": {
+      "run_id": "87a63891-d6bf-46b3-bb65-d70a8d7bac3a",
+      "sha256": "444a6521850e8d4b78616bac166cf1ffeb6a1fa7df33415284484f4748b4e6a2",
+      "production_gate": "pending"
+    },
+    "ch23": {
+      "run_id": "64b857a6-8d8f-46e2-9462-3f097a95a69f",
+      "sha256": "e15486583a9205928530faa2b04a1a5dd07ef7dc50dc53f58ebb0af81f07cb59",
+      "production_gate": "pending"
+    }
+  },
+  "validation": {
+    "artifact_count": 8,
+    "positive_validation_passed": true,
+    "counterexamples_rejected": 20,
+    "chapter_19_live_gate_passed": true,
+    "upstream_runs_bound_by_hash": 4,
+    "secret_material_absent": true
+  },
+  "claims_not_made": [
+    "alert rules are deployed",
+    "a real pager route was notified",
+    "production traffic was measured",
+    "the teaching SLO was negotiated by real owners",
+    "sandbox timings establish production RTO, RPO, capacity, or availability",
+    "chapter 24 has production approval"
+  ],
+  "production_ch24_gate": "pending",
+  "production_approval": false
+}

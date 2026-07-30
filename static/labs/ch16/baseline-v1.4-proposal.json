@@ -1,0 +1,100 @@
+{
+  "schema": "pg36-ch16-release-proposal-v1",
+  "release": "1.4-proposal",
+  "fixture": "ch16-spatiotemporal-v1",
+  "target": {
+    "database": "pg36_shop",
+    "data_schema": "shop_ch16",
+    "extension_schema": "shop_ch16_ext",
+    "owner": "pg36_owner",
+    "application_role": "pg36_app",
+    "postgresql": "14-18",
+    "validated_on": "18.4",
+    "btree_gist": "1.8",
+    "postgis": "3.6.4",
+    "pigsty_reference": "4.4",
+    "pigsty_l1_validation": "not-run"
+  },
+  "decision": {
+    "event_time": "occurred_at",
+    "ingest_time": "received_at",
+    "valid_time": "valid_during",
+    "partition_key": "occurred_at",
+    "partition_timezone": "UTC",
+    "partition_bounds": "[)",
+    "partition_strategy": "native PostgreSQL daily RANGE partitions",
+    "timeseries_extension": "deferred until compression, retention, continuous aggregation, or operational evidence justifies it",
+    "canonical_srid": 4326,
+    "geometry_role": "topological predicates and spatial indexing",
+    "geography_role": "meter-based distance predicates",
+    "geofence_boundary_policy": "ST_Covers includes boundary",
+    "geofence_version_policy": "non-overlapping tstzrange per zone enforced by btree_gist exclusion"
+  },
+  "contracts": {
+    "ingest_attempts": 13,
+    "distinct_events": 12,
+    "duplicate_registry": "e003:2",
+    "geofence_versions": 4,
+    "hubs": 3,
+    "partition_counts": {
+      "2026-03-07": 1,
+      "2026-03-08": 7,
+      "2026-03-09": 4
+    },
+    "zone_memberships": 14,
+    "central_day8_events": "e002,e003,e005,e006,e008",
+    "late_events": "e001,e004",
+    "dst_probe_elapsed_seconds": 600,
+    "mixed_srid_sqlstate": "XX000",
+    "overlapping_validity_sqlstate": "23P01",
+    "application_write_sqlstate": "42501",
+    "managed_indexes": 13
+  },
+  "expected_state": {
+    "business_checksum": "53f51cef1f0bed1a5c2fc89bfad109f4"
+  },
+  "evidence": [
+    "manifest.txt",
+    "attempts.csv",
+    "geofences.csv",
+    "hubs.csv",
+    "temporal-analysis.csv",
+    "partition-catalog.csv",
+    "time-buckets.csv",
+    "zone-membership.csv",
+    "boundary-semantics.csv",
+    "distance-semantics.csv",
+    "extension-catalog.csv",
+    "index-catalog.csv",
+    "security-catalog.csv",
+    "size-catalog.csv",
+    "time-pruned-plan.txt",
+    "time-wrapped-plan.txt",
+    "spatial-gist-plan.txt",
+    "spatial-spgist-plan.txt",
+    "joint-plan.txt",
+    "app-query.csv",
+    "srid-mismatch.stderr",
+    "overlap-geofence.stderr",
+    "app-write.stderr",
+    "final-state.csv",
+    "verify.txt"
+  ],
+  "rollback": {
+    "token": "RESET_CH16_SPATIOTEMPORAL_LAB",
+    "target": "pg36_shop/shop_ch16+shop_ch16_ext",
+    "requires_no_active_workers": true,
+    "requires_full_state_verification": true,
+    "uses_cascade": false,
+    "transactional": true,
+    "preserves_ch14_extensions": true
+  },
+  "limitations": [
+    "The tiny fixture cannot establish throughput, latency, memory, WAL, storage, vacuum, or replica-lag targets.",
+    "Forced plans establish that an access path is available; they do not prove planner preference or superiority.",
+    "EPSG:4326 geometry distances are angular degrees and are not a substitute for meter-based geography or a reviewed projected CRS.",
+    "A three-day daily partition layout does not establish the correct production granularity or retention policy.",
+    "PostGIS backup and upgrade behavior must be validated in the target Pigsty environment on every L1 node.",
+    "TimescaleDB is not installed or benchmarked by this release candidate."
+  ]
+}

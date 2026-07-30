@@ -1,0 +1,47 @@
+{
+  "schema": "pg36-ch28-maintenance-contract-v1",
+  "hypothesis": "A snapshot older than the churn prevents ordinary VACUUM from removing every obsolete tuple; after the exact blocker is released, ordinary VACUUM can make that space reusable without requiring a heap rewrite.",
+  "observation_order": [
+    "baseline",
+    "old-snapshot-acquired",
+    "churn-complete",
+    "vacuum-with-old-snapshot",
+    "old-snapshot-released",
+    "vacuum-freeze-complete",
+    "amcheck-complete",
+    "reindex-concurrently-complete",
+    "partition-archive-round-trip-complete",
+    "exact-cleanup-complete"
+  ],
+  "allowed_mutations": [
+    "create marker-bound disposable login role",
+    "create marker-bound disposable database",
+    "install supplied extensions inside disposable database",
+    "create and mutate chapter-owned fixture relations",
+    "disable autovacuum only on the disposable churn table for determinism",
+    "set vacuum cost controls only in the manual VACUUM session",
+    "terminate exactly one marker-bound old-snapshot session",
+    "run VACUUM, VACUUM FREEZE, amcheck, and REINDEX INDEX CONCURRENTLY on fixture objects",
+    "detach, export, restore-check, and drop one fixture partition",
+    "ordinary-drop the exact marker-bound database and role"
+  ],
+  "forbidden_mutations": [
+    "ALTER SYSTEM",
+    "edit Pigsty inventory",
+    "edit Patroni dynamic configuration",
+    "reload or restart PostgreSQL",
+    "disable cluster-wide autovacuum",
+    "VACUUM FULL",
+    "DROP DATABASE FORCE",
+    "terminate an unrelated session",
+    "drop a partition before archive round-trip validation",
+    "touch production data or traffic"
+  ],
+  "evidence": {
+    "raw_private": true,
+    "public_summary_allowlist": true,
+    "source_hash_binding": true,
+    "remote_temp_cleanup": true,
+    "fixture_cleanup": true
+  }
+}

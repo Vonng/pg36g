@@ -1,0 +1,116 @@
+{
+  "schema": "pg36-ch31-incident-contract-v1",
+  "triage_axes": [
+    "user_impact",
+    "data_risk",
+    "blast_radius",
+    "time_dynamics",
+    "recoverability"
+  ],
+  "response_objectives": [
+    "RESTORE_DATA",
+    "RESTORE_TOPOLOGY",
+    "RELIEVE_PRESSURE",
+    "PRESERVE_INTEGRITY"
+  ],
+  "routes": [
+    {
+      "route": "PITR",
+      "chapter": 32,
+      "objective": "RESTORE_DATA",
+      "trigger": "committed data is logically wrong, missing, or must be reconstructed at a prior boundary"
+    },
+    {
+      "route": "HA",
+      "chapter": 33,
+      "objective": "RESTORE_TOPOLOGY",
+      "trigger": "writer identity, timeline, replication, DCS, fencing, or service routing is uncertain"
+    },
+    {
+      "route": "OVERLOAD",
+      "chapter": 34,
+      "objective": "RELIEVE_PRESSURE",
+      "trigger": "connections, latency, CPU, memory, I/O, disk, WAL retention, or load admission is the immediate constraint"
+    },
+    {
+      "route": "INTEGRITY",
+      "chapter": 35,
+      "objective": "PRESERVE_INTEGRITY",
+      "trigger": "checksum, page, WAL, index, collation, catalog, or cross-copy consistency is in doubt"
+    }
+  ],
+  "severity": {
+    "levels": [
+      "SEV1",
+      "SEV2",
+      "SEV3",
+      "SEV4"
+    ],
+    "determines": [
+      "coordination tempo",
+      "notification scope",
+      "decision authority",
+      "update cadence"
+    ],
+    "does_not_determine": [
+      "root cause",
+      "technical route",
+      "whether a destructive action is safe"
+    ]
+  },
+  "evidence_rules": {
+    "record_utc_and_clock_source": true,
+    "record_provenance_and_hash": true,
+    "separate_fact_hypothesis_and_decision": true,
+    "preserve_confidentiality": true,
+    "raw_query_text_by_default": false,
+    "raw_log_export_by_default": false,
+    "collect_only_incident_scoped_material": true
+  },
+  "decision_log_fields": [
+    "minute",
+    "actor",
+    "entry_type",
+    "statement",
+    "evidence_ids",
+    "expected_result",
+    "stop_condition",
+    "rollback"
+  ],
+  "roles": [
+    "incident_commander",
+    "operator",
+    "scribe",
+    "business_liaison"
+  ],
+  "risk_classes": [
+    {
+      "class": "R0",
+      "meaning": "read-only observation",
+      "minimum_control": "scope, timeout, provenance"
+    },
+    {
+      "class": "R1",
+      "meaning": "reversible traffic or load containment",
+      "minimum_control": "owner, bounded target, rollback, verification"
+    },
+    {
+      "class": "R2",
+      "meaning": "topology, process, configuration, or data mutation",
+      "minimum_control": "incident commander approval and independent technical review"
+    },
+    {
+      "class": "R3",
+      "meaning": "destructive or potentially irreversible recovery action",
+      "minimum_control": "preserved source, explicit authority, two-person command review, tested alternative, stop line"
+    }
+  ],
+  "automation_policy": {
+    "pause_everything_by_default": false,
+    "record_current_state_first": true,
+    "name_exact_controller_and_scope": true,
+    "define_resume_owner_and_condition": true,
+    "never_interrupt_wal_archiving_without_recoverability_analysis": true
+  },
+  "production_ch31_gate": "pending"
+}

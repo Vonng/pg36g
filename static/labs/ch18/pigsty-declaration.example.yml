@@ -1,0 +1,73 @@
+---
+# Teaching proposal only. This file has NOT passed Pigsty L1 validation.
+# Replace example addresses and secret references through an approved process.
+# Do not put plaintext credentials in this repository.
+
+all:
+  children:
+    pg-shop:
+      hosts:
+        10.10.10.11:
+          pg_seq: 1
+          pg_role: primary
+        10.10.10.12:
+          pg_seq: 2
+          pg_role: replica
+        10.10.10.13:
+          pg_seq: 3
+          pg_role: replica
+        10.10.10.14:
+          pg_seq: 4
+          pg_role: offline
+      vars:
+        pg_cluster: pg-shop
+        pg_version: 18
+
+        # Package availability on every node is necessary but not sufficient.
+        # Lifecycle admission remains governed by service-catalog.json.
+        pg_extensions:
+          - pg_trgm
+          - pgvector
+          - postgis
+        pg_libs: "pg_stat_statements,auto_explain"
+
+        pg_databases:
+          - name: pg36_shop
+            owner: pg36_owner
+            comment: "pg36_shop production proposal; not yet approved"
+            extensions:
+              - { name: pg_trgm, schema: shop_ch14 }
+              - { name: vector, schema: shop_ch14 }
+              - { name: postgis, schema: shop_ch16_ext }
+              - { name: btree_gist, schema: shop_ch16_ext }
+
+        pg_users:
+          - name: pg36_owner
+            login: false
+            roles: []
+            comment: "NOLOGIN owner for pg36_shop objects"
+          - name: pg36_app
+            login: true
+            # Supply the password through an approved secret source at render
+            # or deployment time. This sentinel is intentionally unusable.
+            password: "REPLACE_VIA_APPROVED_SECRET_SOURCE"
+            roles: [dbrole_readwrite]
+            connlimit: 40
+            expire_in: 90
+            comment: "runtime identity; exact grants require chapter 23"
+
+        pg_parameters:
+          timezone: UTC
+          log_min_duration_statement: 1000
+          pg_stat_statements.track: all
+
+        # Pigsty's built-in service model separates primary, replica, default,
+        # and offline traffic. Exact ports, selectors, fallback policy, pool
+        # mode, and connection budgets must be validated in chapter 22.
+
+        # Backup policy, repository encryption, retention, and restore evidence
+        # are deliberately absent until chapter 21. Do not infer them from this
+        # topology proposal.
+
+        # Synchronous mode is deliberately not selected here. Chapter 20 must
+        # first define the failure model and prove the RPO/RTO trade-off.

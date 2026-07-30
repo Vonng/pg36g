@@ -1,0 +1,176 @@
+{
+  "schema": "pg36-ch23-reference-run-v1",
+  "release": "1.0-sandbox",
+  "executed_at": "2026-07-29T21:43:34.733Z",
+  "completed_at": "2026-07-29T21:43:46.419Z",
+  "run_id": "64b857a6-8d8f-46e2-9462-3f097a95a69f",
+  "versions": {
+    "pigsty": "v4.4.0",
+    "postgresql": "18.4",
+    "pgbouncer": "1.25.2"
+  },
+  "target": {
+    "id": "pg36-l2-vagrant/pg-test",
+    "database": "test",
+    "fixture_schema": "pg36_ch23",
+    "synthetic_tenants": 2,
+    "synthetic_rows": 4,
+    "production_data": false,
+    "production_traffic": false
+  },
+  "roles": {
+    "synthetic_role_count": 5,
+    "all_nologin_after_drill": true,
+    "all_non_superuser": true,
+    "all_no_createdb": true,
+    "all_no_createrole": true,
+    "all_no_replication": true,
+    "all_no_bypassrls": true,
+    "application_membership_admin": false,
+    "application_membership_inherit": false,
+    "application_membership_set": true,
+    "raw_login_table_select": false
+  },
+  "objects": {
+    "schema_owner": "pg36_ch23_owner",
+    "public_schema_create": false,
+    "runtime_schema_usage": true,
+    "runtime_schema_create": false,
+    "runtime_table_privileges": [
+      "SELECT",
+      "INSERT",
+      "UPDATE"
+    ],
+    "readonly_table_privileges": [
+      "SELECT"
+    ],
+    "row_level_security": true,
+    "force_row_level_security": true,
+    "policy_count": 5
+  },
+  "row_security": {
+    "tenant_a_visible_rows": 2,
+    "tenant_b_visible_rows": 2,
+    "missing_context_visible_rows": 0,
+    "malformed_context_sqlstate": "22P02",
+    "cross_tenant_insert_sqlstate": "42501",
+    "cross_tenant_update_sqlstate": "42501",
+    "runtime_security_ddl_sqlstate": "42501",
+    "runtime_truncate_sqlstate": "42501",
+    "readonly_insert_sqlstate": "42501",
+    "row_security_off_sqlstate": "42501",
+    "owner_without_context_rows": 0,
+    "owner_tenant_a_rows": 2,
+    "superuser_break_glass_rows": 4,
+    "end_user_input_trusted_directly": false
+  },
+  "pool_context": {
+    "mode": "transaction",
+    "baseline": {
+      "default_pool_size": 50,
+      "reserve_pool_size": 30,
+      "reserve_pool_timeout": 1,
+      "query_wait_timeout": 120
+    },
+    "temporary_override": {
+      "default_pool_size": 1,
+      "reserve_pool_size": 0,
+      "reserve_pool_timeout": 1,
+      "query_wait_timeout": 15
+    },
+    "session_counterexample_backend_pid": 72521,
+    "session_counterexample_same_backend": true,
+    "session_tenant_leaked_to_next_client": true,
+    "transaction_local_backend_pid": 72578,
+    "transaction_local_same_backend": true,
+    "missing_after_tenant_a_rows": 0,
+    "missing_after_tenant_b_rows": 0,
+    "settings_restored": true,
+    "pools_reconnected": 3
+  },
+  "transport": {
+    "postgresql_ssl": true,
+    "minimum_protocol": "TLSv1.2",
+    "direct_require_connected": true,
+    "direct_observed_protocol": "TLSv1.3",
+    "direct_observed_cipher": "TLS_AES_256_GCM_SHA384",
+    "direct_observed_bits": 256,
+    "direct_verify_full_connected": true,
+    "direct_wrong_name_rejected": true,
+    "direct_channel_binding_required_connected": true,
+    "direct_non_tls_connected": true,
+    "direct_tls_enforced_by_hba": false,
+    "pool_non_tls_connected": true,
+    "pool_tls_required_connected": false,
+    "pool_client_tls_available": false,
+    "hba_parse_errors": 0,
+    "server_private_key_mode": "0600",
+    "server_private_key_read": false,
+    "server_crl_configured": false
+  },
+  "credential_rotation": {
+    "new_auth_with_version_one": true,
+    "pool_identity_declared": false,
+    "old_auth_after_change_rejected": true,
+    "new_auth_with_version_two": true,
+    "existing_session_after_change_usable": true,
+    "new_auth_after_nologin_rejected": true,
+    "existing_session_after_nologin_usable": true,
+    "final_login_enabled": false,
+    "final_credential_present": false,
+    "credential_values_exported": false,
+    "shell_arguments_used": false
+  },
+  "logging_and_audit": {
+    "pgaudit_installed_or_preloaded": false,
+    "log_statement": "ddl",
+    "log_min_duration_statement_ms": 100,
+    "log_parameter_max_length": -1,
+    "log_parameter_max_length_on_error": 0,
+    "ordinary_logging_claimed_complete_audit": false
+  },
+  "topology": {
+    "changed": false,
+    "leader_before": "pg-test-1",
+    "leader_after": "pg-test-1",
+    "timeline_before": 11,
+    "timeline_after": 11,
+    "streaming_replicas_after": 2
+  },
+  "validation": {
+    "formal_validation_passed": true,
+    "adversarial_cases_rejected": 20,
+    "preflight_ch19_passed": true,
+    "postflight_ch19_passed": true,
+    "secret_material_absent": true
+  },
+  "integrity": {
+    "source_sha256": {
+      "requirements.json": "f60942fa2a87dd39dc0add4b1a26e155711b61985013975e5dee0d01ff68ecd1",
+      "drill.py": "f2fba671c59a8f6a5a4103b0296050784c59317c1ca12fde6cd01448533a6700",
+      "validate.py": "32d6823f0c12a999804a48323b816c0a54a93949eb7c8ba2aa970b9d6b720c7f",
+      "review.py": "28c9dc8d695a8fc7bd6f7468090dad382fc2cfd755de051645f3279a2a38cf70"
+    },
+    "evidence_sha256": {
+      "fixture.json": "c4f6a3154758289e66cb32c1f77b49b381bcd207dee7099fbbd7713bcb619ffb",
+      "tls-tests.json": "0e7821e41f52e071e63e284774094282520930a24946b8c8dc10c9d9de6de342",
+      "rls-tests.json": "bf3403a93499bf7d42548000c3a4d7ae8179110249cb2dc8ae771526ff022be0",
+      "pool-context.json": "e1773b3ccf0e65f1ed61cf8acfeffcf024b0488ed2cec39bfa174e180f337e8a",
+      "rotation-tests.json": "ff0de3670543baf91d7fc39180709c0cc96dbdac344867829202bc3931e6bb4e",
+      "pool-restore.json": "007bd4424b79eef32e0b42179abe611601a0bf8833105f77c9ac29df1c5607b6",
+      "after.json": "7c53a1be816e6d00e9840acea8dabf91f9acb23d8b8ce8ffd9d295d1709386c8"
+    }
+  },
+  "known_production_gaps": [
+    "business PostgreSQL HBA permits non-TLS intranet connections",
+    "PgBouncer client TLS is disabled",
+    "server CRL file and directory are unset",
+    "client CA distribution and certificate rotation are outside the retained sandbox evidence",
+    "pgAudit is not installed or preloaded",
+    "non-error statement logging may retain full bind parameters"
+  ],
+  "sandbox_security_contract": "mechanism-pass-production-pending",
+  "production_ch23_gate": "pending",
+  "production_approval": false,
+  "secret_values_exported": 0
+}

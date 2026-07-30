@@ -1,0 +1,33 @@
+{
+  "schema": "pg36-ch28-negative-cases-v1",
+  "cases": [
+    {"id": "N01", "claim": "把 n_dead_tup 当作逐行精确计数", "rejected": true, "reason": "累计统计是估计值，实验用 pgstattuple 补充物理检查"},
+    {"id": "N02", "claim": "普通 VACUUM 必然缩小关系文件", "rejected": true, "reason": "主要目标是让页内空间可重用，尾部截断只是有条件的行为"},
+    {"id": "N03", "claim": "普通 VACUUM 从不归还任何文件系统空间", "rejected": true, "reason": "它在条件满足时可能截断关系尾部，不能写成绝对命题"},
+    {"id": "N04", "claim": "死元组数高就一定需要 VACUUM FULL", "rejected": true, "reason": "先看工作集、空闲空间、增长趋势和正常 vacuum 是否跟得上"},
+    {"id": "N05", "claim": "为确定性在生产表关闭 autovacuum", "rejected": true, "reason": "本实验的表级覆盖只允许出现在一次性夹具"},
+    {"id": "N06", "claim": "提高 freeze_max_age 可以修复回卷紧急态", "rejected": true, "reason": "这是推迟保护线，不会消除旧 XID 或保留者"},
+    {"id": "N07", "claim": "取消防回卷 autovacuum 以降低 I/O", "rejected": true, "reason": "应优先让防回卷维护完成并处理根因"},
+    {"id": "N08", "claim": "只看数据库年龄，不看表和 TOAST 年龄", "rejected": true, "reason": "数据库值是下界，定位必须下钻关系与 TOAST"},
+    {"id": "N09", "claim": "只看 xact_start 就能找出所有保留者", "rejected": true, "reason": "还要检查 backend_xmin、复制槽 xmin/catalog_xmin 与 prepared xact"},
+    {"id": "N10", "claim": "看到 idle 会话就批量终止", "rejected": true, "reason": "只有验证身份、数据库、应用标记和 xmin 后才处理精确对象"},
+    {"id": "N11", "claim": "复制槽只会保留 WAL", "rejected": true, "reason": "逻辑槽还可能通过 xmin 或 catalog_xmin 保留行版本与系统目录"},
+    {"id": "N12", "claim": "预备事务没有客户端所以无害", "rejected": true, "reason": "孤儿两阶段事务仍可持有 XID 和锁"},
+    {"id": "N13", "claim": "autovacuum 触发阈值只由 scale factor 决定", "rejected": true, "reason": "基准阈值、最大阈值、比例、插入触发及表级参数共同作用"},
+    {"id": "N14", "claim": "增加 worker 数必然加快维护", "rejected": true, "reason": "worker、内存、cost budget、磁盘和业务竞争必须联合评估"},
+    {"id": "N15", "claim": "pg_stat_progress_vacuum 的 scanned/total 就是剩余时间", "rejected": true, "reason": "阶段、索引轮次、跳页和限速使块比例不是可靠 ETA"},
+    {"id": "N16", "claim": "HOT 是 UPDATE 的固定属性", "rejected": true, "reason": "还取决于索引列是否变化及同页是否有空间"},
+    {"id": "N17", "claim": "可见性图是事实来源而无需校验", "rejected": true, "reason": "它是维护的提示结构，可用 pg_visibility 做一致性检查"},
+    {"id": "N18", "claim": "在线重建不需要额外空间和等待窗口", "rejected": true, "reason": "并发重建有多阶段扫描、额外空间、长事务等待和失败残留风险"},
+    {"id": "N19", "claim": "REINDEX CONCURRENTLY 失败后直接重跑即可", "rejected": true, "reason": "先检查 indisvalid/indisready 和临时索引，再决定删除或重试"},
+    {"id": "N20", "claim": "DETACH CONCURRENTLY 完全无锁", "rejected": true, "reason": "它降低父表锁级别但仍有锁、等待和功能限制"},
+    {"id": "N21", "claim": "分区 detach 后即可立刻删除", "rejected": true, "reason": "必须先生成清单、归档并完成独立回灌校验"},
+    {"id": "N22", "claim": "对子分区 ANALYZE 后父表统计必然同步", "rejected": true, "reason": "分区父表应在生命周期变更后显式 ANALYZE"},
+    {"id": "N23", "claim": "amcheck 通过就证明存储、备份和恢复都健康", "rejected": true, "reason": "结构检查、页校验和恢复演练覆盖不同故障面"},
+    {"id": "N24", "claim": "heapallindexed 适合无条件高频全库运行", "rejected": true, "reason": "它更彻底也更昂贵，需按对象、规模和窗口分层"},
+    {"id": "N25", "claim": "使用 DROP DATABASE FORCE 清理实验", "rejected": true, "reason": "清理必须等待夹具会话退出并普通删除"},
+    {"id": "N26", "claim": "实验可以修改 Patroni 或 Pigsty 的全局参数", "rejected": true, "reason": "本章只允许一次性对象和会话局部设置"},
+    {"id": "N27", "claim": "观察到一次维护成功即可批准生产执行", "rejected": true, "reason": "生产对象仍需容量、锁等待、备份和变更窗口审批"},
+    {"id": "N28", "claim": "为了演示回卷可以消耗数十亿 XID", "rejected": true, "reason": "实验只读取年龄并验证决策链，不制造危险年龄"}
+  ]
+}

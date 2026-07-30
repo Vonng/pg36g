@@ -1,0 +1,151 @@
+{
+  "schema": "pg36-ch19-negative-cases-v1",
+  "release": "2.0-sandbox",
+  "cases": [
+    {
+      "id": "claim-production-slo-from-sandbox",
+      "expected_code": "E_PRODUCTION_CLAIM",
+      "patches": [
+        {
+          "target": "requirements",
+          "op": "replace",
+          "path": [
+            "service_units",
+            1,
+            "production_slo_claimed"
+          ],
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "reuse-one-machine-identity",
+      "expected_code": "E_HOST_IDENTITY",
+      "patches": [
+        {
+          "target": "hosts",
+          "op": "copy",
+          "from": [
+            "10.10.10.10",
+            "machine_id_sha256"
+          ],
+          "path": [
+            "10.10.10.11",
+            "machine_id_sha256"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mix-host-operating-systems",
+      "expected_code": "E_HOST_UNIFORMITY",
+      "patches": [
+        {
+          "target": "hosts",
+          "op": "replace",
+          "path": [
+            "10.10.10.13",
+            "os",
+            "id"
+          ],
+          "value": "debian"
+        }
+      ]
+    },
+    {
+      "id": "accept-unsynchronized-clock",
+      "expected_code": "E_CLOCK",
+      "patches": [
+        {
+          "target": "hosts",
+          "op": "replace",
+          "path": [
+            "10.10.10.12",
+            "clock",
+            "ntp_synchronized"
+          ],
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "accept-memory-below-floor",
+      "expected_code": "E_RESOURCE_FLOOR",
+      "patches": [
+        {
+          "target": "hosts",
+          "op": "replace",
+          "path": [
+            "10.10.10.11",
+            "memory",
+            "total_bytes"
+          ],
+          "value": 536870912
+        }
+      ]
+    },
+    {
+      "id": "disable-data-checksums",
+      "expected_code": "E_PG_INIT",
+      "patches": [
+        {
+          "target": "postgres",
+          "op": "replace",
+          "path": [
+            "10.10.10.12",
+            "settings",
+            "data_checksums"
+          ],
+          "value": "off"
+        }
+      ]
+    },
+    {
+      "id": "declare-two-live-leaders",
+      "expected_code": "E_TOPOLOGY",
+      "patches": [
+        {
+          "target": "patroni",
+          "op": "replace",
+          "path": [
+            "pg-test",
+            "members",
+            1,
+            "role"
+          ],
+          "value": "Leader"
+        }
+      ]
+    },
+    {
+      "id": "export-from-world-readable-inventory",
+      "expected_code": "E_SECRET_FILE_MODE",
+      "patches": [
+        {
+          "target": "inventory",
+          "op": "replace",
+          "path": [
+            "source",
+            "mode_octal"
+          ],
+          "value": "0644"
+        }
+      ]
+    },
+    {
+      "id": "export-one-secret-value",
+      "expected_code": "E_SECRET_EXPORT",
+      "patches": [
+        {
+          "target": "inventory",
+          "op": "replace",
+          "path": [
+            "source",
+            "secret_values_exported"
+          ],
+          "value": 1
+        }
+      ]
+    }
+  ]
+}

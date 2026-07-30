@@ -1,0 +1,127 @@
+{
+  "schema": "pg36-ch19-deployment-baseline-v1",
+  "release": "2.0-sandbox",
+  "status": "l2-sandbox-accepted-with-exceptions-not-production-approval",
+  "source": {
+    "pigsty_release": "v4.4.0",
+    "pigsty_source_method": "exact git tag archive",
+    "configuration_template": "conf/ha/full.yml",
+    "configuration_method": "configure -c ha/full -s -n -g -v 18 -r default",
+    "secret_evidence_policy": "values never exported; field count and file mode only"
+  },
+  "target": {
+    "id": "pg36-l2-vagrant",
+    "control_node": "10.10.10.10",
+    "hosts": [
+      "10.10.10.10",
+      "10.10.10.11",
+      "10.10.10.12",
+      "10.10.10.13"
+    ],
+    "expected_hostnames": {
+      "10.10.10.10": "pg-meta-1",
+      "10.10.10.11": "pg-test-1",
+      "10.10.10.12": "pg-test-2",
+      "10.10.10.13": "pg-test-3"
+    },
+    "platform": "Vagrant local sandbox",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false
+  },
+  "declared_service_units": [
+    {
+      "cluster": "pg-meta",
+      "purpose": "control and validation",
+      "members": [
+        {
+          "address": "10.10.10.10",
+          "pg_seq": 1,
+          "pg_role": "primary",
+          "pg_offline_query": false
+        }
+      ]
+    },
+    {
+      "cluster": "pg-test",
+      "purpose": "HA and service rehearsal",
+      "members": [
+        {
+          "address": "10.10.10.11",
+          "pg_seq": 1,
+          "pg_role": "primary",
+          "pg_offline_query": false
+        },
+        {
+          "address": "10.10.10.12",
+          "pg_seq": 2,
+          "pg_role": "replica",
+          "pg_offline_query": false
+        },
+        {
+          "address": "10.10.10.13",
+          "pg_seq": 3,
+          "pg_role": "replica",
+          "pg_offline_query": true
+        }
+      ]
+    }
+  ],
+  "acceptance_layers": [
+    {
+      "id": "inventory",
+      "question": "does the redacted declaration name the expected release, hosts, clusters, roles, and service units?",
+      "evidence": "inventory-projection.json"
+    },
+    {
+      "id": "host",
+      "question": "do four distinct Linux machines satisfy uniform OS, clock, memory, storage, kernel, and service facts?",
+      "evidence": "hosts/*.json"
+    },
+    {
+      "id": "postgresql",
+      "question": "does each member report the exact initialization and recovery-role contract from SQL?",
+      "evidence": "postgres/*.json"
+    },
+    {
+      "id": "pigsty",
+      "question": "does Patroni and the service plane agree with inventory and SQL?",
+      "evidence": "patroni/*.json and endpoints.json"
+    }
+  ],
+  "required_exception_ids": [
+    "EX19-SHARED-HYPERVISOR",
+    "EX19-SINGLE-ETCD",
+    "EX19-SINGLE-BACKUP-TARGET",
+    "EX19-VIRTUAL-STORAGE",
+    "EX19-INVENTORY-SECRETS",
+    "EX19-LAB-RESOURCE-FLOOR"
+  ],
+  "prohibited_claims": [
+    "the four VMs are four independent production failure domains",
+    "the single etcd member provides production DCS availability",
+    "the local backup target proves disaster recovery",
+    "Vagrant storage results qualify production capacity",
+    "random passwords in a private inventory constitute a production secret lifecycle",
+    "successful deployment proves the pg-ha-standard SLO"
+  ],
+  "reset_contract": {
+    "target": "pg36-l2-vagrant/pg-meta+pg-test",
+    "token": "RESET_CH19_L2_SANDBOX",
+    "automatic_in_all": false,
+    "requires_no_production_data": true,
+    "requires_exact_machine_identity_manifest": true,
+    "requires_client_drain": true,
+    "action": "separate guarded destructive exercise, never an acceptance prerequisite"
+  },
+  "decision": {
+    "sandbox_l2": "accepted-with-exceptions",
+    "production_ch19_gate": "pending",
+    "next_review": "chapter 20 HA behavior and fault drills"
+  },
+  "limitations": [
+    "The acceptance is bound to a fresh read-only evidence bundle produced by task.sh capture and verify; generated host identities and timestamps are not source-controlled.",
+    "A successful sandbox validates procedure and observable relationships, not production sizing or failure independence.",
+    "Chapter 20 must validate HA behavior; chapter 21 must validate recovery; neither is implied here.",
+    "No production reset or removal action is authorized by this document."
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "schema": "pg36-ch24-slo-policy-v1",
+  "service_id": "pg36_shop",
+  "status": "teaching-policy-not-production-approved",
+  "production_approval": false,
+  "principles": {
+    "primary_measurement": "count eligible user events as close to the application boundary as practical",
+    "ratio_formula": "good_events / eligible_events",
+    "one_hundred_percent_ratio_target_allowed": false,
+    "planned_maintenance_in_user_slo": true,
+    "database_instance_health_is_user_sli": false,
+    "missing_data_default": "unknown-and-monitored",
+    "correctness_can_be_averaged_away": false,
+    "backup_success_equals_restore_readiness": false
+  },
+  "window_policy": {
+    "primary_window": "rolling-28d",
+    "duration_seconds": 2419200,
+    "weekly_summary": true,
+    "quarterly_policy_review": true,
+    "calendar_report_is_distinct": true,
+    "low_traffic_strategy": [
+      "run an end-to-end synthetic probe",
+      "aggregate only operations with the same consequence",
+      "use an explicitly reviewed time-based or user-minute method when event ratios are too sparse"
+    ]
+  },
+  "objectives": [
+    {
+      "id": "SLO-AVAILABILITY",
+      "kind": "ratio_slo",
+      "journey": "place-order",
+      "description": "eligible order attempts receive a reconciled successful outcome",
+      "eligible_event": "authorized, syntactically valid order attempts admitted at the application boundary",
+      "good_event": "the API returns the declared success result and the idempotency token resolves to exactly one committed order",
+      "target": 0.999,
+      "window": "rolling-28d",
+      "measurement_point": "application edge plus commit-outcome reconciliation",
+      "component_health_proxy": false,
+      "sample_event_volume": 10000000,
+      "sample_error_budget_events": 10000,
+      "equivalent_time_budget_seconds": 2419.2,
+      "equivalent_time_budget_minutes": 40.32
+    },
+    {
+      "id": "SLO-LATENCY",
+      "kind": "ratio_slo",
+      "journey": "place-order",
+      "description": "eligible order attempts complete within the user latency threshold",
+      "eligible_event": "the same admitted attempts used by SLO-AVAILABILITY",
+      "good_event": "the final reconciled response completes within 250 ms",
+      "target": 0.99,
+      "threshold_seconds": 0.25,
+      "window": "rolling-28d",
+      "measurement_point": "application edge",
+      "component_health_proxy": false
+    },
+    {
+      "id": "SLO-FRESHNESS",
+      "kind": "ratio_slo",
+      "journey": "read-order",
+      "description": "a routed read observes the selected committed order within the declared freshness bound",
+      "eligible_event": "synthetic or production-authorized probes carrying a known commit token",
+      "good_event": "the chosen read path returns the committed token within 5 seconds",
+      "target": 0.99,
+      "threshold_seconds": 5,
+      "window": "rolling-28d",
+      "measurement_point": "read entrypoint using a commit-correlated probe",
+      "component_health_proxy": false,
+      "forbidden_shortcut": "wall-clock age of pg_last_xact_replay_timestamp without a current write or commit token"
+    },
+    {
+      "id": "CTRL-CORRECTNESS",
+      "kind": "control_objective",
+      "journey": "place-order",
+      "description": "no acknowledged order may violate uniqueness, tenant, amount, or state-transition invariants",
+      "success_condition": "scheduled and incident reconciliation finds zero unexplained mismatches",
+      "failure_action": "page and freeze affected writes; do not spend a ratio error budget to excuse corruption",
+      "ratio_target": null,
+      "measurement_point": "domain reconciliation and invariant checks"
+    },
+    {
+      "id": "CTRL-RESTORE-READINESS",
+      "kind": "control_objective",
+      "journey": "recover-service",
+      "description": "a restore procedure remains executable and produces checked application state",
+      "success_condition": "an isolated restore drill passes at least every 90 days and after material recovery-path changes",
+      "maximum_evidence_age_days": 90,
+      "failure_action": "block high-risk release and open an owned remediation",
+      "ratio_target": null,
+      "measurement_point": "isolated restore plus application verification"
+    }
+  ],
+  "exclusion_policy": {
+    "default_exclusions": [
+      {
+        "id": "EX-SLO-MALFORMED",
+        "condition": "request is rejected before admission because it violates the published syntax contract",
+        "justification": "not an eligible service attempt"
+      },
+      {
+        "id": "EX-SLO-UNAUTHORIZED",
+        "condition": "authentication or authorization correctly rejects an identity outside the service contract",
+        "justification": "a correct security denial is not availability failure"
+      },
+      {
+        "id": "EX-SLO-CLIENT-CANCEL-BEFORE-ADMISSION",
+        "condition": "the client disconnects before the service accepts work and no server-side outcome exists",
+        "justification": "the service did not admit the event"
+      }
+    ],
+    "planned_maintenance_excluded": false,
+    "retroactive_exclusion_allowed": false,
+    "exception_requirements": [
+      "immutable identifier",
+      "exact start and end",
+      "affected event classes",
+      "independent approver",
+      "reason",
+      "before-and-after event counts"
+    ]
+  },
+  "burn_rate_policy": {
+    "formula": "observed_bad_event_ratio / (1 - slo_target)",
+    "starting_points_require_tuning": true,
+    "alerts": [
+      {
+        "id": "BR-PAGE-FAST",
+        "route": "page",
+        "long_window": "1h",
+        "short_window": "5m",
+        "burn_rate": 14.4,
+        "budget_fraction": 0.02
+      },
+      {
+        "id": "BR-PAGE-SLOW",
+        "route": "page",
+        "long_window": "6h",
+        "short_window": "30m",
+        "burn_rate": 6,
+        "budget_fraction": 0.05
+      },
+      {
+        "id": "BR-TICKET",
+        "route": "ticket",
+        "long_window": "3d",
+        "short_window": "6h",
+        "burn_rate": 1,
+        "budget_fraction": 0.1
+      }
+    ]
+  },
+  "error_budget_policy": {
+    "budget_owner_function": "service",
+    "reliability_owner_function": "platform",
+    "states": [
+      {
+        "id": "healthy",
+        "remaining_fraction_min_exclusive": 0.5,
+        "actions": [
+          "normal reviewed release cadence",
+          "fund preventive reliability work"
+        ]
+      },
+      {
+        "id": "watch",
+        "remaining_fraction_min_exclusive": 0.25,
+        "remaining_fraction_max_inclusive": 0.5,
+        "actions": [
+          "reduce concurrent high-risk change",
+          "review top budget consumers weekly"
+        ]
+      },
+      {
+        "id": "constrained",
+        "remaining_fraction_min_exclusive": 0,
+        "remaining_fraction_max_inclusive": 0.25,
+        "actions": [
+          "pause nonessential risky feature releases",
+          "require service and platform owner exception for material changes",
+          "prioritize verified reliability remediation"
+        ]
+      },
+      {
+        "id": "exhausted",
+        "remaining_fraction_max_inclusive": 0,
+        "actions": [
+          "freeze nonemergency high-risk changes",
+          "open an incident or reliability review",
+          "resume only through a recorded joint decision"
+        ]
+      }
+    ],
+    "gaming_prohibited": [
+      "lowering eligibility after observing errors",
+      "reclassifying failures as maintenance after the event",
+      "moving the measurement point farther from users to hide errors",
+      "combining unrelated high-volume operations to drown a low-volume critical path"
+    ]
+  }
+}

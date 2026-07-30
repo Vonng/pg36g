@@ -1,0 +1,14 @@
+flowchart LR
+  W["Codex 工作区<br/>合同、验证器、公开摘要"] -->|SSH / SCP| M["pg-meta-1<br/>私有编排与证据"]
+  M -->|service=pg-test-1| S["pg-test / PostgreSQL 18<br/>pg36_shop_src"]
+  M -->|service=pg-meta-1| T["pg-meta / PostgreSQL 18<br/>pg36_shop_dst"]
+  S --> P["publication<br/>pg36_shop_pub"]
+  P --> L["logical slot<br/>pg36_shop_slot"]
+  L -->|pgoutput| U["subscription<br/>pg36_shop_sub"]
+  U --> T
+  M --> V["双端 manifest<br/>分桶摘要 / 业务不变量"]
+  V --> S
+  V --> T
+  M --> R["私有 route history<br/>仅模拟切换与回退"]
+  R --> S
+  R --> T

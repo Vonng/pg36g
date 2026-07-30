@@ -1,0 +1,65 @@
+{
+  "captured_at": "2026-07-30T02:35:23.378562Z",
+  "claims_not_made": [
+    "a real PostgreSQL or Pigsty incident was injected",
+    "a human responder passed a blind competency assessment",
+    "the live cluster failover or backup restore path was exercised",
+    "the reference run authorizes production incident actions"
+  ],
+  "decision": {
+    "production_approval": null,
+    "production_ch31_gate": "pending",
+    "result": "read-only-context-and-tabletop-protocol-demonstrated"
+  },
+  "environment": {
+    "cluster": "pg-test",
+    "patroni_members": 3,
+    "pgbackrest_backup_count": 6,
+    "pgbackrest_status": 0,
+    "pigsty_monitoring_mode": "FULL-L3",
+    "postgresql": "18.4 (Ubuntu 18.4-1.pgdg24.04+1)",
+    "primary_members": 1,
+    "replica_members": 2,
+    "timeline": 11
+  },
+  "preflight_run_id": "7351f19a-a932-4ae9-ae12-19b7559814c3",
+  "run_id": "d915ef75-2e7b-4b61-9526-9c3c8177b623",
+  "safety": {
+    "backup_restored": false,
+    "connection_terminated": false,
+    "failover_executed": false,
+    "online_mutation": "none",
+    "patroni_paused": false,
+    "raw_log_exported": false,
+    "raw_query_text_captured": false,
+    "real_incident_injected": false,
+    "route_changed": false,
+    "service_restarted": false,
+    "sql_transaction": "READ ONLY"
+  },
+  "schema": "pg36-ch31-reference-run-v1",
+  "tabletop": {
+    "drawn_cases": 2,
+    "first_response_minutes": 15,
+    "human_competency_claimed": false,
+    "modes": [
+      "solo",
+      "team"
+    ],
+    "routes": [
+      "INTEGRITY",
+      "PITR"
+    ],
+    "scenario_library": 8
+  },
+  "target": "pg36-l0-vagrant/pg-test",
+  "validation": {
+    "blind_answer_leak_rejected": true,
+    "dangerous_actions_executed": 0,
+    "decision_logs_complete": true,
+    "declared_counterexamples_rejected": 31,
+    "live_evidence_mutants_rejected": 18,
+    "required_evidence_before_route": true,
+    "source_files_hash_bound": 12
+  }
+}

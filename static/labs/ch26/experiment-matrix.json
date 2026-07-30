@@ -1,0 +1,139 @@
+{
+  "schema": "pg36-ch26-experiment-matrix-v1",
+  "factors": {
+    "dataset_scale": [
+      {
+        "id": "S",
+        "factor": 1
+      },
+      {
+        "id": "M",
+        "factor": 8
+      },
+      {
+        "id": "L",
+        "factor": 32
+      }
+    ],
+    "clients": [
+      1,
+      8
+    ],
+    "repetitions": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "cells": [
+    {
+      "cell_id": "S-c1",
+      "scale_id": "S",
+      "scale_factor": 1,
+      "clients": 1,
+      "jobs": 1
+    },
+    {
+      "cell_id": "S-c8",
+      "scale_id": "S",
+      "scale_factor": 1,
+      "clients": 8,
+      "jobs": 2
+    },
+    {
+      "cell_id": "M-c1",
+      "scale_id": "M",
+      "scale_factor": 8,
+      "clients": 1,
+      "jobs": 1
+    },
+    {
+      "cell_id": "M-c8",
+      "scale_id": "M",
+      "scale_factor": 8,
+      "clients": 8,
+      "jobs": 2
+    },
+    {
+      "cell_id": "L-c1",
+      "scale_id": "L",
+      "scale_factor": 32,
+      "clients": 1,
+      "jobs": 1
+    },
+    {
+      "cell_id": "L-c8",
+      "scale_id": "L",
+      "scale_factor": 32,
+      "clients": 8,
+      "jobs": 2
+    }
+  ],
+  "run_order": [
+    "S-c1-r1",
+    "S-c8-r1",
+    "S-c8-r2",
+    "S-c1-r2",
+    "S-c1-r3",
+    "S-c8-r3",
+    "S-c8-r4",
+    "S-c1-r4",
+    "S-c1-r5",
+    "S-c8-r5",
+    "M-c1-r1",
+    "M-c8-r1",
+    "M-c8-r2",
+    "M-c1-r2",
+    "M-c1-r3",
+    "M-c8-r3",
+    "M-c8-r4",
+    "M-c1-r4",
+    "M-c1-r5",
+    "M-c8-r5",
+    "L-c1-r1",
+    "L-c8-r1",
+    "L-c8-r2",
+    "L-c1-r2",
+    "L-c1-r3",
+    "L-c8-r3",
+    "L-c8-r4",
+    "L-c1-r4",
+    "L-c1-r5",
+    "L-c8-r5"
+  ],
+  "fixed_factors": {
+    "client_host": "pg-meta-1",
+    "server_host": "pg-test-1",
+    "server_role": "primary",
+    "database": "pg36_capacity",
+    "workload_id": "shop-mix-v1",
+    "query_protocol": "prepared",
+    "connection_reuse": true,
+    "think_time_ms": 0,
+    "latency_limit_ms": 250,
+    "measured_seconds": 8,
+    "warm_cache_only": true
+  },
+  "responses": [
+    "processed_transactions",
+    "failed_transactions",
+    "late_transactions",
+    "tps",
+    "latency_mean_ms",
+    "latency_p50_ms",
+    "latency_p95_ms",
+    "latency_p99_ms",
+    "server_cpu_busy_ratio",
+    "server_cpu_iowait_ratio",
+    "client_cpu_busy_ratio",
+    "database_block_reads",
+    "database_block_hits",
+    "wal_bytes",
+    "temp_bytes",
+    "deadlocks",
+    "wait_sample_distribution",
+    "relation_growth_bytes"
+  ]
+}

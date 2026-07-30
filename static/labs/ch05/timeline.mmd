@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant B as Blocker
+    participant R as Ordinary reader
+    participant W as Waiter
+    participant O as Observer
+
+    B->>B: BEGIN; UPDATE order 1002
+    Note over B: New tuple version is uncommitted
+    R->>B: plain SELECT
+    B-->>R: does not block; old committed version is visible
+    W->>B: UPDATE the same row
+    Note over W: waits on Blocker's transaction ID
+    O->>O: pg_stat_activity + pg_blocking_pids + pg_locks
+    O->>B: pg_cancel_backend(exact PID)
+    Note over B: connection exits; transaction rolls back
+    B-->>W: conflicting lock is released
+    W->>W: UPDATE succeeds, then ROLLBACK
+    O->>O: verify original fingerprint and no workers

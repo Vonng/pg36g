@@ -1,0 +1,141 @@
+{
+  "schema": "pg36-ch26-workload-contract-v1",
+  "service": "pg36_shop",
+  "workload_id": "shop-mix-v1",
+  "semantics": {
+    "mode": "closed-loop-maximum-throughput-probe",
+    "arrival_model": "each client starts its next transaction after the previous transaction completes",
+    "think_time_ms": 0,
+    "connection_lifetime": "persistent for each client during one run",
+    "query_protocol": "prepared",
+    "connection_path": "pg-meta-1 pgbench client to pg-test-1 primary PostgreSQL port 5432",
+    "latency_origin": "pgbench client",
+    "latency_limit_ms": 250,
+    "retry_policy": "one try; no pgbench retry",
+    "durability": {
+      "synchronous_commit": "on",
+      "unlogged_tables": false,
+      "fsync_override": false
+    }
+  },
+  "transaction_mix": [
+    {
+      "id": "read-product",
+      "script": "read-product.sql",
+      "weight": 50,
+      "class": "read",
+      "key_distribution": "Zipfian product_id, parameter 1.15",
+      "business_meaning": "read one product and its current inventory"
+    },
+    {
+      "id": "read-order",
+      "script": "read-order.sql",
+      "weight": 30,
+      "class": "read",
+      "key_distribution": "Zipfian customer_id, parameter 1.08",
+      "business_meaning": "read the five most recent historical orders for one customer"
+    },
+    {
+      "id": "place-order",
+      "script": "place-order.sql",
+      "weight": 20,
+      "class": "write",
+      "key_distribution": "uniform customer_id and Zipfian product_id, parameter 1.10",
+      "business_meaning": "lock and decrement inventory, then append one durable order"
+    }
+  ],
+  "data_model": {
+    "scale_unit": {
+      "customers": 10000,
+      "products": 2000,
+      "historical_orders": 100000
+    },
+    "scales": [
+      {
+        "id": "S",
+        "factor": 1,
+        "customers": 10000,
+        "products": 2000,
+        "historical_orders": 100000
+      },
+      {
+        "id": "M",
+        "factor": 8,
+        "customers": 80000,
+        "products": 16000,
+        "historical_orders": 800000
+      },
+      {
+        "id": "L",
+        "factor": 32,
+        "customers": 320000,
+        "products": 64000,
+        "historical_orders": 3200000
+      }
+    ],
+    "mutable_relations_reset_between_runs": [
+      "shopbench.inventory",
+      "shopbench.order_live"
+    ],
+    "immutable_relations_rebuilt_between_scales": [
+      "shopbench.customer",
+      "shopbench.product",
+      "shopbench.order_history"
+    ],
+    "synthetic_data_only": true
+  },
+  "controls": {
+    "scale_order": [
+      "S",
+      "M",
+      "L"
+    ],
+    "concurrency_order_by_repetition": [
+      [
+        1,
+        8
+      ],
+      [
+        8,
+        1
+      ],
+      [
+        1,
+        8
+      ],
+      [
+        8,
+        1
+      ],
+      [
+        1,
+        8
+      ]
+    ],
+    "warmup_seconds_per_scale_and_concurrency": 5,
+    "measured_seconds": 8,
+    "repetitions": 5,
+    "concurrency_levels": [
+      1,
+      8
+    ],
+    "jobs": {
+      "concurrency_1": 1,
+      "concurrency_8": 2
+    },
+    "base_seed": 2026072900,
+    "seed_formula": "base_seed + scale_factor * 100 + concurrency * 10 + repetition",
+    "post_run_statistics_flush_wait_seconds": 1.2,
+    "cache_policy": "warm naturally; never drop OS cache or restart PostgreSQL",
+    "background_policy": "observe and retain background activity; do not disable it",
+    "statistics_policy": "take before/after snapshots; never reset counters"
+  },
+  "interpretation": {
+    "closed_loop_limit": "The probe reveals maximum-throughput behavior for a fixed client population but does not reproduce an offered arrival rate or queue abandoned by an upstream caller.",
+    "percentile_rule": "Quantiles are computed from transaction samples; quantiles are never averaged.",
+    "repetition_rule": "Cell estimates report median runs and a deterministic bootstrap interval; five runs do not erase systematic bias.",
+    "cold_cache_rule": "No cold-cache claim is permitted because neither PostgreSQL nor operating-system caches are cleared.",
+    "client_rule": "A result is conditional when pg-meta-1 client CPU or scheduling can explain the measured ceiling.",
+    "knee_rule": "Two concurrency levels can only bracket a knee; a denser open-loop or concurrency sweep is required to locate it."
+  }
+}

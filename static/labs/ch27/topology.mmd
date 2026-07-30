@@ -1,0 +1,8 @@
+flowchart LR
+  R["Chapter 26 evidence"] --> H["One falsifiable hypothesis"]
+  M["pg-meta-1<br/>load generator"] -->|"prepared pgbench<br/>session GUC"| P["pg-test-1<br/>PostgreSQL primary"]
+  P --> E["private raw evidence"]
+  E --> V["validation + independent review"]
+  H --> V
+  V --> A["parameter ADR<br/>accept or reject"]
+  A --> G["production gate remains pending"]

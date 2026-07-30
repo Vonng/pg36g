@@ -1,0 +1,150 @@
+{
+  "schema": "pg36-ch29-negative-cases-v1",
+  "cases": [
+    {
+      "id": "same-system-identifier",
+      "rejected": true,
+      "reason": "source and target would not prove a multi-cluster migration"
+    },
+    {
+      "id": "source-is-replica",
+      "rejected": true,
+      "reason": "the declared publisher must be a writable primary"
+    },
+    {
+      "id": "target-is-replica",
+      "rejected": true,
+      "reason": "the subscriber database must be writable"
+    },
+    {
+      "id": "source-wal-level-not-logical",
+      "rejected": true,
+      "reason": "native logical decoding cannot start"
+    },
+    {
+      "id": "dirty-source-database",
+      "rejected": true,
+      "reason": "an unmarked pre-existing database must never be overwritten"
+    },
+    {
+      "id": "dirty-target-database",
+      "rejected": true,
+      "reason": "an unmarked pre-existing database must never be overwritten"
+    },
+    {
+      "id": "dirty-replication-slot",
+      "rejected": true,
+      "reason": "a pre-existing slot may belong to another consumer"
+    },
+    {
+      "id": "dirty-subscription",
+      "rejected": true,
+      "reason": "a pre-existing subscription may belong to another migration"
+    },
+    {
+      "id": "source-hash-drift",
+      "rejected": true,
+      "reason": "executed code must equal preflight-reviewed code"
+    },
+    {
+      "id": "publication-missing-table",
+      "rejected": true,
+      "reason": "partial table coverage invalidates the migration contract"
+    },
+    {
+      "id": "missing-replica-identity",
+      "rejected": true,
+      "reason": "UPDATE and DELETE need a usable replica identity"
+    },
+    {
+      "id": "initial-table-not-ready",
+      "rejected": true,
+      "reason": "row counts alone do not prove the initial synchronization state"
+    },
+    {
+      "id": "initial-manifest-mismatch",
+      "rejected": true,
+      "reason": "initial logical contents differ"
+    },
+    {
+      "id": "incremental-manifest-mismatch",
+      "rejected": true,
+      "reason": "the change stream did not converge"
+    },
+    {
+      "id": "slot-remained-active-while-disabled",
+      "rejected": true,
+      "reason": "the consumer stall was not actually isolated"
+    },
+    {
+      "id": "no-retained-wal-growth",
+      "rejected": true,
+      "reason": "the stall experiment did not demonstrate source-side retention"
+    },
+    {
+      "id": "confirmed-lsn-advanced-during-stall",
+      "rejected": true,
+      "reason": "the supposedly disabled consumer still acknowledged changes"
+    },
+    {
+      "id": "catchup-before-marker",
+      "rejected": true,
+      "reason": "the subscriber has not acknowledged the declared source fence"
+    },
+    {
+      "id": "conflict-not-counted",
+      "rejected": true,
+      "reason": "the duplicate-key conflict was not observed in native statistics"
+    },
+    {
+      "id": "conflict-left-unrepaired",
+      "rejected": true,
+      "reason": "apply cannot safely continue with an unresolved conflict"
+    },
+    {
+      "id": "silent-drift-not-detected",
+      "rejected": true,
+      "reason": "a target-only change must fail reconciliation"
+    },
+    {
+      "id": "silent-drift-left-unrepaired",
+      "rejected": true,
+      "reason": "cutover cannot proceed with mismatched bucket digests"
+    },
+    {
+      "id": "source-write-fence-not-proven",
+      "rejected": true,
+      "reason": "a cutover without a tested write fence has an unbounded split-write race"
+    },
+    {
+      "id": "target-sequence-behind-data",
+      "rejected": true,
+      "reason": "the first target write could collide with replicated identity values"
+    },
+    {
+      "id": "real-route-mutation",
+      "rejected": true,
+      "reason": "the chapter lab is not authorized to change platform or application routes"
+    },
+    {
+      "id": "rollback-loses-target-canary",
+      "rejected": true,
+      "reason": "destination-only writes must be reconciled before returning to the source"
+    },
+    {
+      "id": "source-dropped-before-observation",
+      "rejected": true,
+      "reason": "the rollback source must remain intact through the observation window"
+    },
+    {
+      "id": "force-drop-used",
+      "rejected": true,
+      "reason": "forced cleanup can terminate unrelated sessions and hide ownership errors"
+    },
+    {
+      "id": "production-gate-bypassed",
+      "rejected": true,
+      "reason": "a sandbox run cannot authorize a production migration"
+    }
+  ]
+}

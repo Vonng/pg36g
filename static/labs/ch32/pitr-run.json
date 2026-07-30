@@ -1,0 +1,101 @@
+{
+  "backup": {
+    "archive_covered": true,
+    "check_ms": 629.876833,
+    "command_ms": 2089.9785,
+    "expire_executed": false,
+    "label": "20260730-032534F",
+    "logical_size_bytes": 42355954,
+    "repository_delta_bytes": 5751304,
+    "retained": true,
+    "type": "full"
+  },
+  "candidates": {
+    "exclusive": {
+      "accepted": true,
+      "damage_present": false,
+      "plan_ms": 213.899958,
+      "post_target_present": false,
+      "promoted_timeline": 12,
+      "restore_copy_ms": 2973.629541,
+      "safe_transaction_present": true,
+      "start_to_promoted_ms": 939.310417,
+      "target_inclusive": false,
+      "validation_ms": 502.607291
+    },
+    "inclusive": {
+      "accepted": false,
+      "damage_present": true,
+      "plan_ms": 219.113,
+      "post_target_present": false,
+      "promoted_timeline": 12,
+      "restore_copy_ms": 3040.399541,
+      "start_to_promoted_ms": 960.801583,
+      "target_inclusive": true,
+      "validation_ms": 340.04075
+    }
+  },
+  "cleanup": {
+    "fixture_schema_removed": true,
+    "fresh_backup_retained": true,
+    "restore_roots_removed": true
+  },
+  "decision": {
+    "production_approval": null,
+    "production_ch32_gate": "pending"
+  },
+  "environment": {
+    "cluster": "pg-test",
+    "pgbackrest": "pgBackRest 2.59.0",
+    "pig": "pig version 1.5.1 linux/arm64",
+    "postgresql": "18.4 (Ubuntu 18.4-1.pgdg24.04+1)",
+    "source_timeline": 11,
+    "target": "pg36-l2-vagrant/pg-test",
+    "topology": "one primary and two streaming replicas"
+  },
+  "evidence": {
+    "declared_counterexamples": 32,
+    "live_evidence_mutants": 32,
+    "production_rto_claimed": false,
+    "raw_system_identifier_exported": false,
+    "secret_values_exported": 0,
+    "source_files_hash_bound": 12,
+    "timings_are_sandbox_observations": true
+  },
+  "generated_at": "2026-07-30T03:25:50Z",
+  "incident": {
+    "accounts": 5000,
+    "external_dispatch_count": 0,
+    "post_target_legitimate_writes": 100,
+    "target_derived_from_source_audit": true,
+    "target_identification_ms": 182.696042,
+    "target_type": "xid",
+    "victims": 1000,
+    "wrong_outbox_events": 1000
+  },
+  "preflight_run_id": "aef012a5-0e34-4984-b903-9d62ad783a41",
+  "reconciliation": {
+    "business_manifest_matches": true,
+    "method": "exclusive-history-plus-audited-post-target-delta",
+    "post_target_rows_preserved": 100,
+    "raw_exclusive_missing_legitimate_writes": 100,
+    "reconciled_fixture_data_loss_rows": 0,
+    "reconciliation_ms": 199.834875,
+    "recovered_rows": 1000,
+    "wrong_outbox_canceled": 1000
+  },
+  "run_id": "run_20260730T032532Z_498d0e2c",
+  "safety": {
+    "backup_or_wal_deleted": false,
+    "business_cutover_performed": false,
+    "dcs_changed": false,
+    "external_dispatch_count": 0,
+    "managed_pgdata_touched": false,
+    "patroni_changed": false,
+    "production_data": false,
+    "production_traffic": false,
+    "route_changed": false,
+    "tcp_listener_created": false
+  },
+  "schema": "pg36-ch32-pitr-run-v1"
+}

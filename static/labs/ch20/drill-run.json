@@ -1,0 +1,64 @@
+{
+  "schema": "pg36-ch20-drill-run-v1",
+  "release": "1.0-sandbox",
+  "status": "formal-reference-accepted-with-exceptions",
+  "target": "pg36-l2-vagrant/pg-test",
+  "action": "planned-switchover-and-planned-baseline-restore",
+  "run_id": "475e9b47-bc35-4687-87da-012f1d5ea455",
+  "wrapper_started_at": "2026-07-29T19:39:33Z",
+  "wrapper_finished_at": "2026-07-29T19:40:17Z",
+  "wrapper_elapsed_seconds": 44,
+  "forward_started_at": "2026-07-29T19:39:46Z",
+  "forward_stable_at": "2026-07-29T19:39:52Z",
+  "restore_started_at": "2026-07-29T19:40:04Z",
+  "restore_stable_at": "2026-07-29T19:40:10Z",
+  "versions": {
+    "pigsty": "v4.4.0",
+    "postgresql": "18.4",
+    "patroni": "4.1.3"
+  },
+  "topology": {
+    "before_leader": "pg-test-1",
+    "forward_leader": "pg-test-2",
+    "final_leader": "pg-test-1",
+    "before_timeline": 5,
+    "forward_timeline": 6,
+    "restored_timeline": 7,
+    "system_identifier_relation": "one unchanged identifier",
+    "pg_test_3_checkpoint_timeline_after_restore": 3,
+    "checkpoint_interpretation": "checkpoint metadata may lag current replay timeline"
+  },
+  "measurement": {
+    "forward_command_ms": 2734.74125,
+    "forward_action_to_stable_ms": 5822.6775,
+    "restore_command_ms": 2851.349083,
+    "restore_action_to_stable_ms": 6018.921166,
+    "conservative_write_gap_ms": 6007.079917,
+    "maximum_adjacent_ack_gap_ms": 5207.690167,
+    "probe_interval_seconds": 0.206990042,
+    "probe_attempts": 120,
+    "acknowledged": 95,
+    "unknown": 25,
+    "acknowledged_rows_missing": 0,
+    "unknown_committed": 0,
+    "unknown_absent": 25,
+    "unreconciled_unknown_outcomes": 0,
+    "duplicate_tokens": 0
+  },
+  "gates": {
+    "chapter_19_preflight": "accepted-with-exceptions",
+    "chapter_19_postflight": "accepted-with-exceptions",
+    "chapter_20_positive_validation": "ok",
+    "chapter_20_negative_cases_rejected": 10,
+    "temporary_service_cleanup": "ok"
+  },
+  "production_approval": false,
+  "unplanned_failure_injected": false,
+  "secret_values_exported": 0,
+  "decision": {
+    "sandbox_planned_switchover": "accepted-with-exceptions",
+    "unplanned_failure_drill": "not-run",
+    "production_ch20_gate": "pending"
+  },
+  "interpretation": "One healthy planned switchover and baseline restore met this sandbox contract. This is not automatic-failover, zero-RPO, fencing, or production-RTO evidence."
+}

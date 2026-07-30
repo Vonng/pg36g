@@ -1,0 +1,66 @@
+{
+  "schema": "pg36-ch29-requirements-v1",
+  "chapter": 29,
+  "target": "pg36-l2-vagrant/pg-test-to-pg-meta",
+  "postgresql_major": 18,
+  "source": {
+    "service": "pg-test-1",
+    "cluster": "pg-test",
+    "address": "10.10.10.11",
+    "database": "pg36_shop_src",
+    "owner_role": "pg36_ch29_source_owner",
+    "runtime_role": "dbuser_pg36source",
+    "replication_role": "dbuser_pg36repl",
+    "publication": "pg36_shop_pub",
+    "slot": "pg36_shop_slot"
+  },
+  "target_database": {
+    "service": "pg-meta-1",
+    "cluster": "pg-meta",
+    "database": "pg36_shop_dst",
+    "owner_role": "pg36_ch29_target_owner",
+    "runtime_role": "dbuser_pg36target",
+    "subscription": "pg36_shop_sub"
+  },
+  "fixture": {
+    "initial_customers": 5000,
+    "initial_orders": 20000,
+    "incremental_inserts": 500,
+    "incremental_updates": 200,
+    "incremental_deletes": 100,
+    "stall_inserts": 3000,
+    "conflict_order_id": 900000,
+    "drift_order_id": 1,
+    "digest_buckets": 16
+  },
+  "upstream": {
+    "deployment": "../ch19/deployment-run.json",
+    "security": "../ch23/security-run.json",
+    "observability": "../ch25/observability-run.json",
+    "maintenance": "../ch28/maintenance-run.json"
+  },
+  "risk": {
+    "capture": "L0-read-only",
+    "exercise": "L2-two-cluster-disposable-fixture",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false,
+    "persistent_cluster_configuration_change_permitted": false,
+    "actual_platform_route_change_permitted": false,
+    "unrelated_session_termination_permitted": false,
+    "forced_drop_permitted": false
+  },
+  "acceptance": {
+    "clusters_must_have_distinct_system_identifiers": true,
+    "initial_copy_must_match": true,
+    "incremental_changes_must_match": true,
+    "disabled_subscription_must_retain_wal": true,
+    "insert_conflict_must_be_observed_and_repaired": true,
+    "silent_drift_must_be_located_by_bucket_and_repaired": true,
+    "target_sequence_must_be_synchronized_before_cutover": true,
+    "source_write_fence_must_be_proven": true,
+    "cutover_and_rollback_are_simulated_only": true,
+    "source_must_be_retained_through_rollback": true,
+    "exact_two_cluster_cleanup_required": true,
+    "production_ch29_gate": "pending"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "schema": "pg36-ch21-negative-cases-v1",
+  "cases": [
+    {
+      "id": "claim-production-from-sandbox",
+      "mutation": "production_claim",
+      "expected_code": "E_PRODUCTION_CLAIM"
+    },
+    {
+      "id": "restore-to-unreviewed-target",
+      "mutation": "target_identity",
+      "expected_code": "E_TARGET"
+    },
+    {
+      "id": "accept-failed-repository",
+      "mutation": "repository_status",
+      "expected_code": "E_REPOSITORY"
+    },
+    {
+      "id": "accept-failed-backup",
+      "mutation": "backup_error",
+      "expected_code": "E_BACKUP"
+    },
+    {
+      "id": "accept-missing-target-wal",
+      "mutation": "archive_gap",
+      "expected_code": "E_ARCHIVE"
+    },
+    {
+      "id": "restore-with-archive-push-enabled",
+      "mutation": "archive_mode_on",
+      "expected_code": "E_ISOLATION"
+    },
+    {
+      "id": "restore-on-a-tcp-listener",
+      "mutation": "tcp_listener",
+      "expected_code": "E_ISOLATION"
+    },
+    {
+      "id": "accept-read-only-before-promotion",
+      "mutation": "still_in_recovery",
+      "expected_code": "E_PROMOTION"
+    },
+    {
+      "id": "lose-the-keep-marker",
+      "mutation": "keep_missing",
+      "expected_code": "E_BOUNDARY"
+    },
+    {
+      "id": "replay-the-discard-marker",
+      "mutation": "discard_present",
+      "expected_code": "E_BOUNDARY"
+    },
+    {
+      "id": "accept-foreign-system-identifier",
+      "mutation": "lineage_mismatch",
+      "expected_code": "E_LINEAGE"
+    },
+    {
+      "id": "accept-no-new-timeline",
+      "mutation": "timeline_not_advanced",
+      "expected_code": "E_TIMELINE"
+    },
+    {
+      "id": "leave-isolated-postmaster-running",
+      "mutation": "restore_not_stopped",
+      "expected_code": "E_SHUTDOWN"
+    },
+    {
+      "id": "degrade-the-source-cluster",
+      "mutation": "source_degraded",
+      "expected_code": "E_SOURCE_HEALTH"
+    }
+  ]
+}

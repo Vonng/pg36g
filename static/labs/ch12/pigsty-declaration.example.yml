@@ -1,0 +1,58 @@
+# Pigsty v4.4 declaration fragment for the ch12 reference service.
+#
+# Merge under the intended PGSQL cluster's vars. This file deliberately has
+# no credential value. Inject the pg36_app secret through the controlled
+# inventory/secret overlay and render it to the service at deployment time.
+
+pg_users:
+  - name: pg36_owner
+    login: false
+    superuser: false
+    createdb: false
+    createrole: false
+    replication: false
+    bypassrls: false
+    comment: pg36_shop object owner; never used by the API
+
+  - name: pg36_app
+    login: true
+    superuser: false
+    createdb: false
+    createrole: false
+    replication: false
+    bypassrls: false
+    connlimit: 40
+    pgbouncer: true
+    pool_mode: transaction
+    pool_connlimit: 32
+    comment: pg36 reference API runtime role
+
+pg_databases:
+  - name: pg36_shop
+    owner: pg36_owner
+    comment: PostgreSQL 36 Strategies teaching database
+    encoding: UTF8
+    locale: C
+    revokeconn: true
+    pgbouncer: true
+    pool_mode: transaction
+    pool_size: 32
+    pool_reserve: 8
+    pool_connlimit: 64
+    schemas:
+      - { name: shop, owner: pg36_owner }
+      - { name: shop_api, owner: pg36_owner }
+      - { name: shop_private, owner: pg36_owner }
+      - { name: shop_ch12, owner: pg36_owner }
+    parameters:
+      TimeZone: UTC
+      statement_timeout: 30s
+      lock_timeout: 5s
+      idle_in_transaction_session_timeout: 60s
+
+# Access decision:
+#   application traffic: pg-<cluster>:5433 primary service -> PgBouncer 6432
+#   reviewed DDL/diagnostics: pg-<cluster>:5436 default -> PostgreSQL 5432
+#
+# Object grants, schema markers, SECURITY DEFINER hardening, and fixtures stay
+# in reviewed SQL. Do not grant pg36_app membership in pg36_owner.

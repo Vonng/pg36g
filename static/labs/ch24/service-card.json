@@ -1,0 +1,244 @@
+{
+  "schema": "pg36-ch24-service-card-v1",
+  "service_id": "pg36_shop",
+  "display_name": "PG36 Shop transaction service",
+  "version": "1.0-sandbox",
+  "catalog_status": "teaching-reference",
+  "environment": "l2-sandbox",
+  "business_capability": "accept an order and make its committed state queryable",
+  "customer_journeys": [
+    {
+      "id": "place-order",
+      "critical_operations": [
+        "create order",
+        "reserve inventory",
+        "confirm commit result"
+      ]
+    },
+    {
+      "id": "read-order",
+      "critical_operations": [
+        "read own committed order",
+        "observe an authorized status transition"
+      ]
+    }
+  ],
+  "scope": {
+    "production_data": false,
+    "production_traffic": false,
+    "production_slo_claimed": false,
+    "database": "test",
+    "postgresql_cluster": "pg-test",
+    "entry_address": "10.10.10.11",
+    "write_pool_port": 5433,
+    "read_pool_port": 5434,
+    "synthetic_only": true
+  },
+  "owner_functions": [
+    {
+      "function": "service",
+      "role_id": "shop-service-owner",
+      "accountable_for": [
+        "customer journey",
+        "SLO negotiation",
+        "release priority",
+        "incident business decision"
+      ],
+      "on_call_route": "route://shop-oncall",
+      "individual_name_recorded": false
+    },
+    {
+      "function": "data",
+      "role_id": "shop-data-owner",
+      "accountable_for": [
+        "data meaning",
+        "retention purpose",
+        "quality reconciliation",
+        "privacy classification"
+      ],
+      "on_call_route": "route://shop-data-duty",
+      "individual_name_recorded": false
+    },
+    {
+      "function": "platform",
+      "role_id": "database-platform-owner",
+      "accountable_for": [
+        "PostgreSQL and Pigsty service",
+        "capacity",
+        "backup and recovery",
+        "platform incident execution"
+      ],
+      "on_call_route": "route://db-platform-oncall",
+      "individual_name_recorded": false
+    },
+    {
+      "function": "security_privacy",
+      "role_id": "security-privacy-duty",
+      "accountable_for": [
+        "access policy",
+        "security exception",
+        "evidence disclosure",
+        "privacy escalation"
+      ],
+      "on_call_route": "route://security-duty",
+      "individual_name_recorded": false
+    }
+  ],
+  "service_tier": {
+    "id": "sandbox-reference",
+    "production_tier": false,
+    "obligations": {
+      "on_call": "illustrative routes only; no real pager is claimed",
+      "backup": "chapter-21 named restore-point evidence retained",
+      "recovery_drill": "one isolated sandbox run; repeatability required before production",
+      "security_review": "chapter-23 mechanism evidence with explicit production gaps",
+      "change_review": "L2 and L3 actions require independent authority",
+      "capacity_review": "no production sizing may be inferred from the laptop sandbox"
+    }
+  },
+  "dependencies": [
+    {
+      "id": "application-runtime",
+      "kind": "service",
+      "relationship": "emits user-event SLIs and submits database transactions",
+      "failure_semantics": "the database can be healthy while the application rejects or corrupts requests",
+      "owner_function": "service"
+    },
+    {
+      "id": "pg-test-entrypoint",
+      "kind": "database-service",
+      "relationship": "HAProxy and PgBouncer route PostgreSQL sessions",
+      "failure_semantics": "one reachable instance does not prove the application entry path works",
+      "owner_function": "platform"
+    },
+    {
+      "id": "pg-test-postgresql",
+      "kind": "stateful-data-plane",
+      "relationship": "commits and serves order state",
+      "failure_semantics": "a successful connection does not prove a transaction is correct or durable",
+      "owner_function": "platform"
+    },
+    {
+      "id": "patroni-etcd-control-plane",
+      "kind": "control-plane",
+      "relationship": "maintains role and failover decisions",
+      "failure_semantics": "control-plane impairment can block safe role change before user traffic fails",
+      "owner_function": "platform"
+    },
+    {
+      "id": "pgbackrest-repository",
+      "kind": "recovery-system",
+      "relationship": "stores base backup and WAL needed for recovery",
+      "failure_semantics": "a recent backup job does not prove the selected recovery point is usable",
+      "owner_function": "platform"
+    },
+    {
+      "id": "victoria-observability",
+      "kind": "monitoring-system",
+      "relationship": "stores metrics and evaluates alert rules",
+      "failure_semantics": "missing monitoring can suppress symptoms and must not be treated as healthy",
+      "owner_function": "platform"
+    }
+  ],
+  "health_layers": [
+    {
+      "id": "process",
+      "question": "Are the expected processes running?",
+      "evidence_examples": [
+        "systemd state",
+        "process exporter"
+      ],
+      "sufficient_for_service_health": false
+    },
+    {
+      "id": "endpoint",
+      "question": "Can a client reach the declared entrypoint and route?",
+      "evidence_examples": [
+        "blackbox TCP probe",
+        "HAProxy backend state"
+      ],
+      "sufficient_for_service_health": false
+    },
+    {
+      "id": "authentication",
+      "question": "Can the intended identity authenticate over the required transport?",
+      "evidence_examples": [
+        "synthetic login",
+        "TLS identity check"
+      ],
+      "sufficient_for_service_health": false
+    },
+    {
+      "id": "transaction",
+      "question": "Can the intended operation commit and its outcome be reconciled?",
+      "evidence_examples": [
+        "idempotency-token probe",
+        "commit outcome lookup"
+      ],
+      "sufficient_for_service_health": false
+    },
+    {
+      "id": "correctness",
+      "question": "Did the operation preserve domain, tenant, and authorization invariants?",
+      "evidence_examples": [
+        "reconciliation",
+        "constraint and RLS negative tests"
+      ],
+      "sufficient_for_service_health": false
+    },
+    {
+      "id": "durability_and_recovery",
+      "question": "Can acknowledged state survive the declared failures and be restored within policy?",
+      "evidence_examples": [
+        "acknowledged-write reconciliation",
+        "isolated restore drill"
+      ],
+      "sufficient_for_service_health": false
+    }
+  ],
+  "service_health_requires_all_layers_and_user_contract": true,
+  "escalation_paths": [
+    {
+      "severity": "SEV-1",
+      "trigger": "active widespread user-impacting write failure, correctness breach, or confirmed data loss",
+      "incident_commander_function": "service",
+      "technical_lead_function": "platform",
+      "consulted_functions": [
+        "data",
+        "security_privacy"
+      ],
+      "acknowledgement_target_minutes": 5,
+      "sandbox_target_is_normative": false
+    },
+    {
+      "severity": "SEV-2",
+      "trigger": "material user degradation or rapidly burning error budget with bounded impact",
+      "incident_commander_function": "service",
+      "technical_lead_function": "platform",
+      "consulted_functions": [
+        "data"
+      ],
+      "acknowledgement_target_minutes": 15,
+      "sandbox_target_is_normative": false
+    },
+    {
+      "severity": "ticket",
+      "trigger": "capacity forecast, cause-only degradation, policy debt, or nonurgent evidence gap",
+      "incident_commander_function": null,
+      "technical_lead_function": "platform",
+      "consulted_functions": [
+        "service"
+      ],
+      "acknowledgement_target_minutes": 1440,
+      "sandbox_target_is_normative": false
+    }
+  ],
+  "known_production_gaps": [
+    "owner and route identifiers are role contracts, not staffed production schedules",
+    "shared laptop failure domains are not independent",
+    "user-event application instrumentation is specified but not yet implemented",
+    "SLO targets are teaching policy inputs, not negotiated production commitments",
+    "one restore and planned-switch run do not establish production RTO or RPO distributions",
+    "production evidence retention authority and privacy review are pending"
+  ]
+}

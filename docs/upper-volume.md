@@ -10,7 +10,7 @@ breadcrumbs: true
 comments: false
 book_kind: volume-overview
 book_number: 1
-book_status: scaffold
+book_status: draft
 ---
 
 > **本卷导读**：上卷面向应用开发者与数据库工程实践者，沿着“认识系统—可靠建模—正确查询—性能与并发—安全交付—能力扩展”的路径，建立从 PostgreSQL 原理到 Pigsty 实验闭环的完整开发能力。

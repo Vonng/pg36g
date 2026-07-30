@@ -1,0 +1,238 @@
+{
+  "captured_at": "2026-07-30T00:11:56.861516Z",
+  "decision": {
+    "candidate_p95_ratio_max": 1.05,
+    "minimum_material_gain_percent": 2,
+    "persistent_change_applied": false,
+    "production_ch27_gate": "pending",
+    "result": "reject-persistent-change",
+    "rules": {
+      "all_runs_successful": true,
+      "candidate_p95_ratio_at_most_1_05": true,
+      "global_settings_unchanged": true,
+      "paired_tps_ratio_bootstrap_lower_at_least_1_02": false,
+      "plan_shapes_equal_for_probes": true
+    }
+  },
+  "environment": {
+    "client": {
+      "cpu_count": 2,
+      "host": "pg-meta-1"
+    },
+    "configuration_facts": {
+      "effective_cache_size": {
+        "context": "user",
+        "pending_restart": false,
+        "setting": "187520",
+        "source": "configuration file",
+        "unit": "8kB"
+      },
+      "fsync": {
+        "context": "sighup",
+        "pending_restart": false,
+        "setting": "on",
+        "source": "default",
+        "unit": null
+      },
+      "full_page_writes": {
+        "context": "sighup",
+        "pending_restart": false,
+        "setting": "on",
+        "source": "default",
+        "unit": null
+      },
+      "max_connections": {
+        "context": "postmaster",
+        "pending_restart": false,
+        "setting": "500",
+        "source": "command line",
+        "unit": null
+      },
+      "plan_cache_mode": {
+        "context": "user",
+        "pending_restart": false,
+        "setting": "auto",
+        "source": "default",
+        "unit": null
+      },
+      "shared_buffers": {
+        "context": "postmaster",
+        "pending_restart": false,
+        "setting": "62592",
+        "source": "configuration file",
+        "unit": "8kB"
+      },
+      "synchronous_commit": {
+        "context": "user",
+        "pending_restart": false,
+        "setting": "on",
+        "source": "default",
+        "unit": null
+      },
+      "wal_compression": {
+        "context": "superuser",
+        "pending_restart": false,
+        "setting": "lz4",
+        "source": "configuration file",
+        "unit": null
+      },
+      "work_mem": {
+        "context": "user",
+        "pending_restart": false,
+        "setting": "65536",
+        "source": "configuration file",
+        "unit": "kB"
+      }
+    },
+    "server": {
+      "cpu_count": 1,
+      "host": "pg-test-1",
+      "memory_bytes": 2048679936,
+      "postgresql": "18.4 (Ubuntu 18.4-1.pgdg24.04+1)"
+    }
+  },
+  "experiment": {
+    "arms": {
+      "auto": {
+        "deadlocks": 0,
+        "failures": 0,
+        "late_transactions": 0,
+        "latency_ms": {
+          "max": 73.54,
+          "p50": 1.279,
+          "p95": 9.217,
+          "p99": 13.126779999999998
+        },
+        "runs": 5,
+        "skipped_transactions": 0,
+        "temp_bytes": 0,
+        "tps_median": 2981.721967,
+        "transactions": 178823
+      },
+      "force_generic_plan": {
+        "deadlocks": 0,
+        "failures": 0,
+        "late_transactions": 0,
+        "latency_ms": {
+          "max": 77.943,
+          "p50": 1.285,
+          "p95": 9.135,
+          "p99": 12.933389999999985
+        },
+        "runs": 5,
+        "skipped_transactions": 0,
+        "temp_bytes": 0,
+        "tps_median": 3051.718157,
+        "transactions": 178862
+      }
+    },
+    "candidate_p95_ratio": 0.9911033958988824,
+    "clients": 8,
+    "counterbalanced": true,
+    "dataset_scale": "M",
+    "measured_runs": 10,
+    "measured_seconds_per_run": 12,
+    "paired_repetitions": 5,
+    "paired_seeds": true,
+    "paired_tps_ratio_bootstrap_95": [
+      0.9808161737645186,
+      1.027746008791217
+    ],
+    "paired_tps_ratio_median": 1.0073527209331863,
+    "plan_shapes_equal_for_probes": true,
+    "prepared_plan_counts": {
+      "auto": [
+        {
+          "custom_plans": 5,
+          "generic_plans": 5,
+          "name": "ch27_order",
+          "parameter_types": [
+            "bigint"
+          ]
+        },
+        {
+          "custom_plans": 5,
+          "generic_plans": 5,
+          "name": "ch27_product",
+          "parameter_types": [
+            "bigint"
+          ]
+        }
+      ],
+      "force_generic_plan": [
+        {
+          "custom_plans": 0,
+          "generic_plans": 10,
+          "name": "ch27_order",
+          "parameter_types": [
+            "bigint"
+          ]
+        },
+        {
+          "custom_plans": 0,
+          "generic_plans": 10,
+          "name": "ch27_product",
+          "parameter_types": [
+            "bigint"
+          ]
+        }
+      ]
+    },
+    "transactions": 357685
+  },
+  "hypothesis": {
+    "baseline": "auto",
+    "candidate": "force_generic_plan",
+    "parameter": "plan_cache_mode",
+    "persistent_configuration_change": false,
+    "rollback": "session-end",
+    "scope": "benchmark-session-only"
+  },
+  "preflight_run_id": "d06c94b2-efb0-4688-86bf-b4e6ca92b90f",
+  "rejected_untested_changes": [
+    {
+      "parameter": "work_mem",
+      "reason": "no spill mechanism was observed"
+    },
+    {
+      "parameter": "shared_buffers",
+      "reason": "I/O was not established as the limiting service center; restart and memory-budget effects are material"
+    },
+    {
+      "parameter": "max_connections",
+      "reason": "connection slots are not throughput and can amplify memory and queueing"
+    },
+    {
+      "parameter": "synchronous_commit",
+      "reason": "changes the durability contract"
+    },
+    {
+      "parameter": "wal_compression",
+      "reason": "mechanism and tradeoff do not match the observed constraint"
+    }
+  ],
+  "release": "1.0-sandbox",
+  "risk": "L2-bounded-session-local-parameter-experiment",
+  "run_id": "efb7efec-beb2-4237-8535-6864de2a2e4e",
+  "schema": "pg36-ch27-reference-run-v1",
+  "target": "pg36-l2-vagrant/pg-test",
+  "upstream": {
+    "chapter26_all_temp_bytes_zero": true,
+    "chapter26_exact_knee_known": false,
+    "chapter26_production_tps": null,
+    "chapter26_run_id": "6c44ebdb-2206-48c3-8089-d90fdff45204"
+  },
+  "validation": {
+    "counterexamples_rejected": 28,
+    "database_cleanup_verified": true,
+    "global_settings_unchanged": true,
+    "positive_validation_passed": true,
+    "raw_files_verified": 60,
+    "raw_query_text_public": false,
+    "raw_settings_paths_public": false,
+    "raw_transaction_logs_public": false,
+    "remote_temp_cleanup_verified": true,
+    "role_cleanup_verified": true,
+    "secret_material_public": false
+  }
+}

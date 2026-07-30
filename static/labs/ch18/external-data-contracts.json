@@ -1,0 +1,124 @@
+{
+  "schema": "pg36-external-data-contracts-v1",
+  "release": "1.6-proposal",
+  "status": "proposal",
+  "contracts": [
+    {
+      "id": "product-cache-v1",
+      "kind": "cache",
+      "status": "conditional",
+      "owner": "shop-application-team",
+      "authority": {
+        "product_business_state": "postgresql",
+        "cache_entries": "cache"
+      },
+      "source": "pg36_shop.shop.product",
+      "sink": "external cache namespace pg36:product:v1",
+      "freshness": "TTL no more than 300 seconds plus event-driven invalidation",
+      "delivery": "cache-aside with versioned keys",
+      "ordering": "product version wins; stale version must not replace newer version",
+      "idempotency": "set by product_id and source version",
+      "rebuild": "discard the namespace and repopulate from PostgreSQL",
+      "failure_mode": "cache miss or cache outage falls back to bounded PostgreSQL reads",
+      "reconciliation": "sample cache version and payload checksum against PostgreSQL",
+      "deletion": "tombstone or version bump prevents deleted products from reappearing",
+      "security": "cache stores only the approved public product projection",
+      "exit": "disable cache routing and delete the derived namespace"
+    },
+    {
+      "id": "order-events-v1",
+      "kind": "message",
+      "status": "conditional",
+      "owner": "shop-order-team",
+      "authority": {
+        "order_business_state": "postgresql",
+        "publication_intent": "postgresql-outbox",
+        "delivery_and_replay_log": "event-bus"
+      },
+      "source": "transactional outbox committed with the order change",
+      "sink": "external event bus topic pg36.order.v1",
+      "freshness": "P99 publish lag target to be set in chapter 24",
+      "delivery": "at-least-once",
+      "ordering": "partition by order_id; no global order is promised",
+      "idempotency": "event_id is globally stable and consumers persist processed identity",
+      "rebuild": "replay retained events or regenerate an explicitly versioned state snapshot",
+      "failure_mode": "database commit succeeds independently; relay retries without changing event_id",
+      "reconciliation": "compare outbox published status, broker offsets, and consumer acknowledgements",
+      "deletion": "privacy deletion uses a separately versioned tombstone and retention workflow",
+      "security": "topic ACL separates producers, consumers, and operators",
+      "exit": "drain relay, freeze offset manifest, and move consumers to an approved replacement"
+    },
+    {
+      "id": "product-media-v1",
+      "kind": "object-storage",
+      "status": "accepted-boundary",
+      "owner": "shop-catalog-team",
+      "authority": {
+        "object_bytes": "object-storage",
+        "object_identity_owner_state_checksum": "postgresql"
+      },
+      "source": "application upload workflow with PostgreSQL metadata reservation",
+      "sink": "versioned object-storage bucket",
+      "freshness": "object becomes visible only after checksum and metadata state agree",
+      "delivery": "multipart or single upload with immutable object version",
+      "ordering": "metadata generation number selects the active object",
+      "idempotency": "object_id plus content checksum",
+      "rebuild": "object bytes are restored from versioned object backup; metadata is restored from PostgreSQL",
+      "failure_mode": "orphan upload is quarantined; missing bytes never produce a successful media response",
+      "reconciliation": "periodically compare object inventory, size, checksum, and PostgreSQL metadata",
+      "deletion": "two-phase tombstone then retention-aware object deletion",
+      "security": "private bucket, short-lived signed access, encryption and audit logging",
+      "exit": "copy verified immutable versions to a replacement and atomically change metadata location"
+    },
+    {
+      "id": "analytics-export-v1",
+      "kind": "lakehouse-projection",
+      "status": "conditional",
+      "owner": "data-analytics-team",
+      "authority": {
+        "operational_business_state": "postgresql",
+        "analytical_projection": "lakehouse"
+      },
+      "source": "versioned snapshot or CDC stream from pg36_shop",
+      "sink": "partitioned immutable analytical tables",
+      "freshness": "batch or CDC lag is explicit on every dataset",
+      "delivery": "snapshot plus ordered change stream with a source watermark",
+      "ordering": "source commit position and primary key determine the latest record",
+      "idempotency": "dataset version, primary key, and source commit position",
+      "rebuild": "create a new dataset version from a consistent PostgreSQL snapshot and replay changes",
+      "failure_mode": "stale datasets are labeled and consumers stop at the last complete watermark",
+      "reconciliation": "row counts, business aggregates, and partition checksums by watermark",
+      "deletion": "propagate tombstones and verify regulated deletion across retained versions",
+      "security": "column classification and purpose-specific access policy",
+      "exit": "freeze a final manifest and rebuild the projection in a replacement system"
+    },
+    {
+      "id": "external-search-projection-v1",
+      "kind": "search-projection",
+      "status": "deferred-until-trigger",
+      "owner": "shop-search-team",
+      "authority": {
+        "product_business_state": "postgresql",
+        "search_projection": "search-system"
+      },
+      "source": "versioned product snapshot plus outbox or CDC changes",
+      "sink": "external search index with explicit index generation",
+      "freshness": "maximum accepted indexing lag is defined before activation",
+      "delivery": "snapshot then idempotent change application",
+      "ordering": "product version and deletion tombstone are monotonic",
+      "idempotency": "product_id, source version, and index generation",
+      "rebuild": "build a new index generation from PostgreSQL and swap an alias after golden validation",
+      "failure_mode": "serve a labeled stale generation or fall back to PostgreSQL according to query class",
+      "reconciliation": "quality golden, document counts, sampled payload hashes, and tombstone audit",
+      "deletion": "tombstones must survive retries and index-generation swaps",
+      "security": "only the approved searchable projection is exported",
+      "exit": "remove routing to the external index and retain PostgreSQL search until clients drain"
+    }
+  ],
+  "limitations": [
+    "Component product names, credentials, endpoints, and retention periods are intentionally absent.",
+    "A contract in conditional state is not an authorization to deploy the external system.",
+    "Authority is assigned per data domain; no component is declared the universal source of truth.",
+    "Freshness text must be converted to measured SLOs and alerts in the lower volume."
+  ]
+}

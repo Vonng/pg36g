@@ -1,0 +1,81 @@
+{
+  "schema": "pg36-ch36-capability-map-v1",
+  "assessment_policy": {
+    "status": "not-assessed",
+    "rule": "Building the book artifacts does not certify a reader. A reader passes only by producing and defending the named evidence in an authorized environment."
+  },
+  "domains": [
+    {
+      "id": "C01-CONTEXT-WORKFLOW",
+      "chapters": [1, 2],
+      "capability": "Identify the exact PostgreSQL and Pigsty context and turn interactive work into reproducible evidence.",
+      "assessment": "Given an unfamiliar service endpoint, produce an identity snapshot, object map and rerunnable task with failure-safe output."
+    },
+    {
+      "id": "C02-MODEL-INTEGRITY",
+      "chapters": [3, 4],
+      "capability": "Design logical models, types and constraints that encode business truth without hiding lifecycle semantics.",
+      "assessment": "Defend a schema against invalid, concurrent and evolving input using database and application evidence."
+    },
+    {
+      "id": "C03-TRANSACTION-PROGRAMMING",
+      "chapters": [5, 6],
+      "capability": "Reason about MVCC, transaction boundaries, functions, triggers and server-side behavior.",
+      "assessment": "Explain visibility and side effects for a concurrent workflow, then prove rollback and retry behavior."
+    },
+    {
+      "id": "C04-QUERY-ENGINEERING",
+      "chapters": [7, 8, 9],
+      "capability": "Diagnose query plans and statistics, design indexes and improve slow SQL from measured evidence.",
+      "assessment": "Reproduce a regression, explain plan choice, change one hypothesis and compare resource-normalized results."
+    },
+    {
+      "id": "C05-CONCURRENCY-RELEASE",
+      "chapters": [10, 11, 12],
+      "capability": "Control locks, isolation, schema evolution, release compatibility and application database contracts.",
+      "assessment": "Ship a backwards-compatible change under concurrent load with bounded locks, rollback and contract tests."
+    },
+    {
+      "id": "C06-EXTENSION-WORKLOADS",
+      "chapters": [13, 14, 15, 16, 17, 18],
+      "capability": "Evaluate extensions and specialized search, geospatial, temporal, analytical and distributed workloads.",
+      "assessment": "Select or reject an extension from workload semantics, operational lifecycle, failure modes and exit strategy."
+    },
+    {
+      "id": "C07-SERVICE-BASELINE",
+      "chapters": [19, 20, 21, 22],
+      "capability": "Deploy, route, pool, protect, back up and recover a PostgreSQL service through Pigsty and native evidence.",
+      "assessment": "Build a service baseline, prove endpoint semantics, perform an isolated recovery and restore declared state."
+    },
+    {
+      "id": "C08-SECURITY-GOVERNANCE",
+      "chapters": [23, 24, 25],
+      "capability": "Operate authentication, authorization, security, SLO, SOP and observability as explicit contracts.",
+      "assessment": "Trace one user journey from SLI to PostgreSQL evidence while proving least privilege and escalation policy."
+    },
+    {
+      "id": "C09-CAPACITY-MAINTENANCE",
+      "chapters": [26, 27, 28],
+      "capability": "Benchmark responsibly, tune configuration and manage vacuum, freeze and bloat with safety margins.",
+      "assessment": "Produce a reproducible capacity envelope and maintenance plan that states uncertainty and stop conditions."
+    },
+    {
+      "id": "C10-EVOLUTION",
+      "chapters": [29, 30],
+      "capability": "Plan logical migration and version upgrade with compatibility, cutover, rollback and validation evidence.",
+      "assessment": "Rehearse an upgrade or migration candidate, reconcile data and prove the old path remains recoverable."
+    },
+    {
+      "id": "C11-INCIDENT-RECOVERY",
+      "chapters": [31, 32, 33, 34, 35],
+      "capability": "Protect evidence, classify impact and execute the correct PITR, failover, pressure-relief or rescue route.",
+      "assessment": "Classify a blind scenario, preserve authority and evidence, recover on the right source and validate business truth."
+    },
+    {
+      "id": "C12-PLATFORM-LEARNING",
+      "chapters": [36],
+      "capability": "Convert incident evidence into verified controls, roadmap decisions and safer platform defaults.",
+      "assessment": "Defend a blameless causal analysis and close one control with independent effectiveness evidence."
+    }
+  ]
+}

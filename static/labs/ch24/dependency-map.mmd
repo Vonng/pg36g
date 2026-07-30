@@ -1,0 +1,23 @@
+flowchart LR
+  U["用户旅程<br/>place-order / read-order"] --> A["pg36_shop 应用边界<br/>用户事件 SLI"]
+  A --> E["HAProxy / PgBouncer<br/>服务入口"]
+  E --> P["PostgreSQL pg-test<br/>事务与持久状态"]
+  P --> C["Patroni + etcd<br/>控制平面"]
+  P --> R["pgBackRest + WAL 仓库<br/>恢复路径"]
+  A -. "症状与业务语义" .-> O["VictoriaMetrics / VictoriaLogs<br/>VMAlert / Alertmanager / Grafana"]
+  E -. "入口与池指标" .-> O
+  P -. "PG 统计与日志" .-> O
+  C -. "拓扑与控制事件" .-> O
+  R -. "备份与恢复证据" .-> O
+  O --> V["值班 / ticket / runbook"]
+  V --> G["变更门禁与证据"]
+  G --> A
+
+  classDef user fill:#f6d365,stroke:#7a5200,color:#1b1b1b
+  classDef service fill:#d4edff,stroke:#24658f,color:#1b1b1b
+  classDef state fill:#d8f3dc,stroke:#2d6a4f,color:#1b1b1b
+  classDef observe fill:#eee2ff,stroke:#6941c6,color:#1b1b1b
+  class U user
+  class A,E service
+  class P,C,R state
+  class O,V,G observe

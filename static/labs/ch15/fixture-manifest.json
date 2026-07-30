@@ -1,0 +1,43 @@
+{
+  "schema": "pg36-ch15-fixture-manifest-v1",
+  "fixture": "ch15-search-v1",
+  "frozen_at": "2026-07-29T00:00:00Z",
+  "corpus": {
+    "path": "frozen-corpus.csv",
+    "rows": 17,
+    "sha256": "7136d6f1705e560c5d564407926b44c455cd59b3883cd640f4f51599806a90c8"
+  },
+  "queries": {
+    "path": "frozen-queries.csv",
+    "rows": 8,
+    "sha256": "4b54b0ee322bf52649b5c682d468ea024ae301d8cac40d63aaaed908c9d8a45d"
+  },
+  "judgments": {
+    "path": "frozen-judgments.csv",
+    "rows": 24,
+    "sha256": "657ddc4d82f9b42af589fd64a6326407d5cfb6536b2f2c3c28862279eca41438",
+    "method": "project-authored graded relevance judgments, one to three"
+  },
+  "loader": {
+    "path": "fixture.sql",
+    "sha256": "2548978f3652f816452f22aed0d560a0d0263234a2f62a8fb77d4009c5545787"
+  },
+  "embedding": {
+    "model_id": "pg36-handcrafted-topic-4d-v1",
+    "dimensions": 4,
+    "method": "manually assigned deterministic topic coordinates",
+    "external_model": false,
+    "external_api": false,
+    "distance": "L2"
+  },
+  "license": {
+    "text": "project-owned synthetic fixture; repository terms apply",
+    "vectors": "handcrafted numeric fixture; no external model license"
+  },
+  "limitations": [
+    "The corpus is synthetic and intentionally small.",
+    "The vectors prove deterministic mechanics, not semantic model quality.",
+    "The judgments are pedagogical labels, not population-level relevance evidence.",
+    "The fixture can validate ranking arithmetic and regressions, not production latency or capacity."
+  ]
+}

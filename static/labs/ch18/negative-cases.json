@@ -1,0 +1,116 @@
+{
+  "schema": "pg36-ch18-negative-cases-v1",
+  "release": "1.6-proposal",
+  "cases": [
+    {
+      "id": "claim-l1-without-evidence",
+      "expected_code": "E_L1_EVIDENCE",
+      "patches": [
+        {
+          "target": "blueprint",
+          "op": "replace",
+          "path": [
+            "target",
+            "pigsty_l1_validation"
+          ],
+          "value": "passed"
+        }
+      ]
+    },
+    {
+      "id": "remove-every-exit-path",
+      "expected_code": "E_EXIT_PATH",
+      "patches": [
+        {
+          "target": "blueprint",
+          "op": "replace",
+          "path": [
+            "exit_paths"
+          ],
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "make-cache-authoritative",
+      "expected_code": "E_CACHE_AUTHORITY",
+      "patches": [
+        {
+          "target": "contracts",
+          "op": "replace",
+          "path": [
+            "contracts",
+            0,
+            "authority",
+            "product_business_state"
+          ],
+          "value": "cache"
+        }
+      ]
+    },
+    {
+      "id": "delete-contract-rebuild",
+      "expected_code": "E_CONTRACT_FIELD",
+      "patches": [
+        {
+          "target": "contracts",
+          "op": "remove",
+          "path": [
+            "contracts",
+            1,
+            "rebuild"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "admit-loopback-fdw-to-production",
+      "expected_code": "E_FDW_LAB_ONLY",
+      "patches": [
+        {
+          "target": "blueprint",
+          "op": "replace",
+          "path": [
+            "extension_bundles",
+            4,
+            "lab_authentication",
+            "production_permitted"
+          ],
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "remove-production-objectives",
+      "expected_code": "E_SERVICE_OBJECTIVE",
+      "patches": [
+        {
+          "target": "catalog",
+          "op": "replace",
+          "path": [
+            "offerings",
+            1,
+            "service_objectives"
+          ],
+          "value": {}
+        }
+      ]
+    },
+    {
+      "id": "remove-pilot-gates",
+      "expected_code": "E_EXTENSION_GATE",
+      "patches": [
+        {
+          "target": "blueprint",
+          "op": "replace",
+          "path": [
+            "extension_bundles",
+            2,
+            "gate_ids"
+          ],
+          "value": []
+        }
+      ]
+    }
+  ]
+}

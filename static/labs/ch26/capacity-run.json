@@ -1,0 +1,363 @@
+{
+  "schema": "pg36-ch26-reference-run-v1",
+  "release": "1.0-sandbox",
+  "captured_at": "2026-07-29T23:34:14.930437Z",
+  "run_id": "6c44ebdb-2206-48c3-8089-d90fdff45204",
+  "preflight_run_id": "b31084b1-e8b3-44c1-af23-b827814f76c8",
+  "target": "pg36-l2-vagrant/pg-test",
+  "mode": "bounded-closed-loop-direct-primary-capacity-probe",
+  "risk": "L2-bounded-performance-exercise",
+  "environment": {
+    "client": {
+      "host": "pg-meta-1",
+      "cpu_count": 2,
+      "memory_bytes": 4089262080,
+      "pgbench": "18.4"
+    },
+    "server": {
+      "host": "pg-test-1",
+      "cpu_count": 1,
+      "memory_bytes": 2048679936,
+      "postgresql": "18.4",
+      "shared_buffers_bytes": 512753664
+    },
+    "client_and_server_are_distinct_hosts": true,
+    "connection_path": "direct primary PostgreSQL 5432",
+    "haproxy_measured": false,
+    "pgbouncer_measured": false
+  },
+  "experiment": {
+    "workload_id": "shop-mix-v1",
+    "arrival_model": "closed-loop",
+    "transaction_mix": {
+      "read-product": 50,
+      "read-order": 30,
+      "place-order": 20
+    },
+    "dataset_scales": [
+      {
+        "scale_id": "S",
+        "scale_factor": 1,
+        "customers": 10000,
+        "products": 2000,
+        "historical_orders": 100000,
+        "schema_bytes": 29704192,
+        "database_bytes": 37869247,
+        "initialization_seconds": 2.1667276899970602
+      },
+      {
+        "scale_id": "M",
+        "scale_factor": 8,
+        "customers": 80000,
+        "products": 16000,
+        "historical_orders": 800000,
+        "schema_bytes": 235175936,
+        "database_bytes": 243594943,
+        "initialization_seconds": 17.09472701800405
+      },
+      {
+        "scale_id": "L",
+        "scale_factor": 32,
+        "customers": 320000,
+        "products": 64000,
+        "historical_orders": 3200000,
+        "schema_bytes": 942268416,
+        "database_bytes": 950982335,
+        "initialization_seconds": 84.8189569709939
+      }
+    ],
+    "cells": 6,
+    "repetitions_per_cell": 5,
+    "measured_runs": 30,
+    "measured_seconds_per_run": 8,
+    "transactions": 511709,
+    "warm_cache_only": true,
+    "statistics_reset": false,
+    "results": [
+      {
+        "cell_id": "S-c1",
+        "clients": 1,
+        "transactions": 59854,
+        "failures": 0,
+        "late_transactions": 0,
+        "tps_median": 1508.509028,
+        "tps_bootstrap_95": [
+          1446.529744,
+          1546.321406
+        ],
+        "latency_ms": {
+          "p50": 0.334,
+          "p95": 2.152,
+          "p99": 2.594940000000002,
+          "max": 20.434
+        },
+        "server_work_ratio_median": 0.48944512009729396,
+        "server_iowait_ratio_median": 0.0765771013883142,
+        "client_work_ratio_median": 0.17743682161720944,
+        "block_reads": 0,
+        "block_hits": 675976,
+        "wal_bytes_per_transaction": 160.32739666521869,
+        "durable_bytes_per_place_order": 415.2063044379925,
+        "deadlocks": 0,
+        "temp_bytes": 0
+      },
+      {
+        "cell_id": "S-c8",
+        "clients": 8,
+        "transactions": 115671,
+        "failures": 0,
+        "late_transactions": 0,
+        "tps_median": 2920.501364,
+        "tps_bootstrap_95": [
+          2869.289546,
+          3005.074198
+        ],
+        "latency_ms": {
+          "p50": 1.334,
+          "p95": 9.448,
+          "p99": 12.927300000000002,
+          "max": 56.481
+        },
+        "server_work_ratio_median": 0.84187959214275,
+        "server_iowait_ratio_median": 0.002064777327935223,
+        "client_work_ratio_median": 0.2949704101031076,
+        "block_reads": 0,
+        "block_hits": 1323054,
+        "wal_bytes_per_transaction": 159.52791105808717,
+        "durable_bytes_per_place_order": 409.120977173301,
+        "deadlocks": 0,
+        "temp_bytes": 0
+      },
+      {
+        "cell_id": "M-c1",
+        "clients": 1,
+        "transactions": 61093,
+        "failures": 0,
+        "late_transactions": 0,
+        "tps_median": 1555.819924,
+        "tps_bootstrap_95": [
+          1461.986657,
+          1570.133179
+        ],
+        "latency_ms": {
+          "p50": 0.33,
+          "p95": 2.123,
+          "p99": 2.5980800000000013,
+          "max": 10.774
+        },
+        "server_work_ratio_median": 0.5010457315377224,
+        "server_iowait_ratio_median": 0.07520443896302019,
+        "client_work_ratio_median": 0.17793415337990662,
+        "block_reads": 0,
+        "block_hits": 733198,
+        "wal_bytes_per_transaction": 175.95407002438904,
+        "durable_bytes_per_place_order": 412.80923711340205,
+        "deadlocks": 0,
+        "temp_bytes": 0
+      },
+      {
+        "cell_id": "M-c8",
+        "clients": 8,
+        "transactions": 114051,
+        "failures": 0,
+        "late_transactions": 0,
+        "tps_median": 2911.528724,
+        "tps_bootstrap_95": [
+          2755.437041,
+          2930.270472
+        ],
+        "latency_ms": {
+          "p50": 1.37,
+          "p95": 9.3975,
+          "p99": 12.5705,
+          "max": 41.174
+        },
+        "server_work_ratio_median": 0.8396077568503199,
+        "server_iowait_ratio_median": 0.0020242914979757085,
+        "client_work_ratio_median": 0.29074963105972057,
+        "block_reads": 0,
+        "block_hits": 1326143,
+        "wal_bytes_per_transaction": 161.87897519530736,
+        "durable_bytes_per_place_order": 405.965808266609,
+        "deadlocks": 0,
+        "temp_bytes": 0
+      },
+      {
+        "cell_id": "L-c1",
+        "clients": 1,
+        "transactions": 55309,
+        "failures": 0,
+        "late_transactions": 0,
+        "tps_median": 1423.631838,
+        "tps_bootstrap_95": [
+          1226.066806,
+          1431.408703
+        ],
+        "latency_ms": {
+          "p50": 0.36,
+          "p95": 2.259,
+          "p99": 2.8468399999999967,
+          "max": 30.307
+        },
+        "server_work_ratio_median": 0.4630723224144277,
+        "server_iowait_ratio_median": 0.08196785670469882,
+        "client_work_ratio_median": 0.16167923890694336,
+        "block_reads": 2500,
+        "block_hits": 629335,
+        "wal_bytes_per_transaction": 157.55858901806215,
+        "durable_bytes_per_place_order": 411.5044215516455,
+        "deadlocks": 0,
+        "temp_bytes": 0
+      },
+      {
+        "cell_id": "L-c8",
+        "clients": 8,
+        "transactions": 105731,
+        "failures": 0,
+        "late_transactions": 0,
+        "tps_median": 2774.267108,
+        "tps_bootstrap_95": [
+          2216.087142,
+          2824.359215
+        ],
+        "latency_ms": {
+          "p50": 1.447,
+          "p95": 10.086500000000001,
+          "p99": 14.494,
+          "max": 94.33
+        },
+        "server_work_ratio_median": 0.8422334682860999,
+        "server_iowait_ratio_median": 0.003117408906882591,
+        "client_work_ratio_median": 0.27806934443458475,
+        "block_reads": 14491,
+        "block_hits": 1344632,
+        "wal_bytes_per_transaction": 196.1845343371386,
+        "durable_bytes_per_place_order": 407.87956014913397,
+        "deadlocks": 0,
+        "temp_bytes": 0
+      }
+    ]
+  },
+  "pigsty_corroboration": {
+    "window_scope": "full exercise including initialization, warm-up, measured runs, and gaps; native per-run evidence is authoritative for cell arithmetic",
+    "server_cpu_busy_percent": {
+      "median": 64.36666666665892,
+      "maximum": 100.0
+    },
+    "server_cpu_iowait_percent": {
+      "median": 2.766666666666661,
+      "maximum": 5.100000000000004
+    },
+    "client_cpu_busy_percent": {
+      "median": 23.000000000029107,
+      "maximum": 28.96666666672294
+    },
+    "server_disk_read_bytes_per_second": {
+      "median": 429806.93333333335,
+      "maximum": 13991116.8
+    },
+    "server_disk_write_bytes_per_second": {
+      "median": 4922436.266666667,
+      "maximum": 81219532.8
+    },
+    "wal_bytes_per_second": {
+      "median": 516682.36666666664,
+      "maximum": 46178203.63333333
+    },
+    "database_commits_per_second": {
+      "median": 1186.0,
+      "maximum": 2459.5333333333333
+    },
+    "replica_replay_gap_bytes": {
+      "median": 0.0,
+      "maximum": 3471848.0
+    }
+  },
+  "capacity_model": {
+    "sandbox_only_linear_projection": [
+      {
+        "scale_id": "S",
+        "cpu_seconds_per_mixed_transaction": 0.0002905945945945946,
+        "tps_at_65_percent_cpu_if_linear": 2236.7931547619046,
+        "wal_bytes_per_mixed_transaction": 159.52791105808717
+      },
+      {
+        "scale_id": "M",
+        "cpu_seconds_per_mixed_transaction": 0.0002924022697263651,
+        "tps_at_65_percent_cpu_if_linear": 2222.9649605944605,
+        "wal_bytes_per_mixed_transaction": 161.87897519530736
+      },
+      {
+        "scale_id": "L",
+        "cpu_seconds_per_mixed_transaction": 0.0003070408708480416,
+        "tps_at_65_percent_cpu_if_linear": 2116.9820102604294,
+        "wal_bytes_per_mixed_transaction": 196.1845343371386
+      }
+    ],
+    "projection_assumptions": [
+      "the 50/30/20 operation mix remains fixed",
+      "CPU demand scales linearly near the observation point",
+      "cache, I/O, lock, client, and background-work costs do not become a tighter bottleneck",
+      "the result remains on the same recorded sandbox"
+    ],
+    "saturation_brackets": [
+      {
+        "scale_id": "S",
+        "throughput_gain_c8_over_c1": 1.9360184856646414,
+        "pooled_p95_multiplier_c8_over_c1": 4.390334572490707,
+        "c8_server_work_ratio": 0.84187959214275,
+        "c8_client_work_ratio": 0.2949704101031076,
+        "exact_knee_known": false,
+        "interpretation": "knee-not-bracketed-by-one-and-eight-clients"
+      },
+      {
+        "scale_id": "M",
+        "throughput_gain_c8_over_c1": 1.8713789938584178,
+        "pooled_p95_multiplier_c8_over_c1": 4.426519076778144,
+        "c8_server_work_ratio": 0.8396077568503199,
+        "c8_client_work_ratio": 0.29074963105972057,
+        "exact_knee_known": false,
+        "interpretation": "knee-not-bracketed-by-one-and-eight-clients"
+      },
+      {
+        "scale_id": "L",
+        "throughput_gain_c8_over_c1": 1.9487251085206483,
+        "pooled_p95_multiplier_c8_over_c1": 4.465028773793715,
+        "c8_server_work_ratio": 0.8422334682860999,
+        "c8_client_work_ratio": 0.27806934443458475,
+        "exact_knee_known": false,
+        "interpretation": "knee-not-bracketed-by-one-and-eight-clients"
+      }
+    ],
+    "production_sustainable_tps": null,
+    "why_null": [
+      "one shared-hypervisor virtual CPU and virtual storage are not production hardware",
+      "the measured probe is closed-loop rather than an offered-load SLO sweep",
+      "the direct-primary path excludes application, HAProxy, PgBouncer, and WAN costs",
+      "failure, maintenance, backup, restore, and capacity-lead-time scenarios were not measured"
+    ]
+  },
+  "validation": {
+    "positive_validation_passed": true,
+    "counterexamples_rejected": 26,
+    "raw_transaction_logs_public": false,
+    "raw_system_samples_public": false,
+    "raw_sql_snapshots_public": false,
+    "query_text_public": false,
+    "secret_material_public": false,
+    "database_cleanup_verified": true,
+    "role_cleanup_verified": true,
+    "remote_temp_cleanup_verified": true
+  },
+  "claims_not_made": [
+    "the result is universal PostgreSQL performance",
+    "the result is production sizing or an admitted-load SLO",
+    "the exact saturation knee is known",
+    "cold-cache behavior was measured",
+    "application, HAProxy, PgBouncer, WAN, backup, maintenance, failure, or recovery capacity was measured",
+    "virtual storage represents production IOPS, latency, endurance, or failure domains"
+  ],
+  "sandbox_ch26_gate": "passed",
+  "production_ch26_gate": "pending",
+  "production_approval": false
+}

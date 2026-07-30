@@ -1,0 +1,216 @@
+#!/usr/bin/env python3
+"""Upload and run the bounded chapter 26 benchmark on the Pigsty meta node."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+class ExerciseError(RuntimeError):
+    pass
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--source-dir", type=Path, required=True)
+    parser.add_argument("--evidence-dir", type=Path, required=True)
+    parser.add_argument("--ssh-user", default="vagrant")
+    parser.add_argument("--bastion", default="10.10.10.10")
+    return parser.parse_args()
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def run(command: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
+    completed = subprocess.run(
+        command,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if check and completed.returncode != 0:
+        raise ExerciseError(
+            f"command failed ({completed.returncode}): "
+            f"{' '.join(command[:2])}: {completed.stderr.strip()[-2000:]}"
+        )
+    return completed
+
+
+def main() -> int:
+    args = parse_args()
+    source_dir = args.source_dir.resolve()
+    evidence_dir = args.evidence_dir.resolve()
+    preflight_path = evidence_dir / "preflight-evidence.json"
+    if not preflight_path.is_file():
+        raise ExerciseError(f"preflight evidence is missing: {preflight_path}")
+    preflight = json.loads(preflight_path.read_text(encoding="utf-8"))
+    if (
+        preflight.get("schema") != "pg36-ch26-preflight-evidence-v1"
+        or preflight.get("mutation") != "none"
+        or preflight.get("clean_start")
+        != {"database_absent": True, "role_absent": True}
+    ):
+        raise ExerciseError("preflight evidence is not acceptable")
+    token = uuid.uuid4().hex
+    remote_root = f"/tmp/pg36-ch26.{token}"
+    if not re.fullmatch(r"/tmp/pg36-ch26\.[0-9a-f]{32}", remote_root):
+        raise ExerciseError("remote temporary path guard failed")
+    source_remote = f"{remote_root}/source"
+    output_remote = f"{remote_root}/evidence"
+    target = f"{args.ssh_user}@{args.bastion}"
+    remote_log = evidence_dir / "remote-benchmark.log"
+    remote_log.chmod(0o600) if remote_log.exists() else None
+    cleanup_verified = False
+    benchmark_return_code: int | None = None
+    try:
+        run(
+            [
+                "ssh",
+                "-o",
+                "BatchMode=yes",
+                target,
+                "mkdir",
+                "-p",
+                "-m",
+                "700",
+                "--",
+                source_remote,
+            ]
+        )
+        run(
+            [
+                "scp",
+                "-q",
+                *[str(path) for path in sorted(source_dir.iterdir()) if path.is_file()],
+                f"{target}:{source_remote}/",
+            ]
+        )
+        command = [
+            "ssh",
+            "-o",
+            "BatchMode=yes",
+            target,
+            "python3",
+            f"{source_remote}/remote_benchmark.py",
+            "--source-dir",
+            source_remote,
+            "--output-dir",
+            output_remote,
+        ]
+        with remote_log.open("w", encoding="utf-8") as log:
+            remote_log.chmod(0o600)
+            process = subprocess.Popen(
+                command,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                bufsize=1,
+            )
+            assert process.stdout is not None
+            for line in process.stdout:
+                print(line, end="", flush=True)
+                log.write(line)
+                log.flush()
+            benchmark_return_code = process.wait()
+        if benchmark_return_code != 0:
+            raise ExerciseError(
+                f"remote benchmark returned {benchmark_return_code}; "
+                f"see {remote_log}"
+            )
+        local_remote = evidence_dir / "remote"
+        if local_remote.exists():
+            raise ExerciseError(f"refusing to overwrite {local_remote}")
+        run(
+            [
+                "scp",
+                "-q",
+                "-r",
+                f"{target}:{output_remote}",
+                str(local_remote),
+            ]
+        )
+        capacity_path = local_remote / "capacity-evidence.json"
+        if not capacity_path.is_file():
+            raise ExerciseError("remote benchmark did not return capacity evidence")
+        capacity = json.loads(capacity_path.read_text(encoding="utf-8"))
+        if (
+            capacity.get("status") != "passed"
+            or capacity.get("cleanup", {}).get("database_absent") is not True
+            or capacity.get("cleanup", {}).get("role_absent") is not True
+        ):
+            raise ExerciseError("remote benchmark or exact cleanup did not pass")
+    finally:
+        if re.fullmatch(r"/tmp/pg36-ch26\.[0-9a-f]{32}", remote_root):
+            completed = run(
+                [
+                    "ssh",
+                    "-o",
+                    "BatchMode=yes",
+                    target,
+                    "rm",
+                    "-rf",
+                    "--",
+                    remote_root,
+                ],
+                check=False,
+            )
+            probe = run(
+                [
+                    "ssh",
+                    "-o",
+                    "BatchMode=yes",
+                    target,
+                    "test",
+                    "!",
+                    "-e",
+                    remote_root,
+                ],
+                check=False,
+            )
+            cleanup_verified = completed.returncode == 0 and probe.returncode == 0
+        cleanup = {
+            "schema": "pg36-ch26-remote-cleanup-v1",
+            "captured_at": utc_now(),
+            "remote_path": remote_root,
+            "benchmark_return_code": benchmark_return_code,
+            "remote_temp_absent": cleanup_verified,
+        }
+        cleanup_path = evidence_dir / "remote-cleanup.json"
+        cleanup_path.write_text(
+            json.dumps(cleanup, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        cleanup_path.chmod(0o600)
+    if not cleanup_verified:
+        raise ExerciseError("remote temporary cleanup verification failed")
+    print(
+        json.dumps(
+            {
+                "status": "exercise-ok",
+                "remote_temp_absent": True,
+                "fixture_absent": True,
+            },
+            separators=(",", ":"),
+        )
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except (ExerciseError, OSError, ValueError, json.JSONDecodeError) as exc:
+        print(f"chapter 26 exercise failed: {exc}", file=sys.stderr)
+        raise SystemExit(1)

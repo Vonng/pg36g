@@ -1,0 +1,48 @@
+{
+  "proposal_version": 1,
+  "base_baseline": "0.1.0",
+  "base_checksum": "bb1404e2b2e47624b17f3a1b0de63a5371f382b67906f1a8ba1cf08e92895a1c",
+  "depends_on_candidates": [
+    {
+      "candidate_baseline": "0.2.0",
+      "proposal": "/labs/ch07/baseline-v0.2-proposal.json",
+      "proposal_checksum": "449447c6743f2deddf698fdd6605e72d901917441b892c9cb1bba78e576d71a8"
+    },
+    {
+      "candidate_baseline": "0.3.0",
+      "proposal": "/labs/ch08/baseline-v0.3-proposal.json",
+      "proposal_checksum": "888a61c805873e10f7a1e400cdb18c03f2fad29f1d2095647a5b5acd26de720b"
+    }
+  ],
+  "candidate_baseline": "0.4.0",
+  "status": "candidate",
+  "rule_id": "PREF-PLAN-005",
+  "change_kind": "evidence-and-runtime-check",
+  "statement_change": "none",
+  "evidence": [
+    {
+      "chapter": "ch09",
+      "artifact": "/labs/ch09/index-decisions.json",
+      "observation": "每个候选绑定 query shape、保留或拒绝结论及可复核 artifact。"
+    },
+    {
+      "chapter": "ch09",
+      "artifact": "/labs/ch09/analyze_indexes.py",
+      "observation": "运行断言同时比较读路径、partial/generic 边界、index size、HOT、WAL 与最终状态。"
+    },
+    {
+      "chapter": "ch09",
+      "artifact": "/labs/ch09/concurrent-failure.sh",
+      "observation": "并发唯一索引失败以 23505 留下 INVALID，catalog 识别后按精确身份回收。"
+    }
+  ],
+  "proposed_check": {
+    "kind": "runtime",
+    "criterion": "索引候选必须绑定真实 query/parameter/order/return shape；保存 before/after plan、结果、buffers、大小、写/HOT/WAL 代价与发布失败回收证据，并明确 retain/merge/reject。"
+  },
+  "promotion_conditions": [
+    "ch09 analyzer 在 PostgreSQL 14-18 兼容矩阵通过并标注 PG18 skip scan 差异",
+    "在至少一个真实 Pigsty workload 时间窗复测读取收益、写入代价和 concurrent build 水位",
+    "先晋升依赖的 v0.2/v0.3 candidates，再合并为不可变 baseline v0.4 release artifact"
+  ]
+}

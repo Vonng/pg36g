@@ -1,0 +1,54 @@
+{
+  "schema": "pg36-ch26-capacity-model-v1",
+  "model_id": "pg36-shop-sandbox-demand-v1",
+  "inputs": {
+    "business": [
+      "peak eligible transactions per second by operation class",
+      "peak-to-average ratio and burst duration",
+      "batch and maintenance overlap",
+      "retry amplification and admission policy",
+      "data growth per day and retention",
+      "latency and error objectives",
+      "failure scenario that must still meet the objective",
+      "provisioning lead time"
+    ],
+    "measured": [
+      "CPU seconds per mixed transaction",
+      "WAL bytes per mixed transaction",
+      "durable relation bytes per place-order",
+      "latency distribution by cell",
+      "read and hit blocks per transaction",
+      "wait distribution and client utilization"
+    ]
+  },
+  "equations": {
+    "effective_peak_tps": "interactive_peak_tps + batch_equivalent_tps + replay_tps",
+    "little_law_concurrency": "arrival_rate_tps * response_time_seconds",
+    "cpu_demand_seconds_per_tx": "server_cpu_busy_ratio * measured_seconds / processed_transactions",
+    "vcpu_required": "effective_peak_tps * cpu_demand_seconds_per_tx / target_cpu_utilization",
+    "wal_rate_bytes_per_second": "effective_peak_tps * wal_bytes_per_transaction",
+    "daily_live_growth_bytes": "daily_place_orders * durable_bytes_per_place_order",
+    "primary_space_floor": "live_bytes + index_bytes + bloat_allowance + maintenance_workspace + retained_wal + emergency_margin",
+    "provisioning_trigger_days": "provisioning_lead_days + validation_days + rollback_days + decision_buffer_days"
+  },
+  "policy_defaults": {
+    "target_cpu_utilization": 0.65,
+    "minimum_failure_headroom_ratio": 0.30,
+    "storage_high_watermark_ratio": 0.70,
+    "forecast_review_interval_days": 7,
+    "production_numbers_approved": false
+  },
+  "decision_rules": [
+    "Use an operation-weighted demand model; do not multiply one average TPS by one universal cost.",
+    "Keep a separate normal-state and declared-failure-state model.",
+    "A closed-loop maximum-throughput result is an upper-bound probe, not an admitted-load SLO.",
+    "If the client is saturated, repeat from a stronger or distributed load generator.",
+    "If a factor is unmeasured, retain it as an unknown rather than assigning a convenient zero.",
+    "Trigger provisioning early enough to acquire, configure, load, validate, and roll back capacity."
+  ],
+  "publication_contract": {
+    "public_values": "allowlisted aggregate results and declared limitations only",
+    "private_values": "raw transaction logs, raw system samples, raw SQL snapshots, and raw VictoriaMetrics responses",
+    "production_ch26_gate": "pending"
+  }
+}

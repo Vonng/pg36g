@@ -1,0 +1,47 @@
+{
+  "schema": "pg36-ch35-classification-contract-v1",
+  "required_packet_fields": [
+    "case_id",
+    "observed_at",
+    "checksum",
+    "relation",
+    "collation",
+    "amcheck",
+    "business"
+  ],
+  "routes": [
+    {
+      "route": "RESTORE_FROM_KNOWN_GOOD_COPY",
+      "requires": [
+        "checksum.enabled = true",
+        "checksum.offline_bad_checksums >= 1",
+        "relation.kind = heap",
+        "collation.version_mismatch = false"
+      ],
+      "safe_action": "preserve the corrupted clone and recover a new working copy from a verified source",
+      "forbidden_shortcut": "ignore the checksum or zero the damaged page on the evidence copy"
+    },
+    {
+      "route": "REINDEX_AND_REFRESH_COLLATION",
+      "requires": [
+        "checksum.offline_bad_checksums = 0",
+        "collation.version_mismatch = true",
+        "amcheck.structural_check_passed = true",
+        "relation.kind = index-derived"
+      ],
+      "safe_action": "on a working copy, reindex the exact dependent index before refreshing collation metadata",
+      "forbidden_shortcut": "refresh version metadata without rebuilding affected derived objects"
+    }
+  ],
+  "unknown_route": {
+    "route": "STOP_AND_ESCALATE",
+    "when": "neither or both route predicates match",
+    "actions": [
+      "preserve original evidence",
+      "stop writes and repeated experiments",
+      "name missing facts and recovery sources",
+      "escalate before dangerous recovery parameters"
+    ]
+  },
+  "production_ch35_gate": "pending"
+}

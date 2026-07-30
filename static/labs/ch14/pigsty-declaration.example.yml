@@ -1,0 +1,53 @@
+---
+# Pigsty v4.4 extension-governance fragment for ch14.
+#
+# This fragment illustrates the platform mapping; the formal local evidence
+# was collected on direct Homebrew PostgreSQL 18.4, not on a Pigsty L1 host.
+# Merge only after reviewing the target cluster, OS, PG major, and repository.
+
+pg_extensions:
+  - pgvector
+
+# Pigsty 4.4 installs pgvector through pgsql-main by default, but declaring the
+# cluster-specific requirement makes intent explicit and repairs node drift.
+# "pgvector" is the package alias; the SQL extension name is "vector".
+#
+# Stock Pigsty also enables pg_trgm in public through pg_default_extensions.
+# Keep that default unless you have a reviewed reason to change its schema.
+# The direct chapter fixture deliberately places pg_trgm in shop_ch14 so that
+# extension namespace and membership are easy to inspect; it is not a request
+# to fight the platform default.
+
+pg_databases:
+  - name: pg36_shop
+    owner: pg36_owner
+    comment: PostgreSQL 36 Strategies teaching database
+    encoding: UTF8
+    locale: C
+    revokeconn: true
+    pgbouncer: true
+    pool_mode: transaction
+    schemas:
+      - {name: shop, owner: pg36_owner}
+      - {name: shop_api, owner: pg36_owner}
+      - {name: shop_private, owner: pg36_owner}
+      - {name: app_ext, owner: pg36_owner}
+    extensions:
+      - {name: vector, schema: app_ext}
+    parameters:
+      TimeZone: UTC
+      statement_timeout: 30s
+      lock_timeout: 5s
+
+# Neither pg_trgm nor vector requires shared preload in this chapter:
+#
+# pg_libs: 'pg_stat_statements, auto_explain'
+#
+# Do not overwrite a site's existing pg_libs from a fragment. Merge it with
+# the reviewed cluster value. Extensions such as Citus or TimescaleDB have
+# different preload/restart requirements.
+#
+# Verification is three-layered:
+#   package intent -> pg_extensions / node package inventory
+#   load config    -> pg_libs plus live shared_preload_libraries
+#   database state -> pg_available_extensions and pg_extension in pg36_shop

@@ -1,0 +1,240 @@
+{
+  "schema": "pg36-ch24-negative-cases-v1",
+  "cases": [
+    {
+      "id": "N01",
+      "artifact": "service-card.json",
+      "operation": "set",
+      "path": [
+        "scope",
+        "production_slo_claimed"
+      ],
+      "value": true,
+      "mutation": "promote the teaching service card to a production SLO"
+    },
+    {
+      "id": "N02",
+      "artifact": "service-card.json",
+      "operation": "delete",
+      "path": [
+        "owner_functions",
+        2
+      ],
+      "mutation": "remove the platform owner"
+    },
+    {
+      "id": "N03",
+      "artifact": "service-card.json",
+      "operation": "set",
+      "path": [
+        "health_layers",
+        0,
+        "sufficient_for_service_health"
+      ],
+      "value": true,
+      "mutation": "treat a running process as sufficient service health"
+    },
+    {
+      "id": "N04",
+      "artifact": "slo-policy.json",
+      "operation": "set",
+      "path": [
+        "objectives",
+        0,
+        "target"
+      ],
+      "value": 1,
+      "mutation": "replace the availability target with a 100 percent ratio SLO"
+    },
+    {
+      "id": "N05",
+      "artifact": "slo-policy.json",
+      "operation": "set",
+      "path": [
+        "exclusion_policy",
+        "planned_maintenance_excluded"
+      ],
+      "value": true,
+      "mutation": "silently remove planned maintenance from the user SLO"
+    },
+    {
+      "id": "N06",
+      "artifact": "slo-policy.json",
+      "operation": "set",
+      "path": [
+        "principles",
+        "database_instance_health_is_user_sli"
+      ],
+      "value": true,
+      "mutation": "use database instance health as the user availability SLI"
+    },
+    {
+      "id": "N07",
+      "artifact": "slo-policy.json",
+      "operation": "set",
+      "path": [
+        "principles",
+        "missing_data_default"
+      ],
+      "value": "healthy",
+      "mutation": "interpret missing telemetry as healthy"
+    },
+    {
+      "id": "N08",
+      "artifact": "slo-policy.json",
+      "operation": "set",
+      "path": [
+        "error_budget_policy",
+        "states",
+        3,
+        "actions"
+      ],
+      "value": [],
+      "mutation": "give an exhausted error budget no consequence"
+    },
+    {
+      "id": "N09",
+      "artifact": "observation-contract.json",
+      "operation": "set",
+      "path": [
+        "sli_sources",
+        0,
+        "missing_semantics"
+      ],
+      "value": "healthy",
+      "mutation": "make an absent availability series equal healthy"
+    },
+    {
+      "id": "N10",
+      "artifact": "observation-contract.json",
+      "operation": "set",
+      "path": [
+        "identity_labels",
+        "forbidden_unbounded_labels"
+      ],
+      "value": [],
+      "mutation": "allow unbounded customer and SQL values as metric labels"
+    },
+    {
+      "id": "N11",
+      "artifact": "alert-candidates.json",
+      "operation": "set",
+      "path": [
+        "accepted",
+        0,
+        "first_safe_action"
+      ],
+      "value": null,
+      "mutation": "accept a page without a first safe action"
+    },
+    {
+      "id": "N12",
+      "artifact": "alert-candidates.json",
+      "operation": "set",
+      "path": [
+        "accepted",
+        0,
+        "class"
+      ],
+      "value": "cause",
+      "mutation": "page on a cause while the user symptom is unspecified"
+    },
+    {
+      "id": "N13",
+      "artifact": "alert-candidates.json",
+      "operation": "set",
+      "path": [
+        "accepted",
+        5,
+        "route"
+      ],
+      "value": "page",
+      "mutation": "turn a future capacity forecast into an immediate page"
+    },
+    {
+      "id": "N14",
+      "artifact": "alert-candidates.json",
+      "operation": "set",
+      "path": [
+        "rejected",
+        0,
+        "decision"
+      ],
+      "value": "accepted",
+      "mutation": "accept the instance-down page that has no owner or action"
+    },
+    {
+      "id": "N15",
+      "artifact": "sop-catalog.json",
+      "operation": "set",
+      "path": [
+        "documents",
+        0,
+        "verification"
+      ],
+      "value": [
+        "backup command exited zero"
+      ],
+      "mutation": "accept backup completion as the entire restore verification"
+    },
+    {
+      "id": "N16",
+      "artifact": "change-policy.json",
+      "operation": "set",
+      "path": [
+        "high_risk_control",
+        "requester_approver_executor_distinct"
+      ],
+      "value": false,
+      "mutation": "let one identity request, approve, and execute a high-risk change"
+    },
+    {
+      "id": "N17",
+      "artifact": "change-policy.json",
+      "operation": "set",
+      "path": [
+        "high_risk_control",
+        "break_glass",
+        "may_skip_target_and_evidence"
+      ],
+      "value": true,
+      "mutation": "let break-glass skip target binding and evidence"
+    },
+    {
+      "id": "N18",
+      "artifact": "evidence-retention.json",
+      "operation": "set",
+      "path": [
+        "categories",
+        2,
+        "secret_values_permitted"
+      ],
+      "value": true,
+      "mutation": "permit secret values in access evidence"
+    },
+    {
+      "id": "N19",
+      "artifact": "requirements.json",
+      "operation": "set",
+      "path": [
+        "upstream_reference_contract",
+        "ch21",
+        "run_id"
+      ],
+      "value": "invented-restore-run",
+      "mutation": "bind governance to an invented upstream recovery run"
+    },
+    {
+      "id": "N20",
+      "artifact": "sop-catalog.json",
+      "operation": "set",
+      "path": [
+        "documents",
+        1,
+        "reference_is_production_proof"
+      ],
+      "value": true,
+      "mutation": "promote one sandbox switchover into production proof"
+    }
+  ]
+}

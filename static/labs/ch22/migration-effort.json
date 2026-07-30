@@ -1,0 +1,14 @@
+{
+  "schema": "pg36-ch22-production-effort-v1",
+  "sandbox_service_contract": "accepted-with-exceptions",
+  "production_ch22_gate": "pending",
+  "required_next_evidence": [
+    "declare pg36_shop database, roles, service endpoints and budgets in the reviewed Pigsty inventory",
+    "validate client and server TLS plus certificate rotation",
+    "prove VIP, DNS or libpq multi-host entrypoint failover",
+    "run representative driver/version matrices and ORM workloads",
+    "load test connection queues and database concurrency on production-class infrastructure",
+    "exercise unplanned failure, cancel propagation, partial network loss and reconnect jitter",
+    "define and enforce read consistency contracts for every replica workload"
+  ]
+}

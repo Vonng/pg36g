@@ -1,0 +1,91 @@
+{
+  "schema": "pg36-ch17-fixture-manifest-v1",
+  "fixture": "ch17-analytics-v1",
+  "generator": {
+    "identity": "fixture-generator-v1",
+    "tenant_count": 8,
+    "accounts_per_tenant": 50,
+    "day_count": 120,
+    "sales_per_account_day": 5,
+    "first_day": "2026-01-01",
+    "last_day": "2026-04-30",
+    "frozen_at": "2026-07-29T00:00:00Z"
+  },
+  "local": {
+    "accounts": 400,
+    "sales": 240000,
+    "units": 1200000,
+    "amount": "2256000.00",
+    "daily_summary_rows": 2880,
+    "monthly_rows": 32,
+    "business_checksum": "42fb8ab5444469eba1f104a8e1e529dd",
+    "monthly_checksum": "644d45544ebbc2a80c42270c38ac6885"
+  },
+  "distribution": {
+    "strategy": "explicit LIST routing by tenant identity",
+    "modulus": 2,
+    "shard_a": {
+      "database": "pg36_shard_a",
+      "remainder": 0,
+      "tenant_ids": [2, 4, 6, 8],
+      "accounts": 200,
+      "sales": 120000,
+      "units": 599988,
+      "amount": "1188000.00",
+      "checksum": "274002669404fbcd449bdecd929624e3"
+    },
+    "shard_b": {
+      "database": "pg36_shard_b",
+      "remainder": 1,
+      "tenant_ids": [1, 3, 5, 7],
+      "accounts": 200,
+      "sales": 120000,
+      "units": 600012,
+      "amount": "1068000.00",
+      "checksum": "0bb770361058ec76ebc81a2a7d1e2629"
+    }
+  },
+  "frozen_export": {
+    "path": "frozen-monthly.csv",
+    "rows": 32,
+    "sha256": "64b045809e10364fd84a587121d919e8562a15335c4c6c015e91a0ead3a44323"
+  },
+  "loaders": {
+    "coordinator": {
+      "path": "fixture.sql",
+      "sha256": "3110d0369b0c62fffeee643200f5320d1f6bd26ad5f9950b2ab2b58991080e10"
+    },
+    "remote": {
+      "path": "fixture-remote.sql",
+      "sha256": "da02dbca8d2cfeb0294c369b15cad3619a9433d984f98866b5043eb4508e3e91"
+    }
+  },
+  "evidence_contract": {
+    "selective_tenant": 3,
+    "selective_from": "2026-04-01",
+    "selective_sales": 7500,
+    "selective_amount": "69375.00",
+    "naive_foreign_rows": 240000,
+    "two_stage_foreign_rows": 960,
+    "application_write_sqlstate": "42501",
+    "failed_shard_sqlstate": "08001"
+  },
+  "authentication": {
+    "lab_transport": "same-host Unix-domain socket",
+    "password_required": false,
+    "production_approved": false,
+    "warning": "password_required=false is an isolated loopback-lab shortcut, not a production credential pattern"
+  },
+  "license": {
+    "text": "project-owned deterministic synthetic fixture; repository terms apply",
+    "external_dataset": false
+  },
+  "limitations": [
+    "All three databases run in one PostgreSQL instance on one host.",
+    "The fixture proves routing, pruning, pushdown, transfer shape, permissions, failure semantics, and rebuildability; it is not a distributed throughput or high-availability benchmark.",
+    "EXPLAIN row counts describe this frozen fixture and must not be generalized into universal product comparisons.",
+    "The explicit LIST partitions encode the fixture tenant set; a production shard map needs a reviewed routing and rebalance mechanism.",
+    "The lab deliberately retains the two empty shard database shells after reset.",
+    "Coordinator and shard reset steps are individually transactional but cannot form one atomic transaction across three databases."
+  ]
+}

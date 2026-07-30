@@ -1,0 +1,55 @@
+---
+# Sanitized teaching declaration. This is not the live inventory and contains
+# no usable credential. Generate secrets out-of-band before any deployment.
+all:
+  children:
+    infra:
+      hosts:
+        10.10.10.10: { infra_seq: 1 }
+    etcd:
+      hosts:
+        10.10.10.10: { etcd_seq: 1 }
+      vars:
+        etcd_cluster: etcd
+    minio:
+      hosts:
+        10.10.10.10: { minio_seq: 1 }
+      vars:
+        minio_cluster: minio
+    pg-meta:
+      hosts:
+        10.10.10.10: { pg_seq: 1, pg_role: primary }
+      vars:
+        pg_cluster: pg-meta
+        pg_databases:
+          - { name: meta, comment: "sandbox control database" }
+    pg-test:
+      hosts:
+        10.10.10.11: { pg_seq: 1, pg_role: primary }
+        10.10.10.12: { pg_seq: 2, pg_role: replica }
+        10.10.10.13:
+          pg_seq: 3
+          pg_role: replica
+          pg_offline_query: true
+      vars:
+        pg_cluster: pg-test
+        pg_databases:
+          - { name: test, comment: "sandbox HA acceptance database" }
+  vars:
+    version: v4.4.0
+    admin_ip: 10.10.10.10
+    region: default
+    node_tune: oltp
+    pg_conf: oltp.yml
+    pg_version: 18
+    pg_locale: C.UTF-8
+    pg_checksum: true
+    pgbackrest_method: minio
+    grafana_admin_password: "REPLACE_VIA_APPROVED_SECRET_SOURCE"
+    pg_admin_password: "REPLACE_VIA_APPROVED_SECRET_SOURCE"
+    pg_monitor_password: "REPLACE_VIA_APPROVED_SECRET_SOURCE"
+    pg_replication_password: "REPLACE_VIA_APPROVED_SECRET_SOURCE"
+    patroni_password: "REPLACE_VIA_APPROVED_SECRET_SOURCE"
+    haproxy_admin_password: "REPLACE_VIA_APPROVED_SECRET_SOURCE"
+    minio_secret_key: "REPLACE_VIA_APPROVED_SECRET_SOURCE"
+    etcd_root_password: "REPLACE_VIA_APPROVED_SECRET_SOURCE"

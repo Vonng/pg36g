@@ -1,0 +1,14 @@
+flowchart LR
+  U["Blind initial symptom"] --> T["Triage: impact / data risk / scope / trend / recoverability"]
+  L3["Pigsty FULL/L3 read-only snapshot"] --> E["Evidence cards and provenance"]
+  T --> E
+  E --> D{"Technical route"}
+  D -->|Wrong or missing committed data| P["ch32 PITR"]
+  D -->|Writer / timeline / DCS / route| H["ch33 HA"]
+  D -->|Connections / CPU / memory / I/O / disk| O["ch34 Overload"]
+  D -->|Checksum / page / index / semantics| I["ch35 Integrity"]
+  P --> G["Decision log + stop line + owner"]
+  H --> G
+  O --> G
+  I --> G
+  G --> R["Restore or contain, verify, communicate"]

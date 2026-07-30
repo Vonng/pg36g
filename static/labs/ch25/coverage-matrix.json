@@ -1,0 +1,175 @@
+{
+  "schema": "pg36-ch25-coverage-matrix-v1",
+  "service_id": "pg36_shop",
+  "environment": "l2-sandbox",
+  "captured_baseline": "filled-by-capture",
+  "production_claim": false,
+  "rows": [
+    {
+      "id": "COV-USER-AVAILABILITY",
+      "question": "eligible order attempts receive a reconciled successful outcome",
+      "source": "pg36_shop_request_outcomes_total",
+      "live_expected": false,
+      "live_status": "expected-gap",
+      "rule_status": "isolated-test-only",
+      "fallback": "independent end-to-end place-order probe",
+      "owner_function": "service",
+      "blind_spot": "no application request outcome instrumentation is installed in the sandbox"
+    },
+    {
+      "id": "COV-USER-LATENCY",
+      "question": "eligible order attempts complete within 250 ms",
+      "source": "pg36_shop_request_duration_seconds_bucket",
+      "live_expected": false,
+      "live_status": "expected-gap",
+      "rule_status": "proposed-and-isolated-test-only",
+      "fallback": "independent end-to-end duration probe",
+      "owner_function": "service",
+      "blind_spot": "application histogram is absent and the alert candidate still requires chapter-24 governance acceptance"
+    },
+    {
+      "id": "COV-READ-FRESHNESS",
+      "question": "a routed read observes a known committed token within five seconds",
+      "source": "pg36_shop_commit_visibility_probes_total",
+      "live_expected": false,
+      "live_status": "expected-gap",
+      "rule_status": "isolated-test-only",
+      "fallback": "write a unique token and poll the declared read path",
+      "owner_function": "service",
+      "blind_spot": "no commit-correlated probe is installed; pg_lag is diagnostic only"
+    },
+    {
+      "id": "COV-CORRECTNESS",
+      "question": "acknowledged order state satisfies domain invariants",
+      "source": "pg36_shop_reconciliation_mismatches",
+      "live_expected": false,
+      "live_status": "expected-gap",
+      "rule_status": "isolated-test-only",
+      "fallback": "signed reconciliation run with a retained boundary and result hash",
+      "owner_function": "data",
+      "blind_spot": "no application reconciliation exporter is installed"
+    },
+    {
+      "id": "COV-RESTORE",
+      "question": "recent restore evidence remains within the 90-day control",
+      "source": "pg36_shop_restore_evidence_age_seconds",
+      "live_expected": false,
+      "live_status": "expected-gap",
+      "rule_status": "proposed-ticket-isolated-only",
+      "fallback": "inspect the immutable chapter-22 restore manifest",
+      "owner_function": "platform",
+      "blind_spot": "restore-run evidence is not exported as a metric"
+    },
+    {
+      "id": "COV-PG-UP",
+      "question": "PostgreSQL exporter can reach each declared instance",
+      "source": "pg_up and pg_exporter_up",
+      "live_expected": true,
+      "live_status": "captured",
+      "rule_status": "existing-platform-telemetry",
+      "fallback": "Patroni API and direct read-only SQL",
+      "owner_function": "platform",
+      "blind_spot": "exporter reachability does not prove a user journey"
+    },
+    {
+      "id": "COV-PG-ACTIVITY",
+      "question": "sessions, transactions, waits and locks can explain a symptom",
+      "source": "pg_activity_* plus pg_stat_activity and pg_locks",
+      "live_expected": true,
+      "live_status": "captured",
+      "rule_status": "diagnostic",
+      "fallback": "direct read-only SQL",
+      "owner_function": "platform",
+      "blind_spot": "one sample can miss a transient wait"
+    },
+    {
+      "id": "COV-PG-IO-WAL",
+      "question": "I/O, WAL, checkpoints, archive and replication can explain a symptom or recovery risk",
+      "source": "pg_io_*, pg_checkpointer_*, pg_archiver_*, pg_repl_* and native views",
+      "live_expected": true,
+      "live_status": "captured",
+      "rule_status": "diagnostic-and-proposed-ticket",
+      "fallback": "direct read-only SQL plus pgBackRest evidence",
+      "owner_function": "platform",
+      "blind_spot": "PostgreSQL I/O views do not separate disk from OS cache and archive counters do not prove restore"
+    },
+    {
+      "id": "COV-PG-MAINTENANCE",
+      "question": "freeze age, dead tuples, object growth and maintenance progress are visible",
+      "source": "pg_table_* plus native catalogs and progress views",
+      "live_expected": true,
+      "live_status": "captured",
+      "rule_status": "diagnostic-and-capacity-ticket",
+      "fallback": "direct read-only SQL and object-size snapshots",
+      "owner_function": "platform",
+      "blind_spot": "dead tuple estimates are not exact bloat"
+    },
+    {
+      "id": "COV-SQL",
+      "question": "queryid-level workload cost and reset boundaries are visible",
+      "source": "monitor.pg_stat_statements and pg_stat_statements_info",
+      "live_expected": true,
+      "live_status": "captured-without-query-text",
+      "rule_status": "diagnostic",
+      "fallback": "restricted interactive SQL and bounded logs",
+      "owner_function": "platform",
+      "blind_spot": "normalized query identity can collide; sampled logs are not a complete population; the observed auto_explain analyze plus timing policy requires a separate overhead review"
+    },
+    {
+      "id": "COV-META",
+      "question": "ingestion, rule evaluation and notification machinery can prove its own operation",
+      "source": "VMAlert and Alertmanager APIs plus self metrics",
+      "live_expected": true,
+      "live_status": "captured",
+      "rule_status": "isolated-test-only-for-chapter-rule",
+      "fallback": "independent blackbox and receipt canary",
+      "owner_function": "platform",
+      "blind_spot": "zero notification failures without a receipt canary does not prove delivery"
+    },
+    {
+      "id": "COV-LOGS",
+      "question": "PostgreSQL, PgBouncer, Patroni and pgBackRest events are searchable",
+      "source": "Vector to VictoriaLogs",
+      "live_expected": true,
+      "live_status": "endpoint-and-version-only",
+      "rule_status": "diagnostic",
+      "fallback": "restricted host journal and log files",
+      "owner_function": "platform",
+      "blind_spot": "this exercise deliberately does not export or inspect log bodies"
+    },
+    {
+      "id": "COV-TRACES",
+      "question": "a sampled request can be followed across service boundaries",
+      "source": "VictoriaTraces",
+      "live_expected": true,
+      "live_status": "backend-endpoint-only",
+      "rule_status": "none",
+      "fallback": "bounded correlation identifiers in metrics, logs and events",
+      "owner_function": "service",
+      "blind_spot": "no pg36_shop application spans are asserted"
+    },
+    {
+      "id": "COV-ROUTING",
+      "question": "accepted alerts reach the intended role without touching a real receiver",
+      "source": "offline Alertmanager configuration and route tests",
+      "live_expected": false,
+      "live_status": "isolated-test-only",
+      "rule_status": "isolated-test-only",
+      "fallback": "reviewed route tree and receipt drill before production",
+      "owner_function": "platform",
+      "blind_spot": "offline resolution does not prove a real integration can deliver"
+    }
+  ],
+  "deployment": {
+    "application_instrumentation": false,
+    "chapter_recording_rules_live": false,
+    "chapter_alert_rules_live": false,
+    "chapter_routes_live": false,
+    "real_notification_exercised": false,
+    "isolated_rule_tests_required": true,
+    "offline_route_tests_required": true
+  },
+  "next_diagnostic_chapter": "ch31",
+  "production_ch25_gate": "pending",
+  "production_approval": false
+}

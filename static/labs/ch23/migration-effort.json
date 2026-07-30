@@ -1,0 +1,22 @@
+{
+  "schema": "pg36-ch23-migration-effort-v1",
+  "current_release": "v4.4.0 / PostgreSQL 18.4",
+  "lower_release_support": {
+    "status": "design-only",
+    "minimum_postgresql_for_membership_options": 16,
+    "notes": [
+      "PostgreSQL 14 and 15 do not have per-membership INHERIT and SET options; use carefully separated NOINHERIT login roles and test the exact role graph",
+      "RLS, FORCE RLS, SCRAM, pg_stat_ssl, and pg_hba_file_rules exist in supported PostgreSQL 14-18 releases, but catalog columns and operational defaults must be re-captured",
+      "Pigsty parameter names, default HBA rules, certificate layouts, and PgBouncer defaults must be checked against the chosen Pigsty release"
+    ]
+  },
+  "required_revalidation": [
+    "driver support for SCRAM and channel binding",
+    "certificate SAN and name-verification behavior",
+    "PgBouncer client and server TLS settings",
+    "HBA first-match result for every client class",
+    "role membership graph after upgrades",
+    "RLS behavior through every application and migration path",
+    "audit extension branch matching the PostgreSQL major version"
+  ]
+}

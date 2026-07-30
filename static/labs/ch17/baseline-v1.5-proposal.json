@@ -1,0 +1,119 @@
+{
+  "schema": "pg36-ch17-release-proposal-v1",
+  "release": "1.5-proposal",
+  "fixture": "ch17-analytics-v1",
+  "target": {
+    "coordinator_database": "pg36_shop",
+    "shard_databases": ["pg36_shard_a", "pg36_shard_b"],
+    "data_schema": "shop_ch17",
+    "remote_schema": "shop_ch17_shard",
+    "extension_schema": "shop_ch17_ext",
+    "owner": "pg36_owner",
+    "application_role": "pg36_app",
+    "postgresql": "18.x for the formal fixture",
+    "validated_on": "18.4",
+    "postgres_fdw": "1.2",
+    "pigsty_reference": "4.4",
+    "pigsty_l1_validation": "not-run"
+  },
+  "decision": {
+    "default_path": "prove and exhaust the single-node boundary before distributing",
+    "single_node_tools": [
+      "parallel query",
+      "covering B-tree index",
+      "BRIN candidate for correlated append order",
+      "work_mem spill evidence",
+      "materialized daily summary"
+    ],
+    "distribution_key": "tenant_id",
+    "fixture_routing": "explicit LIST partitions: even tenant IDs to shard A, odd tenant IDs to shard B",
+    "hash_partition_warning": "PostgreSQL HASH partition remainders are based on PostgreSQL hash support functions, not tenant_id modulo 2",
+    "remote_aggregation": "aggregate by tenant and day on each shard, then aggregate by month on the coordinator",
+    "production_sharding_candidate": "evaluate Citus only after workload, ownership, availability, and operations gates pass",
+    "fdw_role": "mechanics and counterexample laboratory, not a claim of production distributed performance",
+    "specialized_olap": "consider a separate analytical system when PostgreSQL-compatible choices fail measured workload and operating-model requirements"
+  },
+  "contracts": {
+    "local_sales": 240000,
+    "distributed_sales": 240000,
+    "daily_summary_rows": 2880,
+    "monthly_rows": 32,
+    "shard_sales_each": 120000,
+    "tenant3_april": "7500:69375.00",
+    "naive_transfer_rows": 240000,
+    "two_stage_transfer_rows": 960,
+    "managed_relations": 18,
+    "managed_indexes": 6,
+    "user_mappings": 6,
+    "application_write_sqlstate": "42501",
+    "failed_shard_sqlstate": "08001",
+    "healthy_shard_during_failure": "tenant 2: 30000 rows"
+  },
+  "expected_state": {
+    "business_checksum": "42fb8ab5444469eba1f104a8e1e529dd",
+    "monthly_checksum": "644d45544ebbc2a80c42270c38ac6885",
+    "frozen_export_sha256": "64b045809e10364fd84a587121d919e8562a15335c4c6c015e91a0ead3a44323"
+  },
+  "authentication": {
+    "lab_only": "password_required=false over a same-instance Unix-domain socket",
+    "production_requirement": "reviewed SCRAM, GSS, delegated credentials, or another approved secret and identity design",
+    "no_public_mapping": true
+  },
+  "evidence": [
+    "manifest.txt",
+    "monthly-local.csv",
+    "monthly-summary.csv",
+    "monthly-distributed.csv",
+    "monthly-two-stage.csv",
+    "fixture-facts.csv",
+    "remote-a-state.csv",
+    "remote-b-state.csv",
+    "server-catalog.csv",
+    "mapping-catalog.csv",
+    "relation-catalog.csv",
+    "index-catalog.csv",
+    "security-catalog.csv",
+    "size-catalog.csv",
+    "local-parallel-plan.txt",
+    "spill-low-plan.txt",
+    "spill-high-plan.txt",
+    "selective-index-plan.txt",
+    "raw-aggregate-plan.txt",
+    "summary-aggregate-plan.txt",
+    "tenant-pruned-plan.txt",
+    "distributed-naive-plan.txt",
+    "distributed-two-stage-plan.txt",
+    "collocated-parent-plan.txt",
+    "app-query.csv",
+    "app-write.stderr",
+    "shard-failure.stdout",
+    "shard-failure.stderr",
+    "final-state.csv",
+    "verify.txt",
+    "remote-a-verify.txt",
+    "remote-b-verify.txt"
+  ],
+  "rollback": {
+    "token": "RESET_CH17_ANALYTICS_FDW_LAB",
+    "coordinator_target": "pg36_shop/shop_ch17+shop_ch17_ext+fdw",
+    "remote_targets": [
+      "pg36_shard_a/shop_ch17_shard",
+      "pg36_shard_b/shop_ch17_shard"
+    ],
+    "requires_full_state_verification": true,
+    "requires_no_active_coordinator_workers": true,
+    "uses_cascade": false,
+    "coordinator_transactional": true,
+    "each_remote_transactional": true,
+    "cross_database_atomic": false,
+    "retains_database_shells": true
+  },
+  "limitations": [
+    "The local fixture is too small and too synthetic to set production latency, throughput, WAL, storage, vacuum, network, or replica-lag objectives.",
+    "The loopback FDW topology has no independent CPU, storage, network, failure domain, or high-availability behavior.",
+    "Forced planner settings prove that a path can be exercised; they do not establish that it is generally preferable.",
+    "Materialization lowers read work but introduces freshness, refresh, locking, and recovery obligations that require separate SLOs.",
+    "Collocation in the logical model does not guarantee join pushdown through a partitioned foreign-table parent.",
+    "A production Citus, read-replica, or specialized OLAP decision requires a representative benchmark and a tested Pigsty L1 topology."
+  ]
+}

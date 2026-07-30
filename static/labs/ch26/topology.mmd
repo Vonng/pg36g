@@ -1,0 +1,8 @@
+flowchart LR
+  R["chapter 26 runner<br/>workstation"] -->|"SSH, source hash binding"| M["pg-meta-1<br/>2 vCPU load generator"]
+  M -->|"direct PostgreSQL 5432<br/>persistent prepared sessions"| P["pg-test-1<br/>primary, 1 vCPU"]
+  P --> D[("pg36_capacity<br/>marker-bound disposable DB")]
+  P -->|"streaming WAL"| R2["pg-test-2<br/>replica"]
+  P -->|"streaming WAL"| R3["pg-test-3<br/>offline replica"]
+  M -->|"read-only query_range"| V["VictoriaMetrics<br/>Pigsty monitoring"]
+  M -. "not measured in engine baseline" .-> H["HAProxy / PgBouncer<br/>service-path test is separate"]

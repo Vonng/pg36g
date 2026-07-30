@@ -1,0 +1,47 @@
+{
+  "schema": "pg36-ch21-recovery-scenarios-v1",
+  "scenarios": [
+    {
+      "id": "logical-row-loss",
+      "trigger": "an operator or application deletes or corrupts a bounded logical set",
+      "preferred_evidence": "audit trail, transaction time or named restore point",
+      "primary_method": "isolated PITR followed by comparison or selective logical export",
+      "rpo_driver": "target precision and available WAL",
+      "rto_driver": "restore, replay, validation and controlled data merge",
+      "this_lab": true
+    },
+    {
+      "id": "cluster-storage-loss",
+      "trigger": "all database copies in one storage or failure domain are unavailable",
+      "preferred_evidence": "repository inventory, latest complete backup and WAL range",
+      "primary_method": "physical restore into replacement infrastructure",
+      "rpo_driver": "last durably archived WAL",
+      "rto_driver": "provisioning, bytes restored, WAL replay and service cutover",
+      "this_lab": false
+    },
+    {
+      "id": "regional-loss",
+      "trigger": "database, control plane and local backup repository are lost together",
+      "preferred_evidence": "independently controlled off-site repository",
+      "primary_method": "restore in a separate region or promote a designed DR system",
+      "rpo_driver": "off-site copy or replication lag",
+      "rto_driver": "regional capacity, dependencies, routing and business validation",
+      "this_lab": false
+    },
+    {
+      "id": "compliance-retention",
+      "trigger": "records must remain recoverable or provably deleted for a policy period",
+      "preferred_evidence": "retention policy, legal hold, object immutability and restore tests",
+      "primary_method": "policy-specific logical and/or physical archives",
+      "rpo_driver": "declared capture cadence",
+      "rto_driver": "catalog search, key access and restore procedure",
+      "this_lab": false
+    }
+  ],
+  "non_substitutes": [
+    "a streaming replica is not an independent backup because logical mistakes replay",
+    "a successful backup command is not proof that a restore can start and satisfy business invariants",
+    "a storage snapshot is not transactionally useful unless its consistency and WAL relationship are designed",
+    "a logical dump cannot be inserted into a physical WAL replay chain"
+  ]
+}

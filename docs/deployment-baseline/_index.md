@@ -13,20 +13,97 @@ book_kind: chapter
 book_id: ch19
 book_number: 19
 book_part: part-4
-book_status: scaffold
+book_status: draft
 ---
 
-> **骨架状态**：本章已经建立“章 → 节页面 → 目摘要”的完整索引；当前摘要用于固定写作范围，后续再逐目扩写、验证和审校。
+上卷回答了 PostgreSQL 能做什么；下卷从一个更苛刻的问题开始：
+
+> 我们准备把什么服务，交付给谁，承诺到什么程度；声明的版本、主机、
+> 初始化与拓扑，是否真的存在？
+
+本章先写需求与资源合同，再冻结 PostgreSQL 初始化选择，最后用 exact Pigsty
+v4.4.0 在四台 Linux VM 上完成 PostgreSQL 18 部署和 L2 沙箱验收。正式
+结果是“带六项例外的沙箱通过”，不是生产批准。
 
 ## 本章目标
 
-从工作负载、服务目标和责任边界出发，规划并验收 L2 生产仿真环境，而不是从一份默认配置开始。
+读完并完成实验后，你应当能够：
 
-## 所属位置
+1. 从业务损失、数据分类、owner、workload 与 RPO/RTO 写服务需求；
+2. 将 CPU、memory、storage、network 与可观察饱和/故障条件连接；
+3. 建立 OS baseline，而不是照抄 sysctl 模板；
+4. 冻结并验证 locale/provider、encoding、checksum、page/WAL、auth 等
+   PostgreSQL 初始化契约；
+5. 严格区分 node、instance、database cluster、HA cluster、database、
+   service、pool 与 DCS；
+6. 用 secret-safe Pigsty inventory 声明两个 service unit；
+7. 从 inventory、host、SQL、Patroni/service 四面交叉验收；
+8. 区分 sandbox acceptance、exception 与 production gate；
+9. 为 destructive reset 建立显式 guard，而不把它混入正常检查。
 
-- 卷别：[下卷：运维管理](/lower-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第四篇：规划——建设可交付的 PostgreSQL 服务
-- 兼容入口：`/ch19/`、`/volume-2/deployment-baseline/`
+## 前置与后续
+
+前置：
+
+- [第 18 章 PostgreSQL 数据平台与替代边界](/data-platform-boundaries/) 提供 service catalog、
+  capability placement 与下卷 evidence gate；
+- 读者应已掌握 Linux 与 SQL；
+- 不要求预先掌握 PostgreSQL HA、Pigsty 或 Ansible internals。
+
+后续：
+
+- [第 20 章 高可用拓扑与容灾目标](/high-availability/) 使用本章保留 baseline
+  验证 election、fencing、RTO 与数据损失边界；
+- 第 21 章验证 backup/restore；
+- 第 22 章验证 service routing、pooling 与 client semantics；
+- 后续容量、安全、变更和升级 gate 不由本章安装结果代替。
+
+## 学习路径
+
+```text
+service requirement
+    -> resource/failure model
+        -> host observed baseline
+            -> irreversible PostgreSQL initialization contract
+                -> topology and stable identity
+                    -> secret-safe Pigsty declaration
+                        -> live four-plane acceptance
+                            -> exceptions + next gates
+```
+
+前三节解决“为什么、需要什么、机器是什么”；19.4–19.6 解决“哪些选择必须
+提前冻结、如何声明”；19.7 只读验证声明与事实是否一致。
+
+## 正式实验结果
+
+```text
+target               pg36-l2-vagrant
+Pigsty               v4.4.0 exact tag
+PostgreSQL           18.4 observed
+hosts                4 distinct Ubuntu 24.04/aarch64 guests
+service units        pg-meta + pg-test
+pg-test              one primary + two streaming replicas
+normal validation    passed
+negative tests       9/9 rejected as designed
+sandbox L2           accepted-with-exceptions
+production ch19      pending
+mutation by lab      none
+reset                not executed
+```
+
+六项例外：
+
+```text
+shared hypervisor/power/storage
+single etcd
+single local backup target
+unqualified virtual storage
+temporary inventory-based secret handling
+three pg-test guests below recommended 2-vCPU/2-GiB floor
+```
+
+这些例外不是脚注；它们逐项阻止 failure-domain、DCS、DR、durability、
+secret lifecycle 与 capacity 的生产结论。
 
 ## 本章目录
 
@@ -73,8 +150,43 @@ book_status: scaffold
 - [19.7.2 从 SQL、主机与 Pigsty 三侧验证同一事实](07/#item-19-7-2)
 - [19.7.3 产出基线清单、风险例外与 `reset:cluster`](07/#item-19-7-3)
 
-## 写作与验收提示
+## 实验入口
 
-- 本章各节是独立页面，目的标题使用稳定锚点；
-- PostgreSQL 结论优先回到原生证据，Pigsty 内容标明参考实现边界；
-- 实验正文补写时必须同时补齐验证、风险等级与复位路径。
+- [`lab-contract.md`](/labs/ch19/lab-contract.md)：风险、输入、动作、验收边界；
+- [`requirements.json`](/labs/ch19/requirements.json)：机器可验证的需求；
+- [`baseline-v2.0-sandbox.json`](/labs/ch19/baseline-v2.0-sandbox.json)：
+  接受决定与非生产边界；
+- [`inventory.example.yml`](/labs/ch19/inventory.example.yml)：无真实凭据的结构示例；
+- [`task.sh`](/labs/ch19/task.sh)：`project/capture/verify/review/all`；
+- [`deployment-adr.md`](/labs/ch19/deployment-adr.md)：架构决定；
+- [`deployment-run.json`](/labs/ch19/deployment-run.json)：无 secret 的执行摘要。
+
+正常 `all` 是只读验收，不包含 deploy、failover、restore 或 reset。
+
+## 本章最重要的判断
+
+```text
+declaration != observation
+playbook success != service acceptance
+node count != independent failure domains
+replica exists != RPO achieved
+port open != routing contract
+SSL on != transport security complete
+sandbox passed != production approved
+```
+
+如果只记住一个方法，就记住：
+
+> 同一事实必须由合适的 authority 证明；差异必须被拒绝或登记为有范围的
+> exception，不能被一句“看起来正常”吞掉。
+
+## 所属位置
+
+- 卷别：[下卷：运维管理](/lower-volume/)（独立导读页，不构成章节父目录）
+- 教学分组：第四篇：规划——建设可交付的 PostgreSQL 服务
+- 兼容入口：`/ch19/`、`/volume-2/deployment-baseline/`
+
+---
+
+[上一章：万法归宗：PostgreSQL 数据平台与替代边界](/data-platform-boundaries/) · [返回下卷导读](/lower-volume/) · [下一章：狡兔三窟：高可用拓扑与容灾目标](/high-availability/) ·
+[查看全书目录](/toc/) · [查看索引中心](/indexes/)

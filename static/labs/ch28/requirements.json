@@ -1,0 +1,45 @@
+{
+  "schema": "pg36-ch28-requirements-v1",
+  "chapter": 28,
+  "target": "pg36-l2-vagrant/pg-test",
+  "postgresql_major": 18,
+  "required_extensions": [
+    "amcheck",
+    "pg_freespacemap",
+    "pg_visibility",
+    "pgstattuple"
+  ],
+  "upstream": {
+    "deployment": "../ch19/deployment-run.json",
+    "observability": "../ch25/observability-run.json",
+    "tuning": "../ch27/tuning-run.json"
+  },
+  "fixture": {
+    "database": "pg36_maintenance",
+    "role": "dbuser_pg36maint",
+    "rows": 60000,
+    "updated_rows": 40000,
+    "deleted_rows": 10000,
+    "expired_partition_rows": 10000,
+    "current_partition_rows": 5000
+  },
+  "risk": {
+    "capture": "L0-read-only",
+    "exercise": "L2-bounded-disposable-fixture",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false,
+    "cluster_configuration_change_permitted": false,
+    "table_autovacuum_override": "disposable fixture only",
+    "forced_drop_permitted": false
+  },
+  "acceptance": {
+    "old_snapshot_must_retain_dead_tuples": true,
+    "post_release_vacuum_must_remove_dead_tuples": true,
+    "visibility_map_must_be_observed": true,
+    "amcheck_must_pass": true,
+    "concurrent_reindex_must_leave_one_valid_index": true,
+    "partition_archive_must_round_trip": true,
+    "exact_cleanup_required": true,
+    "production_ch28_gate": "pending"
+  }
+}

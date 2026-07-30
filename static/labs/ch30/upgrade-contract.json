@@ -1,0 +1,61 @@
+{
+  "schema": "pg36-ch30-upgrade-contract-v1",
+  "states": [
+    "PREFLIGHT",
+    "SOURCE_BASELINE",
+    "COMPATIBILITY_BLOCKED",
+    "COMPATIBILITY_REPAIRED",
+    "SOURCE_STOPPED",
+    "CHECK_REJECTED",
+    "CHECK_PASSED",
+    "UPGRADED",
+    "VALIDATED",
+    "ROLLBACK_PROVEN",
+    "FORWARD_COMMITTED",
+    "CLEANED"
+  ],
+  "transitions": [
+    ["PREFLIGHT", "SOURCE_BASELINE"],
+    ["SOURCE_BASELINE", "COMPATIBILITY_BLOCKED"],
+    ["COMPATIBILITY_BLOCKED", "COMPATIBILITY_REPAIRED"],
+    ["COMPATIBILITY_REPAIRED", "SOURCE_STOPPED"],
+    ["SOURCE_STOPPED", "CHECK_REJECTED"],
+    ["CHECK_REJECTED", "CHECK_PASSED"],
+    ["CHECK_PASSED", "UPGRADED"],
+    ["UPGRADED", "VALIDATED"],
+    ["VALIDATED", "ROLLBACK_PROVEN"],
+    ["ROLLBACK_PROVEN", "FORWARD_COMMITTED"],
+    ["FORWARD_COMMITTED", "CLEANED"]
+  ],
+  "allowed_mutations": [
+    "create private PostgreSQL 17 and 18 clusters below the marker-bound remote run root",
+    "create deterministic synthetic objects only inside pg36_upgrade",
+    "set collversion to pg36-injected-stale on the exact disposable app.en_numeric row",
+    "reindex app.orders_order_code_key and refresh app.en_numeric",
+    "run pg_upgrade --check against one checksum-incompatible disposable target",
+    "run pg_upgrade --copy against a fresh checksum-compatible disposable target",
+    "start one temporary cluster at a time on a private Unix socket",
+    "insert forward canary order_id 10001 after rollback proof",
+    "remove only marker-bound temporary run roots"
+  ],
+  "forbidden_mutations": [
+    "install or remove system packages",
+    "read or write production data",
+    "change Pigsty inventory or generated configuration",
+    "change Patroni DCS or restart a managed PostgreSQL instance",
+    "listen on TCP or modify firewall, HBA, DNS, VIP, HAProxy, or PgBouncer",
+    "run pg_upgrade with link, clone, copy-file-range, swap, or no-sync",
+    "run delete_old_cluster.sh",
+    "modify any system catalog outside the exact disposable collation row",
+    "terminate unrelated sessions or processes",
+    "delete an unmarked or non-temporary path"
+  ],
+  "release_gates": {
+    "collation_mismatch": "blocked",
+    "pg_upgrade_check_failure": "blocked",
+    "manifest_mismatch": "blocked",
+    "amcheck_failure": "blocked",
+    "target_only_writes_after_cutover": "rollback-requires-reconciliation",
+    "production_ch30_gate": "pending"
+  }
+}

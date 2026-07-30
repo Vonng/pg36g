@@ -1,0 +1,11 @@
+{
+  "schema": "pg36-ch19-machine-identity-allowlist-v1",
+  "target": "pg36-l2-vagrant",
+  "authority": "replace sentinels only after reviewing an accepted evidence bundle; keep the real file outside source control",
+  "machine_id_sha256": {
+    "10.10.10.10": "REPLACE_WITH_REVIEWED_64_HEX_SHA256",
+    "10.10.10.11": "REPLACE_WITH_REVIEWED_64_HEX_SHA256",
+    "10.10.10.12": "REPLACE_WITH_REVIEWED_64_HEX_SHA256",
+    "10.10.10.13": "REPLACE_WITH_REVIEWED_64_HEX_SHA256"
+  }
+}

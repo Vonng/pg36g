@@ -1,0 +1,16 @@
+# Copy this file to a private location, replace <L1_HOST>, and set:
+#   chmod 600 /path/to/pg_service.conf
+#   export PGSERVICEFILE=/path/to/pg_service.conf
+#
+# Keep passwords out of this file. Use a passfile with mode 0600 or let the
+# client prompt interactively. The automated task uses -w and therefore
+# requires a usable passfile or another non-interactive credential provider.
+
+[pg36-admin]
+host=<L1_HOST>
+port=5436
+dbname=pg36_shop
+user=dbuser_dba
+application_name=pg36-ch02
+connect_timeout=5
+options=-c statement_timeout=30s -c lock_timeout=5s -c idle_in_transaction_session_timeout=60s

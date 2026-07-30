@@ -1,0 +1,111 @@
+{
+  "schema": "pg36-ch26-capacity-requirements-v1",
+  "release": "1.0-sandbox",
+  "target": {
+    "id": "pg36-l2-vagrant",
+    "environment": "isolated-teaching-sandbox",
+    "cluster": "pg-test",
+    "primary_host": "pg-test-1",
+    "primary_address": "10.10.10.11",
+    "client_host": "pg-meta-1",
+    "client_address": "10.10.10.10",
+    "database": "pg36_capacity",
+    "benchmark_role": "dbuser_pg36bench",
+    "hba_membership": "dbrole_readwrite with INHERIT FALSE and SET FALSE",
+    "production_data": false,
+    "production_traffic": false,
+    "production_slo_claimed": false
+  },
+  "risk": {
+    "classification": "L2-bounded-performance-exercise",
+    "expected_mutations": [
+      "create one marker-bound disposable database and one marker-bound login role",
+      "grant the disposable login a non-inheriting, non-settable dbrole_readwrite membership so the existing Pigsty HBA group rule can authenticate it",
+      "bulk-load synthetic data in the disposable database",
+      "run a bounded write workload against the disposable database",
+      "drop only the marker-bound disposable database and role after evidence is captured"
+    ],
+    "prohibited_actions": [
+      "run against a production target or production data",
+      "run through an ambiguous service endpoint",
+      "change PostgreSQL, Patroni, PgBouncer, HAProxy, kernel, or Pigsty configuration",
+      "reset PostgreSQL, pg_stat_statements, operating-system, or monitoring statistics",
+      "drop operating-system caches, restart a service, checkpoint on demand, or fail over",
+      "disable durability, archive, replication, checksums, constraints, or synchronous_commit",
+      "terminate a session not created by this chapter",
+      "retain a password, connection URI, SQL text, client address, or raw monitoring payload in public evidence"
+    ]
+  },
+  "purpose": {
+    "question": "How do dataset size and client concurrency change the throughput, latency, resource demand, WAL demand, and wait profile of one declared pg36_shop transaction mix on the recorded sandbox?",
+    "supported_claims": [
+      "reproduce six cells on the recorded sandbox",
+      "compare cells within the same recorded run",
+      "estimate sandbox-only resource demand for the declared mix",
+      "bracket, but not precisely locate, a saturation knee when two concurrency levels diverge"
+    ],
+    "unsupported_claims": [
+      "universal PostgreSQL performance",
+      "production sizing or production SLO acceptance",
+      "cold-cache performance",
+      "failure-mode or degraded-replica capacity",
+      "HAProxy, PgBouncer, application, WAN, storage endurance, or independent failure-domain capacity",
+      "an exact saturation point from only two concurrency levels"
+    ]
+  },
+  "upstream_evidence": {
+    "chapter_19": [
+      "requirements.json",
+      "deployment-run.json"
+    ],
+    "chapter_25": [
+      "requirements.json",
+      "signal-contract.json",
+      "observability-run.json"
+    ],
+    "required_properties": [
+      "the target is the disposable pg36-l2-vagrant sandbox",
+      "the cluster identity is pg-test",
+      "the live node is the primary and not in recovery",
+      "the observation path is healthy enough to retain a corroborating time-series window"
+    ]
+  },
+  "acceptance": {
+    "scales": 3,
+    "concurrency_levels": 2,
+    "repetitions_per_cell": 5,
+    "minimum_measured_seconds_per_run": 8,
+    "required_latency_quantiles": [
+      0.5,
+      0.95,
+      0.99
+    ],
+    "required_evidence_layers": [
+      "pgbench client transaction log and report",
+      "PostgreSQL cumulative-statistic deltas without reset",
+      "PostgreSQL activity and wait samples",
+      "server and client operating-system samples",
+      "Pigsty VictoriaMetrics corroboration or an explicit missing-series gap"
+    ],
+    "hard_rejections": [
+      "target identity, role, database, or topology differs from the contract",
+      "the database or role exists without the exact chapter marker",
+      "a non-chapter session is connected to the disposable database",
+      "any scale, concurrency level, repetition, seed, workload weight, or latency distribution is missing",
+      "a pgbench failure, skipped transaction, missing log, or statistics reset occurs",
+      "client saturation is ignored when it can explain the result",
+      "cleanup is not proven",
+      "the report promotes a sandbox result to production capacity"
+    ]
+  },
+  "gates": {
+    "sandbox_ch26_gate": "may pass after the bounded exercise and exact cleanup",
+    "production_ch26_gate": "pending",
+    "production_requirements": [
+      "production-representative compute, storage, network, data shape, connection path, and workload trace",
+      "open-loop offered-load sweep around the SLO boundary",
+      "maintenance, backup, replica loss, failover, and recovery capacity scenarios",
+      "at least one independently reviewed capacity forecast with lead time and business growth inputs"
+    ]
+  }
+}

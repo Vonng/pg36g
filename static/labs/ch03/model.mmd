@@ -1,0 +1,39 @@
+erDiagram
+  CUSTOMER ||--o{ SALES_ORDER : places
+  SALES_ORDER ||--|{ SALES_ORDER_ITEM : contains
+  PRODUCT ||--o{ SALES_ORDER_ITEM : snapshotted_as
+  SALES_ORDER ||--o{ PAYMENT : receives
+
+  CUSTOMER {
+    bigint customer_id PK
+    text customer_ref UK
+    text email UK
+  }
+  PRODUCT {
+    bigint product_id PK
+    text sku UK
+    numeric current_unit_price
+  }
+  SALES_ORDER {
+    bigint order_id PK
+    text order_no UK
+    bigint customer_id FK
+    text request_key
+    text order_status
+  }
+  SALES_ORDER_ITEM {
+    bigint order_id PK,FK
+    integer line_no PK
+    bigint product_id FK
+    text sku_snapshot
+    numeric unit_price
+    integer quantity
+  }
+  PAYMENT {
+    bigint payment_id PK
+    bigint order_id FK
+    text provider
+    text provider_payment_ref
+    text payment_status
+    numeric amount
+  }

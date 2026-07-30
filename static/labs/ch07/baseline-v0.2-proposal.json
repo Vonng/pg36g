@@ -1,0 +1,36 @@
+{
+  "proposal_version": 1,
+  "base_baseline": "0.1.0",
+  "base_checksum": "bb1404e2b2e47624b17f3a1b0de63a5371f382b67906f1a8ba1cf08e92895a1c",
+  "candidate_baseline": "0.2.0",
+  "status": "candidate",
+  "rule_id": "PREF-PLAN-005",
+  "change_kind": "evidence-and-runtime-check",
+  "statement_change": "none",
+  "evidence": [
+    {
+      "chapter": "ch07",
+      "artifact": "/labs/ch07/correlation-present.sql",
+      "observation": "扩展统计前后对照跨列相关条件的 estimate/actual。"
+    },
+    {
+      "chapter": "ch07",
+      "artifact": "/labs/ch07/parameter-plan.sql",
+      "observation": "倾斜 tenant 参数下对照 custom 与 generic plan。"
+    },
+    {
+      "chapter": "ch07",
+      "artifact": "/labs/ch07/partition-generic.sql",
+      "observation": "generic parameter 在执行初始化阶段裁剪分区。"
+    }
+  ],
+  "proposed_check": {
+    "kind": "runtime",
+    "criterion": "保存机器可读 plan，比较 estimate/actual、参数计划与裁剪范围；不得以节点名或 cost 单独判定回归。"
+  },
+  "promotion_conditions": [
+    "ch07 analyzer 在 PostgreSQL 14-18 兼容矩阵通过",
+    "记录至少一次不同硬件或数据规模复测",
+    "将本 proposal 合并到不可变 baseline v0.2 release artifact"
+  ]
+}

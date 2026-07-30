@@ -1,0 +1,103 @@
+{
+  "schema": "pg36-ch14-release-proposal-v1",
+  "release": "1.2-proposal",
+  "fixture": "ch14-extension-lifecycle-v1",
+  "target": {
+    "database": "pg36_shop",
+    "schema": "shop_ch14",
+    "owner": "pg36_owner",
+    "application_role": "pg36_app",
+    "postgresql": "14-18",
+    "validated_on": "18.4",
+    "local_distribution": "Homebrew PostgreSQL",
+    "pigsty_reference": "4.4",
+    "pigsty_l1_validation": "not-run"
+  },
+  "decision": {
+    "pg_trgm": "accept",
+    "vector": "pilot",
+    "citus": "reject",
+    "principle": "availability is evidence, not approval"
+  },
+  "contracts": {
+    "pg_trgm_source_version": "1.3",
+    "pg_trgm_target_version": "1.6",
+    "vector_version": "0.8.4",
+    "pg_trgm_trusted": true,
+    "vector_trusted": false,
+    "owner_vector_create_sqlstate": "42501",
+    "application_alter_sqlstate": "42501",
+    "trigram_top_ids": [
+      1,
+      5,
+      2
+    ],
+    "vector_top_ids": [
+      1,
+      2,
+      5
+    ],
+    "trigram_index": "gin",
+    "vector_index": "hnsw"
+  },
+  "expected_state": {
+    "reviews": 3,
+    "documents": 5,
+    "pg_trgm_members_on_18_4": 47,
+    "vector_members_on_18_4": 237,
+    "business_checksum": "5398634500fe53ba1fb683e9a2c6e745"
+  },
+  "package_boundary": {
+    "required_control_files": [
+      "pg_trgm.control",
+      "vector.control"
+    ],
+    "required_shared_libraries": [
+      "pg_trgm",
+      "vector"
+    ],
+    "manifest_hashes_support_files": true,
+    "database_extension_version_is_separate": true
+  },
+  "evidence": [
+    "manifest.txt",
+    "package-manifest.txt",
+    "owner-create-vector.stderr",
+    "app-alter-extension.stderr",
+    "available-candidates-before.csv",
+    "available-versions-before.csv",
+    "extension-inventory-before.csv",
+    "member-catalog-before.csv",
+    "update-paths.csv",
+    "index-catalog-before.csv",
+    "security-catalog-before.csv",
+    "behavior-before.csv",
+    "trigram-plan-before.txt",
+    "vector-plan-before.txt",
+    "extension-inventory-after.csv",
+    "member-catalog-after.csv",
+    "behavior-after.csv",
+    "trigram-plan-after.txt",
+    "vector-plan-after.txt",
+    "database-schema.sql",
+    "selected-schema.sql",
+    "portable-export.csv",
+    "final-state.csv",
+    "verify.txt"
+  ],
+  "rollback": {
+    "token": "RESET_CH14_EXTENSION_LAB",
+    "target": "pg36_shop/shop_ch14/pg_trgm+vector",
+    "requires_no_active_workers": true,
+    "requires_exact_markers": true,
+    "uses_cascade": false
+  },
+  "limitations": [
+    "The direct PostgreSQL fixture does not claim a Pigsty L1 run.",
+    "The five-row corpus proves mechanics, not search relevance or production latency.",
+    "A package present in the local catalog does not prove presence on every cluster node.",
+    "Logical replication, physical standby startup, backup restore, and major upgrade are analyzed but not executed here.",
+    "The Citus rejection is a problem-fit decision, not a claim that Citus is defective or absent from Pigsty.",
+    "Extension member counts can vary by server major even when the extension version is the same."
+  ]
+}

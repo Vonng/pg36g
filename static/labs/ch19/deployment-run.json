@@ -1,0 +1,95 @@
+{
+  "schema": "pg36-ch19-deployment-run-v1",
+  "release": "2.0-sandbox",
+  "captured_on": "2026-07-29",
+  "authority": "sanitized execution account; live evidence must be recaptured before relying on it",
+  "source": {
+    "pigsty_release": "v4.4.0",
+    "git_commit": "2d5a45f759274048de0c197829228a71d0182e5c",
+    "git_commit_date": "2026-07-10",
+    "source_method": "git archive of the exact v4.4.0 tag into a private temporary directory",
+    "local_dirty_worktree_used": false
+  },
+  "configuration": {
+    "template": "conf/ha/full.yml",
+    "command": "./configure -c ha/full -s -n -g -v 18 -r default",
+    "inventory": "private generated inventory plus the declared four-host topology",
+    "inventory_mode": "0600",
+    "secret_values_exported": 0
+  },
+  "execution": {
+    "control_node": "10.10.10.10",
+    "bootstrap": "completed",
+    "ansible_core": "2.16.3",
+    "playbook": "./deploy.yml -i pg36.yml",
+    "return_code": 0,
+    "recap": {
+      "10.10.10.10": {
+        "ok": 326,
+        "changed": 248,
+        "unreachable": 0,
+        "failed": 0,
+        "skipped": 76,
+        "rescued": 0,
+        "ignored": 0
+      },
+      "10.10.10.11": {
+        "ok": 174,
+        "changed": 134,
+        "unreachable": 0,
+        "failed": 0,
+        "skipped": 58,
+        "rescued": 0,
+        "ignored": 0
+      },
+      "10.10.10.12": {
+        "ok": 159,
+        "changed": 120,
+        "unreachable": 0,
+        "failed": 0,
+        "skipped": 73,
+        "rescued": 0,
+        "ignored": 0
+      },
+      "10.10.10.13": {
+        "ok": 159,
+        "changed": 120,
+        "unreachable": 0,
+        "failed": 0,
+        "skipped": 73,
+        "rescued": 0,
+        "ignored": 0
+      },
+      "localhost": {
+        "ok": 6,
+        "changed": 4,
+        "unreachable": 0,
+        "failed": 0,
+        "skipped": 1,
+        "rescued": 0,
+        "ignored": 0
+      }
+    }
+  },
+  "observed_acceptance": {
+    "hosts": 4,
+    "postgresql_members": 4,
+    "postgresql_clusters": 2,
+    "postgresql_version_num": 180004,
+    "inventory_patroni_and_sql_roles_agree": true,
+    "postgresql_system_identifier_relation": "same within each cluster and different between pg-meta and pg-test",
+    "required_tcp_endpoints_reachable": true,
+    "normal_validation": "ok",
+    "negative_cases_rejected": 9,
+    "sandbox_l2": "accepted-with-exceptions",
+    "production_ch19_gate": "pending"
+  },
+  "boundary": {
+    "production_data_permitted": false,
+    "production_traffic_permitted": false,
+    "failover_claimed": false,
+    "recovery_claimed": false,
+    "capacity_claimed": false,
+    "reset_executed": false
+  }
+}

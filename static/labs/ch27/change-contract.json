@@ -1,0 +1,41 @@
+{
+  "schema": "pg36-ch27-change-contract-v1",
+  "change_id": "ch27-plan-cache-mode-falsification",
+  "question": "Does forcing generic plans materially improve the chapter 26 prepared OLTP mix without changing plans or tail latency?",
+  "parameter": {
+    "name": "plan_cache_mode",
+    "baseline": "auto",
+    "candidate": "force_generic_plan",
+    "context_required": "user",
+    "applied_with": "PGOPTIONS=-c plan_cache_mode=<arm>",
+    "scope": "benchmark session",
+    "persistent": false,
+    "rollback": "end the session; RESET plan_cache_mode if reused"
+  },
+  "controlled_factors": [
+    "same M synthetic dataset generator",
+    "same eight clients and two pgbench jobs",
+    "same prepared protocol",
+    "same 50/30/20 scripts",
+    "same paired seed within each repetition",
+    "fixture reset before every measured run",
+    "counterbalanced baseline/candidate order"
+  ],
+  "acceptance": {
+    "all_runs_successful": true,
+    "failures": 0,
+    "late_transactions": 0,
+    "skipped_transactions": 0,
+    "plan_shapes_equal_for_probes": true,
+    "global_settings_unchanged": true,
+    "candidate_p95_ratio_max": 1.05,
+    "paired_tps_ratio_bootstrap_95_lower_min": 1.02,
+    "minimum_material_gain_percent": 2,
+    "decision_if_any_rule_fails": "reject-persistent-change"
+  },
+  "claim_boundary": {
+    "passing_result": "candidate-worthy-for-a-larger-canary, not production approval",
+    "failing_result": "keep auto and record why the parameter hypothesis was rejected",
+    "production_ch27_gate": "pending"
+  }
+}

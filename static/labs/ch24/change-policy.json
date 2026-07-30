@@ -1,0 +1,125 @@
+{
+  "schema": "pg36-ch24-change-policy-v1",
+  "service_id": "pg36_shop",
+  "production_approval": false,
+  "lifecycle": [
+    "request",
+    "classify-risk-and-authority",
+    "freeze-preconditions-and-stop-lines",
+    "preview-and-test",
+    "approve",
+    "execute",
+    "observe",
+    "verify",
+    "rollback-or-roll-forward",
+    "retain-evidence",
+    "close-and-review"
+  ],
+  "risk_classes": [
+    {
+      "id": "L0",
+      "description": "read-only observation or local artifact validation",
+      "examples": [
+        "query a statistics view",
+        "render a configuration diff",
+        "validate an existing evidence bundle"
+      ],
+      "independent_approval": false,
+      "exact_target": true,
+      "rollback_required": false
+    },
+    {
+      "id": "L1",
+      "description": "bounded reversible nonproduction or low-impact production change",
+      "examples": [
+        "add a dashboard",
+        "publish a disabled alert rule",
+        "grant a narrowly scoped non-login role in a sandbox"
+      ],
+      "independent_approval": false,
+      "exact_target": true,
+      "rollback_required": true
+    },
+    {
+      "id": "L2",
+      "description": "material state, access, schema, pool, or runtime change",
+      "examples": [
+        "rotate a workload credential",
+        "execute an online schema expansion",
+        "change a connection-pool limit"
+      ],
+      "independent_approval": true,
+      "exact_target": true,
+      "rollback_required": true
+    },
+    {
+      "id": "L3",
+      "description": "destructive, topology-changing, recovery, or broad high-blast-radius action",
+      "examples": [
+        "fail over a production service",
+        "restore or promote recovered state",
+        "drop data or reset a cluster"
+      ],
+      "independent_approval": true,
+      "exact_target": true,
+      "rollback_required": true
+    }
+  ],
+  "high_risk_control": {
+    "applies_to": [
+      "L2",
+      "L3"
+    ],
+    "requester_may_approve": false,
+    "approver_may_execute": false,
+    "requester_approver_executor_distinct": true,
+    "shared_accounts_allowed": false,
+    "independent_approver_qualified": true,
+    "exact_target_and_blast_radius_required": true,
+    "machine_enforced_preconditions": true,
+    "human_confirmation_binds_target_action_and_window": true,
+    "cooldown_or_delayed_confirmation_for_destructive_action": true,
+    "stop_conditions_evaluated_during_execution": true,
+    "credential_material_in_ticket": false,
+    "break_glass": {
+      "may_skip_normal_wait": true,
+      "may_skip_target_and_evidence": false,
+      "time_bounded_identity": true,
+      "independent_after_action_review": true,
+      "credential_rotation_after_use": true
+    }
+  },
+  "change_record_required_fields": [
+    "change_id",
+    "service_id",
+    "risk_class",
+    "exact_target",
+    "blast_radius",
+    "requester_identity",
+    "approver_identity",
+    "executor_identity",
+    "planned_start_and_end",
+    "preconditions",
+    "stop_conditions",
+    "execution_hash",
+    "verification",
+    "rollback_or_roll_forward",
+    "observations",
+    "decision",
+    "evidence_manifest"
+  ],
+  "error_budget_gate": {
+    "healthy": "normal reviewed cadence",
+    "watch": "reduce concurrent L2 and L3 work",
+    "constrained": "service and platform owner exception required for nonessential L2 or L3 work",
+    "exhausted": "only emergency, security, legal, or directly reliability-restoring high-risk work may proceed",
+    "emergency_exception_still_requires_evidence": true
+  },
+  "automation_rules": [
+    "automation may collect facts and enforce invariants but cannot invent authority",
+    "preview and execution use the same target identity and artifact hash",
+    "a successful command is not a successful change until postconditions pass",
+    "a rollback command must itself have a target, authority, stop line, and verification",
+    "retry is prohibited until unknown outcomes are reconciled"
+  ]
+}

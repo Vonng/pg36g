@@ -1,0 +1,111 @@
+{
+  "captured_at": "2026-07-30T01:16:14.404631Z",
+  "claims_not_made": [
+    "this run changed a real application or Pigsty route",
+    "logical replication copied DDL, sequences, or large objects",
+    "row counts alone proved semantic equivalence",
+    "the sandbox result authorizes a production migration"
+  ],
+  "cleanup": {
+    "all_roles_absent": true,
+    "force_drop_used": false,
+    "ordinary_drop": true,
+    "source_database_absent": true,
+    "source_slot_absent": true,
+    "target_database_absent": true,
+    "target_subscription_absent": true,
+    "unrelated_sessions_terminated": 0
+  },
+  "conflict_and_reconciliation": {
+    "apply_errors_after": 1,
+    "conflict_order_id": 900000,
+    "conflict_repaired": true,
+    "drift_order_id": 1,
+    "insert_exists_after": 1,
+    "insert_exists_before": 0,
+    "mismatched_buckets_after": [],
+    "mismatched_buckets_before": [
+      1
+    ]
+  },
+  "consumer_stall": {
+    "caught_up_after_enable": true,
+    "confirmed_lsn_unchanged": true,
+    "generated_rows": 3000,
+    "retained_bytes_after": 2867128,
+    "retained_bytes_before": 227008,
+    "retained_bytes_grew": true,
+    "slot_inactive": true
+  },
+  "cutover_and_rollback": {
+    "actual_platform_route_changed": false,
+    "final_business_invariants": {
+      "invalid_statuses": 0,
+      "negative_amounts": 0,
+      "orphan_orders": 0
+    },
+    "final_customers": 5000,
+    "final_logical_manifest_equal": true,
+    "final_orders": 23402,
+    "route_history": [
+      "source",
+      "target",
+      "source"
+    ],
+    "source_max_order_id": 900000,
+    "source_retained_through_rollback": true,
+    "source_write_fence_sqlstate": "42501",
+    "target_canary_order_id": 900001,
+    "target_only_rows_reconciled": 1,
+    "target_sequence_after": 900000,
+    "target_sequence_before": 1
+  },
+  "decision": {
+    "production_approval": null,
+    "production_ch29_gate": "pending",
+    "result": "two-cluster-migration-state-machine-demonstrated"
+  },
+  "environment": {
+    "distinct_system_identifiers": true,
+    "source_cluster": "pg-test",
+    "source_postgresql": "18.4 (Ubuntu 18.4-1.pgdg24.04+1)",
+    "source_wal_level": "logical",
+    "target_cluster": "pg-meta",
+    "target_postgresql": "18.4 (Ubuntu 18.4-1.pgdg24.04+1)"
+  },
+  "incremental": {
+    "deleted": 100,
+    "inserted": 500,
+    "logical_manifest_equal": true,
+    "marker_acknowledged": true,
+    "updated": 200
+  },
+  "initial_copy": {
+    "customers": 5000,
+    "logical_manifest_equal": true,
+    "orders": 20000,
+    "tables_ready": 2
+  },
+  "preflight_run_id": "568c4034-5b7c-4be1-a5e0-48fa189bb782",
+  "release": "1.0-sandbox",
+  "risk": {
+    "actual_platform_route_changed": false,
+    "force_drop_used": false,
+    "patroni_configuration_changed": false,
+    "persistent_cluster_configuration_change": false,
+    "pigsty_inventory_changed": false,
+    "production_data_touched": false,
+    "production_traffic_touched": false,
+    "unrelated_slot_changed": false,
+    "unrelated_subscription_changed": false
+  },
+  "run_id": "7d95ca65-12a7-46c2-8e6c-ad8cbb5336c5",
+  "schema": "pg36-ch29-reference-run-v1",
+  "target": "pg36-l2-vagrant/pg-test-to-pg-meta",
+  "validation": {
+    "declared_counterexamples_rejected": 29,
+    "live_evidence_mutants_rejected": 19,
+    "private_bundle_required": true,
+    "source_hash_bound": true
+  }
+}

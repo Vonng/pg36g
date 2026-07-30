@@ -1,0 +1,38 @@
+# Pigsty 4.4 declaration sketch for chapter 16.
+# Merge into a reviewed cluster inventory; this is not a complete standalone
+# production configuration.  Package aliases and defaults can change across
+# Pigsty releases, so resolve them against the target release and OS.
+all:
+  vars:
+    pg_version: 18
+
+    # Supply PostGIS binaries on every L1 node.  btree_gist ships with the
+    # PostgreSQL contrib set in the normal main package.
+    pg_extensions:
+      - postgis
+
+    pg_databases:
+      - name: pg36_shop
+        owner: pg36_owner
+        schemas:
+          - { name: app_ext, owner: pg36_owner }
+        extensions:
+          - { name: btree_gist, schema: app_ext }
+          - { name: postgis, schema: app_ext }
+
+# Optional decision branch, deliberately NOT enabled by this baseline:
+#
+#   pg_extensions:
+#     - postgis
+#     - timescaledb
+#
+#   pg_libs: 'timescaledb, pg_stat_statements, auto_explain'
+#
+#   pg_databases:
+#     - name: pg36_shop
+#       extensions:
+#         - { name: timescaledb, schema: public }
+#
+# TimescaleDB requires package supply, shared_preload_libraries, restart, and
+# CREATE EXTENSION coordination across the cluster.  Adopt it only after the
+# native-partition baseline and production workload establish a concrete need.

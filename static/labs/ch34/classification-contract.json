@@ -1,0 +1,51 @@
+{
+  "schema": "pg36-ch34-classification-contract-v1",
+  "common_alert": "postgresql-resource-headroom-at-risk",
+  "required_packet_fields": [
+    "case_id",
+    "observed_at",
+    "connection",
+    "retention",
+    "engine",
+    "filesystem"
+  ],
+  "routes": [
+    {
+      "route": "RELIEVE_FLOW_PRESSURE",
+      "requires": [
+        "connection.observed_sessions >= 18",
+        "connection.connection_rejections >= 1",
+        "connection.lock_waiters >= 1",
+        "retention.inactive_physical_slots = 0"
+      ],
+      "safe_action": "cancel exact fixture sessions, then reduce admission/retry pressure",
+      "forbidden_shortcut": "increase max_connections during the incident"
+    },
+    {
+      "route": "PRESERVE_RETENTION_EVIDENCE",
+      "requires": [
+        "retention.inactive_physical_slots = 1",
+        "retention.retained_wal_bytes >= 33554432",
+        "connection.connection_rejections = 0"
+      ],
+      "safe_action": "identify the retention owner and protect evidence; only an exact disposable owned slot may be dropped in this lab",
+      "forbidden_shortcut": "delete files from pg_wal"
+    }
+  ],
+  "unknown_route": {
+    "route": "STOP_AND_INVESTIGATE",
+    "when": "neither or both route predicates match",
+    "actions": [
+      "stop destructive cleanup",
+      "preserve SQL and host evidence",
+      "name unresolved facts",
+      "escalate to the incident commander"
+    ]
+  },
+  "wrong_route_cost": {
+    "flow_as_retention": "no admission relief; connection failures and queueing continue",
+    "retention_as_flow": "canceling sessions does not release restart_lsn; WAL continues to be retained",
+    "delete_pg_wal": "can make crash recovery or replication impossible and destroys evidence"
+  },
+  "production_ch34_gate": "pending"
+}

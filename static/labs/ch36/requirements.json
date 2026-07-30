@@ -1,0 +1,77 @@
+{
+  "schema": "pg36-ch36-closure-requirements-v1",
+  "chapter": 36,
+  "input": {
+    "kind": "frozen-public-evidence",
+    "chapters": [32, 33, 34, 35],
+    "network_required": false,
+    "database_connection_required": false
+  },
+  "risk": {
+    "level": "L0-offline-read-only",
+    "production_mutation_permitted": false,
+    "external_dispatch_permitted": false,
+    "incident_source_overwrite_permitted": false,
+    "automatic_production_approval_permitted": false,
+    "learner_auto_certification_permitted": false
+  },
+  "acceptance": {
+    "incident_count": 4,
+    "required_chapters": [32, 33, 34, 35],
+    "minimum_cross_incident_themes": 6,
+    "minimum_incidents_per_theme": 2,
+    "minimum_actions": 12,
+    "roadmap_phases": ["day-0-30", "day-31-60", "day-61-90"],
+    "required_control_types": ["prevent", "detect", "mitigate", "recover"],
+    "required_action_fields": [
+      "id",
+      "title",
+      "owner_role",
+      "priority",
+      "phase",
+      "due_day",
+      "source_themes",
+      "control_type",
+      "artifact",
+      "verification",
+      "failure_condition",
+      "status",
+      "production_execution_approved"
+    ],
+    "required_verification_fields": [
+      "type",
+      "procedure",
+      "pass_condition",
+      "evidence_to_close",
+      "revalidation_days"
+    ],
+    "forbidden_action_phrases": [
+      "加强意识",
+      "以后注意",
+      "小心一点",
+      "培训一下",
+      "be careful",
+      "human error"
+    ],
+    "capability_chapter_min": 1,
+    "capability_chapter_max": 36,
+    "learner_assessment_status": "not-assessed",
+    "production_ch36_gate": "pending"
+  },
+  "source_manifest": {
+    "files": [
+      "requirements.json",
+      "incident-catalog.json",
+      "control-backlog.json",
+      "capability-map.json",
+      "negative-cases.json",
+      "lab-contract.md",
+      "topology.mmd",
+      "common.py",
+      "compile.py",
+      "validate.py",
+      "review.py",
+      "task.sh"
+    ]
+  }
+}

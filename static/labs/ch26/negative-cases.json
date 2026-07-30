@@ -1,0 +1,210 @@
+{
+  "schema": "pg36-ch26-negative-cases-v1",
+  "cases": [
+    {
+      "id": "NEG26-01-PRODUCTION-DATA",
+      "document": "requirements",
+      "path": "target.production_data",
+      "operation": "set",
+      "value": true,
+      "expected_error": "TARGET_NOT_DISPOSABLE"
+    },
+    {
+      "id": "NEG26-02-PRODUCTION-TRAFFIC",
+      "document": "requirements",
+      "path": "target.production_traffic",
+      "operation": "set",
+      "value": true,
+      "expected_error": "TARGET_NOT_DISPOSABLE"
+    },
+    {
+      "id": "NEG26-03-WRONG-DATABASE",
+      "document": "requirements",
+      "path": "target.database",
+      "operation": "set",
+      "value": "postgres",
+      "expected_error": "FIXTURE_SCOPE_DRIFT"
+    },
+    {
+      "id": "NEG26-04-SAME-CLIENT-SERVER",
+      "document": "requirements",
+      "path": "target.client_host",
+      "operation": "set",
+      "value": "pg-test-1",
+      "expected_error": "CLIENT_PATH_DRIFT"
+    },
+    {
+      "id": "NEG26-05-CACHE-DROP-ALLOWED",
+      "document": "requirements",
+      "path": "risk.prohibited_actions",
+      "operation": "delete_value",
+      "value": "drop operating-system caches, restart a service, checkpoint on demand, or fail over",
+      "expected_error": "SAFETY_BOUNDARY_DRIFT"
+    },
+    {
+      "id": "NEG26-06-STAT-RESET-ALLOWED",
+      "document": "requirements",
+      "path": "risk.prohibited_actions",
+      "operation": "delete_value",
+      "value": "reset PostgreSQL, pg_stat_statements, operating-system, or monitoring statistics",
+      "expected_error": "SAFETY_BOUNDARY_DRIFT"
+    },
+    {
+      "id": "NEG26-07-THINK-TIME-HIDDEN",
+      "document": "workload",
+      "path": "semantics.think_time_ms",
+      "operation": "set",
+      "value": 50,
+      "expected_error": "WORKLOAD_SEMANTICS_DRIFT"
+    },
+    {
+      "id": "NEG26-08-CONNECT-PER-TX",
+      "document": "workload",
+      "path": "semantics.connection_lifetime",
+      "operation": "set",
+      "value": "new connection per transaction",
+      "expected_error": "WORKLOAD_SEMANTICS_DRIFT"
+    },
+    {
+      "id": "NEG26-09-SIMPLE-PROTOCOL",
+      "document": "workload",
+      "path": "semantics.query_protocol",
+      "operation": "set",
+      "value": "simple",
+      "expected_error": "WORKLOAD_SEMANTICS_DRIFT"
+    },
+    {
+      "id": "NEG26-10-DURABILITY-OFF",
+      "document": "workload",
+      "path": "semantics.durability.synchronous_commit",
+      "operation": "set",
+      "value": "off",
+      "expected_error": "DURABILITY_DRIFT"
+    },
+    {
+      "id": "NEG26-11-MIX-WEIGHT",
+      "document": "workload",
+      "path": "transaction_mix.0.weight",
+      "operation": "set",
+      "value": 80,
+      "expected_error": "MIX_DRIFT"
+    },
+    {
+      "id": "NEG26-12-MISSING-WRITE",
+      "document": "workload",
+      "path": "transaction_mix.2",
+      "operation": "delete",
+      "expected_error": "MIX_DRIFT"
+    },
+    {
+      "id": "NEG26-13-MISSING-SCALE",
+      "document": "workload",
+      "path": "data_model.scales.2",
+      "operation": "delete",
+      "expected_error": "SCALE_DRIFT"
+    },
+    {
+      "id": "NEG26-14-ONE-REPETITION",
+      "document": "workload",
+      "path": "controls.repetitions",
+      "operation": "set",
+      "value": 1,
+      "expected_error": "REPETITION_DRIFT"
+    },
+    {
+      "id": "NEG26-15-ONE-CONCURRENCY",
+      "document": "workload",
+      "path": "controls.concurrency_levels",
+      "operation": "set",
+      "value": [
+        8
+      ],
+      "expected_error": "CONCURRENCY_DRIFT"
+    },
+    {
+      "id": "NEG26-16-NO-SEED",
+      "document": "workload",
+      "path": "controls.base_seed",
+      "operation": "delete",
+      "expected_error": "SEED_DRIFT"
+    },
+    {
+      "id": "NEG26-17-COLD-CACHE-CLAIM",
+      "document": "workload",
+      "path": "controls.cache_policy",
+      "operation": "set",
+      "value": "cold cache proven",
+      "expected_error": "CACHE_CLAIM_DRIFT"
+    },
+    {
+      "id": "NEG26-18-MATRIX-CELL-MISSING",
+      "document": "matrix",
+      "path": "cells.5",
+      "operation": "delete",
+      "expected_error": "MATRIX_DRIFT"
+    },
+    {
+      "id": "NEG26-19-RUN-ORDER-SHORT",
+      "document": "matrix",
+      "path": "run_order.29",
+      "operation": "delete",
+      "expected_error": "MATRIX_DRIFT"
+    },
+    {
+      "id": "NEG26-20-NO-P99",
+      "document": "matrix",
+      "path": "responses",
+      "operation": "delete_value",
+      "value": "latency_p99_ms",
+      "expected_error": "RESPONSE_DRIFT"
+    },
+    {
+      "id": "NEG26-21-PRODUCTION-APPROVED",
+      "document": "model",
+      "path": "policy_defaults.production_numbers_approved",
+      "operation": "set",
+      "value": true,
+      "expected_error": "PRODUCTION_CLAIM_DRIFT"
+    },
+    {
+      "id": "NEG26-22-AGGRESSIVE-CPU",
+      "document": "model",
+      "path": "policy_defaults.target_cpu_utilization",
+      "operation": "set",
+      "value": 0.95,
+      "expected_error": "HEADROOM_POLICY_DRIFT"
+    },
+    {
+      "id": "NEG26-23-NO-FAILURE-HEADROOM",
+      "document": "model",
+      "path": "policy_defaults.minimum_failure_headroom_ratio",
+      "operation": "set",
+      "value": 0,
+      "expected_error": "HEADROOM_POLICY_DRIFT"
+    },
+    {
+      "id": "NEG26-24-UNIVERSAL-CLAIM",
+      "document": "requirements",
+      "path": "purpose.unsupported_claims",
+      "operation": "delete_value",
+      "value": "universal PostgreSQL performance",
+      "expected_error": "CLAIM_BOUNDARY_DRIFT"
+    },
+    {
+      "id": "NEG26-25-EXACT-KNEE",
+      "document": "workload",
+      "path": "interpretation.knee_rule",
+      "operation": "set",
+      "value": "Two points locate the exact knee.",
+      "expected_error": "INTERPRETATION_DRIFT"
+    },
+    {
+      "id": "NEG26-26-AVERAGE-QUANTILES",
+      "document": "workload",
+      "path": "interpretation.percentile_rule",
+      "operation": "set",
+      "value": "Average p99 values across instances.",
+      "expected_error": "INTERPRETATION_DRIFT"
+    }
+  ]
+}

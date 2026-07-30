@@ -1,0 +1,110 @@
+{
+  "schema": "pg36-ch34-overload-requirements-v1",
+  "chapter": 34,
+  "target": {
+    "id": "pg36-l2-vagrant/pg-test",
+    "ssh_user": "vagrant",
+    "cluster": "pg-test",
+    "managed_primary": "pg-test-1",
+    "managed_primary_address": "10.10.10.11",
+    "observer": "pg-test-3",
+    "observer_address": "10.10.10.13",
+    "postgresql_major": 18,
+    "postgresql_observed": "18.4",
+    "pig_observed": "1.5.1",
+    "production_data_permitted": false,
+    "production_traffic_permitted": false
+  },
+  "exercise": {
+    "scenario_count": 2,
+    "random_order": true,
+    "blind_classification": true,
+    "common_alert": "postgresql-resource-headroom-at-risk",
+    "routes": ["RELIEVE_FLOW_PRESSURE", "PRESERVE_RETENTION_EVIDENCE"],
+    "wrong_action_execution": false
+  },
+  "disposable_cluster": {
+    "host": "pg-test-3",
+    "address": "10.10.10.13",
+    "root_prefix": "/tmp/pg36-ch34-overload",
+    "port": 55444,
+    "listen_addresses": "",
+    "unix_socket_permissions": "0700",
+    "max_connections": 24,
+    "superuser_reserved_connections": 3,
+    "max_replication_slots": 4,
+    "max_slot_wal_keep_size": "-1",
+    "max_wal_size": "64MB",
+    "min_wal_size": "32MB",
+    "data_checksums": true,
+    "exact_cleanup_required": true
+  },
+  "flow_scenario": {
+    "attempted_clients": 30,
+    "statement_seconds": 20,
+    "sample_after_seconds": 1.5,
+    "minimum_observed_sessions": 18,
+    "minimum_connection_rejections": 1,
+    "minimum_lock_waiters": 1,
+    "mitigation": "pg_cancel_backend-exact-application-name",
+    "fallback": "terminate-exact-owned-client-process-only",
+    "post_mitigation_sessions": 0
+  },
+  "retention_scenario": {
+    "slot_kind": "physical",
+    "slot_active": false,
+    "minimum_retained_wal_bytes": 33554432,
+    "maximum_generated_wal_bytes": 134217728,
+    "payload_batch_rows": 20000,
+    "mitigation": "drop-exact-owned-disposable-slot-after-evidence",
+    "manual_pg_wal_file_deletion": false,
+    "post_mitigation_slots": 0
+  },
+  "risk": {
+    "managed_capture": "L0-read-only",
+    "exercise": "L2-disposable-local-cluster-only",
+    "managed_postgresql_mutation_permitted": false,
+    "managed_connection_storm_permitted": false,
+    "managed_replication_slot_permitted": false,
+    "managed_query_cancel_permitted": false,
+    "managed_service_change_permitted": false,
+    "managed_route_change_permitted": false,
+    "host_cache_drop_permitted": false,
+    "oom_injection_permitted": false,
+    "manual_pg_wal_deletion_permitted": false
+  },
+  "acceptance": {
+    "flow_case_must_show_connection_pressure": true,
+    "flow_case_must_have_no_retaining_slot": true,
+    "flow_action_must_target_exact_fixture_sessions": true,
+    "retention_case_must_show_inactive_slot_and_retained_lsn": true,
+    "retention_case_must_not_be_treated_as_connection_pressure": true,
+    "retention_action_must_preserve_evidence_before_exact_slot_drop": true,
+    "wrong_route_must_be_rejected": true,
+    "managed_topology_unchanged": true,
+    "exact_cleanup_required": true,
+    "production_ch34_gate": "pending"
+  },
+  "exceptions": [
+    {
+      "id": "EX34-DISPOSABLE-ENGINE",
+      "reason": "both online faults run in a private temporary PostgreSQL cluster",
+      "claim_blocked": "managed Pigsty service saturation and production resource limits"
+    },
+    {
+      "id": "EX34-NO-OOM",
+      "reason": "the lab does not intentionally exhaust host memory or trigger the kernel OOM killer",
+      "claim_blocked": "OOM victim selection and postmaster recovery timing"
+    },
+    {
+      "id": "EX34-BOUNDED-WAL",
+      "reason": "retained WAL is capped at 128 MiB and removed only by dropping the exact owned slot",
+      "claim_blocked": "filesystem-full behavior and archive-repository failure"
+    },
+    {
+      "id": "EX34-NO-WRONG-ACTION",
+      "reason": "misclassification cost is modeled and validated, not executed",
+      "claim_blocked": "empirical corruption impact from deleting pg_wal"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+# Pigsty v4.4 cluster-vars fragment for the pg36_shop teaching database.
+#
+# Merge this fragment under the intended PostgreSQL cluster's `vars` mapping.
+# It deliberately contains no credential material. Inject LOGIN-role secrets
+# from a controlled secret overlay; never commit the expanded inventory.
+#
+# Service decision:
+#   - application read/write traffic: Pigsty primary service, port 5433
+#   - reviewed migrations and direct diagnostics: default service, port 5436
+#   - no custom pg_services entry is required for this baseline
+
+pg_users:
+  - name: pg36_owner
+    login: false
+    superuser: false
+    createdb: false
+    createrole: false
+    replication: false
+    bypassrls: false
+    comment: pg36_shop object owner; no login
+
+  - name: pg36_app
+    login: true
+    superuser: false
+    createdb: false
+    createrole: false
+    replication: false
+    bypassrls: false
+    connlimit: 40
+    pgbouncer: true
+    pool_mode: transaction
+    pool_connlimit: 32
+    comment: pg36_shop application runtime role
+
+  - name: pg36_ro
+    login: true
+    superuser: false
+    createdb: false
+    createrole: false
+    replication: false
+    bypassrls: false
+    connlimit: 20
+    pgbouncer: true
+    pool_mode: transaction
+    pool_connlimit: 16
+    comment: pg36_shop read-only role
+
+pg_databases:
+  - name: pg36_shop
+    owner: pg36_owner
+    comment: PostgreSQL 36 Strategies teaching database
+    encoding: UTF8
+    locale: C
+    revokeconn: true
+    pgbouncer: true
+    pool_mode: transaction
+    pool_size: 32
+    pool_reserve: 8
+    pool_connlimit: 64
+    schemas:
+      - { name: shop, owner: pg36_owner }
+      - { name: shop_api, owner: pg36_owner }
+      - { name: shop_private, owner: pg36_owner }
+    parameters:
+      TimeZone: UTC
+      statement_timeout: 30s
+      lock_timeout: 5s
+      idle_in_transaction_session_timeout: 60s
+
+# Object grants, ALTER DEFAULT PRIVILEGES, SECURITY DEFINER hardening, named
+# constraints, schema-version markers, and fixture data remain versioned SQL.
+# Run ch01-ch04 migrations through the direct admin path, then verify catalog
+# state with this chapter's quality gate.

@@ -1,0 +1,18 @@
+flowchart LR
+    client["业务检查点<br/>base → keep → discard"]
+    primary["pg-test-1<br/>生产路径主库<br/>timeline 7"]
+    repo["MinIO / pgBackRest<br/>基础备份 + 连续 WAL"]
+    replica["pg-test-3 live replica<br/>Patroni 管理 · 5432"]
+    restore["隔离恢复实例<br/>独立目录与 Unix socket<br/>55432 · archive_mode=off"]
+    target["命名恢复点<br/>保留 base + keep<br/>排除 discard"]
+
+    client --> primary
+    primary --> repo
+    primary --> replica
+    repo --> restore
+    restore --> target
+
+    classDef live fill:#e8f5e9,stroke:#2e7d32
+    classDef isolated fill:#fff3e0,stroke:#ef6c00
+    class primary,replica live
+    class restore,target isolated

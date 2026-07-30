@@ -1,0 +1,106 @@
+{
+  "captured_at": "2026-07-30T00:37:21.390120Z",
+  "claims_not_made": [
+    "normal VACUUM never truncates relation files",
+    "this run proves a production maintenance window is safe",
+    "amcheck replaces checksums or restore tests",
+    "one table-local autovacuum override is a production recommendation"
+  ],
+  "cleanup": {
+    "database_absent": true,
+    "marker_matched": true,
+    "ordinary_drop": true,
+    "remote_temp_absent": true,
+    "role_absent": true,
+    "unrelated_sessions_terminated": 0
+  },
+  "decision": {
+    "production_approval": null,
+    "production_ch28_gate": "pending",
+    "result": "maintenance-loop-demonstrated-in-sandbox"
+  },
+  "environment": {
+    "baseline_relation_bytes": 61440000,
+    "cluster": "pg-test",
+    "data_checksums": "on",
+    "fixture_database": "pg36_maintenance",
+    "postgresql": "18.4 (Ubuntu 18.4-1.pgdg24.04+1)"
+  },
+  "integrity_and_rebuild": {
+    "bt_index_check_passed": true,
+    "bt_index_check_seconds": 0.05972607500734739,
+    "bt_index_parent_check_passed": true,
+    "bt_index_parent_check_seconds": 0.07885647300281562,
+    "concurrent_artifacts_after": 0,
+    "invalid_fixture_indexes_after": 0,
+    "reindex_concurrently_passed": true,
+    "relfilenode_changed": true,
+    "valid_indexes_after": 1
+  },
+  "mvcc_reclamation": {
+    "baseline_relation_bytes": 61440000,
+    "baseline_relfrozenxid_age": 14,
+    "dead_tuples_after_release_vacuum": 0,
+    "dead_tuples_after_vacuum_with_old_snapshot": 50000,
+    "deleted_rows": 10000,
+    "initial_rows": 60000,
+    "old_snapshot_backend_xmin_observed": true,
+    "post_release_all_frozen_pages": 10625,
+    "post_release_all_visible_pages": 10625,
+    "post_release_fsm_available_bytes": 51920000,
+    "post_release_relation_bytes": 87040000,
+    "post_release_relfrozenxid_age": 2,
+    "progress_phases": {
+      "after_release": [
+        "scanning heap",
+        "vacuuming heap",
+        "vacuuming indexes"
+      ],
+      "with_old_snapshot": [
+        "initializing",
+        "scanning heap"
+      ]
+    },
+    "progress_samples": {
+      "after_release": 171,
+      "with_old_snapshot": 128
+    },
+    "remaining_rows": 50000,
+    "updated_rows": 40000
+  },
+  "partition_retirement": {
+    "archive_bytes": 547894,
+    "archive_sha256": "cd7d54e4781db3e18deb3fd6d49d5e23daf54496da14e41e5daed009a9a41d0d",
+    "detach_concurrently_passed": true,
+    "expired_rows": 10000,
+    "parent_rows_after_detach": 5000,
+    "partition_dropped_after_validation": true,
+    "round_trip_validated": true
+  },
+  "preflight_run_id": "3aa4eae7-b622-454e-9a2a-1b0005985f69",
+  "release": "1.0-sandbox",
+  "risk": {
+    "capture": "L0-read-only",
+    "exercise": "L2-bounded-disposable-fixture",
+    "fixture_table_autovacuum_enabled": false,
+    "force_drop_used": false,
+    "persistent_configuration_change": false,
+    "production_data_touched": false,
+    "production_traffic_touched": false,
+    "vacuum_full_used": false
+  },
+  "run_id": "79895c99-f401-43dc-9e2d-ba01ddabcd15",
+  "schema": "pg36-ch28-reference-run-v1",
+  "target": "pg36-l2-vagrant/pg-test",
+  "upstream": {
+    "ch19_release": "2.0-sandbox",
+    "ch25_run_id": "b876731e-5741-40e3-a03e-17cf7d20881b",
+    "ch27_decision": "reject-persistent-change",
+    "ch27_run_id": "efb7efec-beb2-4237-8535-6864de2a2e4e"
+  },
+  "validation": {
+    "counterexamples_rejected": 28,
+    "private_archive_verified": true,
+    "source_hash_bound": true
+  }
+}

@@ -1,0 +1,126 @@
+groups:
+  - name: pg36-shop-sli-recording
+    interval: 1m
+    type: prometheus
+    rules:
+      - record: pg36_shop:sli_availability_bad_ratio:rate5m
+        expr: |
+          sum by (service, operation_class, environment) (
+            rate(pg36_shop_request_outcomes_total{eligible="true",outcome!="good"}[5m])
+          )
+          /
+          sum by (service, operation_class, environment) (
+            rate(pg36_shop_request_outcomes_total{eligible="true"}[5m])
+          )
+      - record: pg36_shop:sli_availability_bad_ratio:rate30m
+        expr: |
+          sum by (service, operation_class, environment) (
+            rate(pg36_shop_request_outcomes_total{eligible="true",outcome!="good"}[30m])
+          )
+          /
+          sum by (service, operation_class, environment) (
+            rate(pg36_shop_request_outcomes_total{eligible="true"}[30m])
+          )
+      - record: pg36_shop:sli_availability_bad_ratio:rate1h
+        expr: |
+          sum by (service, operation_class, environment) (
+            rate(pg36_shop_request_outcomes_total{eligible="true",outcome!="good"}[1h])
+          )
+          /
+          sum by (service, operation_class, environment) (
+            rate(pg36_shop_request_outcomes_total{eligible="true"}[1h])
+          )
+      - record: pg36_shop:sli_availability_bad_ratio:rate6h
+        expr: |
+          sum by (service, operation_class, environment) (
+            rate(pg36_shop_request_outcomes_total{eligible="true",outcome!="good"}[6h])
+          )
+          /
+          sum by (service, operation_class, environment) (
+            rate(pg36_shop_request_outcomes_total{eligible="true"}[6h])
+          )
+      - record: pg36_shop:sli_availability_bad_ratio:rate3d
+        expr: |
+          sum by (service, operation_class, environment) (
+            rate(pg36_shop_request_outcomes_total{eligible="true",outcome!="good"}[3d])
+          )
+          /
+          sum by (service, operation_class, environment) (
+            rate(pg36_shop_request_outcomes_total{eligible="true"}[3d])
+          )
+      - record: pg36_shop:sli_latency_bad_ratio:rate5m
+        expr: |
+          1 -
+          (
+            sum by (service, operation_class, environment) (
+              rate(pg36_shop_request_duration_seconds_bucket{eligible="true",le="0.25"}[5m])
+            )
+            /
+            sum by (service, operation_class, environment) (
+              rate(pg36_shop_request_duration_seconds_count{eligible="true"}[5m])
+            )
+          )
+      - record: pg36_shop:sli_latency_bad_ratio:rate1h
+        expr: |
+          1 -
+          (
+            sum by (service, operation_class, environment) (
+              rate(pg36_shop_request_duration_seconds_bucket{eligible="true",le="0.25"}[1h])
+            )
+            /
+            sum by (service, operation_class, environment) (
+              rate(pg36_shop_request_duration_seconds_count{eligible="true"}[1h])
+            )
+          )
+      - record: pg36_shop:sli_freshness_bad_ratio:rate5m
+        expr: |
+          sum by (service, read_path, environment) (
+            rate(pg36_shop_commit_visibility_probes_total{eligible="true",within_bound="false"}[5m])
+          )
+          /
+          sum by (service, read_path, environment) (
+            rate(pg36_shop_commit_visibility_probes_total{eligible="true"}[5m])
+          )
+      - record: pg36_shop:sli_freshness_bad_ratio:rate1h
+        expr: |
+          sum by (service, read_path, environment) (
+            rate(pg36_shop_commit_visibility_probes_total{eligible="true",within_bound="false"}[1h])
+          )
+          /
+          sum by (service, read_path, environment) (
+            rate(pg36_shop_commit_visibility_probes_total{eligible="true"}[1h])
+          )
+
+  - name: pg36-postgresql-diagnostic-recording
+    interval: 1m
+    type: prometheus
+    rules:
+      - record: pg36:replica_replay_distance_bytes:max
+        expr: max by (cls, ins, ip) (pg_repl_replay_diff)
+      - record: pg36:archive_failures:increase15m
+        expr: sum by (cls, ins, ip) (increase(pg_archiver_failed_count[15m]))
+      - record: pg36:longest_transaction_seconds:max
+        expr: |
+          max by (cls, ins, ip, datname, state) (
+            pg_activity_max_tx_duration{state=~"active|idle in transaction"}
+          )
+      - record: pg36:table_freeze_age:max
+        expr: max by (cls, ins, ip) (pg_table_age)
+      - record: pg36:dead_tuples:sum
+        expr: sum by (cls, ins, ip, datname) (pg_table_n_dead_tup)
+      - record: pg36:exporter_unavailable:max
+        expr: max by (cls, ins, ip) (1 - pg_exporter_up)
+
+  - name: pg36-observation-meta-recording
+    interval: 1m
+    type: prometheus
+    rules:
+      - record: pg36:vmalert_rule_errors:sum
+        expr: |
+          sum(vmalert_alerting_rules_errors_total)
+          +
+          sum(vmalert_recording_rules_errors_total)
+      - record: pg36:vmalert_missed_iterations:increase15m
+        expr: sum(increase(vmalert_iteration_missed_total[15m]))
+      - record: pg36:notification_failures:increase15m
+        expr: sum(increase(alertmanager_notifications_failed_total[15m]))

@@ -1,0 +1,104 @@
+{
+  "schema": "pg36-ch23-role-contract-v1",
+  "principles": [
+    "login identity, object ownership, migration authority, runtime DML, and read-only access are separate roles",
+    "application requests enter an explicit effective role inside a transaction",
+    "the owner and migration roles cannot log in",
+    "no synthetic role is superuser, CREATEROLE, CREATEDB, REPLICATION, or BYPASSRLS",
+    "role membership does not imply ADMIN OPTION"
+  ],
+  "roles": [
+    {
+      "name": "test",
+      "kind": "predeclared sandbox login",
+      "login": true,
+      "retained_attributes_are_not_modified": true,
+      "memberships_added_by_lab": [
+        {
+          "role": "pg36_ch23_runtime",
+          "inherit": false,
+          "set": true,
+          "admin": false
+        },
+        {
+          "role": "pg36_ch23_readonly",
+          "inherit": false,
+          "set": true,
+          "admin": false
+        }
+      ]
+    },
+    {
+      "name": "pg36_ch23_owner",
+      "kind": "object owner",
+      "login": false,
+      "owns": [
+        "schema pg36_ch23",
+        "function pg36_ch23.current_tenant()",
+        "table pg36_ch23.account"
+      ],
+      "direct_members": [
+        "pg36_ch23_migrate"
+      ]
+    },
+    {
+      "name": "pg36_ch23_migrate",
+      "kind": "migration authority",
+      "login": false,
+      "may_set_role": [
+        "pg36_ch23_owner"
+      ],
+      "inherits_owner": false,
+      "may_delegate_owner": false
+    },
+    {
+      "name": "pg36_ch23_runtime",
+      "kind": "application runtime",
+      "login": false,
+      "schema": [
+        "USAGE"
+      ],
+      "table": [
+        "SELECT",
+        "INSERT",
+        "UPDATE"
+      ],
+      "function": [
+        "EXECUTE current_tenant()"
+      ],
+      "denied_by_contract": [
+        "DELETE",
+        "TRUNCATE",
+        "REFERENCES",
+        "TRIGGER",
+        "schema CREATE",
+        "ALTER TABLE",
+        "DISABLE ROW LEVEL SECURITY"
+      ]
+    },
+    {
+      "name": "pg36_ch23_readonly",
+      "kind": "read-only workload",
+      "login": false,
+      "schema": [
+        "USAGE"
+      ],
+      "table": [
+        "SELECT"
+      ],
+      "function": [
+        "EXECUTE current_tenant()"
+      ]
+    },
+    {
+      "name": "pg36_ch23_rotate",
+      "kind": "direct-only credential rotation probe",
+      "login_during_drill": true,
+      "login_after_drill": false,
+      "password_after_drill": null,
+      "pgbouncer_declared": false,
+      "inherits_readonly": false,
+      "may_set_readonly": false
+    }
+  ]
+}

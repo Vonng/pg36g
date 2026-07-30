@@ -1,0 +1,57 @@
+{
+  "proposal_version": 1,
+  "base_baseline": "0.1.0",
+  "base_checksum": "bb1404e2b2e47624b17f3a1b0de63a5371f382b67906f1a8ba1cf08e92895a1c",
+  "depends_on_candidates": [
+    {
+      "candidate_baseline": "0.6.0",
+      "proposal": "/labs/ch11/baseline-v0.6-proposal.json",
+      "proposal_checksum": "d43b5b9fa3f6a7c1ac1ebf7e7ef4ef10ceaa57a085ae4d07d560bb881fe3ea0c"
+    }
+  ],
+  "candidate_baseline": "1.0.0",
+  "status": "release-candidate",
+  "scope": "application delivery rules accumulated in ch07-ch12",
+  "rule_changes": [
+    {
+      "rule_id": "DEFAULT-APP-011",
+      "change_kind": "statement-and-runtime-check",
+      "statement_change": "服务必须把连接池预算、请求截止时间、语句超时、整事务重试、幂等键、外部副作用边界、健康检查和可观测关联作为同一交付合同；进程存活、一次成功请求或直连测试均不能单独证明服务可发布。"
+    },
+    {
+      "rule_id": "POOL-STATE-012",
+      "change_kind": "runtime-check",
+      "statement_change": "使用 transaction pooling 时，业务正确性不得依赖跨事务会话状态；驱动查询模式、协议级预备语句能力和 PgBouncer 配置必须按实际版本组合验证，DDL 发布还要验证缓存计划失效后的恢复路径。"
+    }
+  ],
+  "evidence": [
+    {
+      "chapter": "ch12",
+      "artifact": "/labs/ch12/run_service_lab.py",
+      "observation": "真实 pg36_app 连接运行下单、支付、查询、重放、错误映射、取消、数据库超时、40001 整事务重试和连接耗尽矩阵。"
+    },
+    {
+      "chapter": "ch12",
+      "artifact": "/labs/ch12/verify.sql",
+      "observation": "核对最小权限、库存只扣一次、幂等账本、outbox、trace 关系、活跃 worker 清零及 ch04 checksum 不变。"
+    },
+    {
+      "chapter": "ch12",
+      "artifact": "/labs/ch12/service/README.md",
+      "observation": "冻结单一 Go/pgx 参考实现；后续章节复用 SQL 和工作负载，不继续扩展应用框架。"
+    }
+  ],
+  "verified_now": [
+    "PostgreSQL 18.4 direct endpoint",
+    "pgx v5.10.0 with QueryExecModeExec",
+    "application-side pgxpool MaxConns=2 failure lab",
+    "runtime role pg36_app without DDL or DELETE"
+  ],
+  "promotion_blockers": [
+    "run the unchanged suite through the declared Pigsty primary service and its actual PgBouncer transaction-pooling configuration",
+    "pass the PostgreSQL 14-18 compatibility matrix",
+    "record Pigsty application, database, PgBouncer, WAL, replica, and tail-latency evidence under L1 load",
+    "promote the dependent v0.2-v0.6 candidates and obtain application and database owner sign-off"
+  ],
+  "promotion_rule": "Deadline, confidence, and local success cannot change an unexecuted promotion condition into evidence."
+}

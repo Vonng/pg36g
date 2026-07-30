@@ -1,0 +1,181 @@
+{
+  "schema": "pg36-ch24-observation-contract-v1",
+  "service_id": "pg36_shop",
+  "implementation_target": "chapter-25",
+  "query_language": "PromQL-compatible",
+  "identity_labels": {
+    "pigsty_required": [
+      "cls",
+      "ins",
+      "ip"
+    ],
+    "service_required": [
+      "service",
+      "operation_class",
+      "environment"
+    ],
+    "forbidden_unbounded_labels": [
+      "customer_id",
+      "tenant_id",
+      "order_id",
+      "raw_sql",
+      "error_message"
+    ]
+  },
+  "sli_sources": [
+    {
+      "objective_id": "SLO-AVAILABILITY",
+      "metric_status": "application-metric-to-implement",
+      "source": "pg36_shop_request_outcomes_total",
+      "metric_type": "counter",
+      "good_selector": "eligible=\"true\",outcome=\"good\"",
+      "total_selector": "eligible=\"true\"",
+      "dimensions": [
+        "service",
+        "operation_class",
+        "environment"
+      ],
+      "recording_rule": "pg36_shop:sli_availability_bad_ratio:rate5m",
+      "query_template": "1 - sum(rate(pg36_shop_request_outcomes_total{eligible=\"true\",outcome=\"good\"}[$window])) / clamp_min(sum(rate(pg36_shop_request_outcomes_total{eligible=\"true\"}[$window])), 1)",
+      "missing_semantics": "unknown; fire metamonitoring when expected traffic or synthetic probes exist but the series disappears",
+      "fallback": "independent end-to-end synthetic place-order probe",
+      "user_facing": true
+    },
+    {
+      "objective_id": "SLO-LATENCY",
+      "metric_status": "application-metric-to-implement",
+      "source": "pg36_shop_request_duration_seconds",
+      "metric_type": "histogram",
+      "good_selector": "eligible=\"true\",le=\"0.25\"",
+      "total_selector": "eligible=\"true\"",
+      "dimensions": [
+        "service",
+        "operation_class",
+        "environment"
+      ],
+      "recording_rule": "pg36_shop:sli_latency_bad_ratio:rate5m",
+      "query_template": "1 - sum(rate(pg36_shop_request_duration_seconds_bucket{eligible=\"true\",le=\"0.25\"}[$window])) / clamp_min(sum(rate(pg36_shop_request_duration_seconds_count{eligible=\"true\"}[$window])), 1)",
+      "missing_semantics": "unknown; never turn an absent histogram into zero latency",
+      "fallback": "independent end-to-end request-duration probe",
+      "user_facing": true
+    },
+    {
+      "objective_id": "SLO-FRESHNESS",
+      "metric_status": "synthetic-probe-metric-to-implement",
+      "source": "pg36_shop_commit_visibility_probes_total",
+      "metric_type": "counter",
+      "good_selector": "eligible=\"true\",within_bound=\"true\"",
+      "total_selector": "eligible=\"true\"",
+      "dimensions": [
+        "service",
+        "read_path",
+        "environment"
+      ],
+      "recording_rule": "pg36_shop:sli_freshness_bad_ratio:rate5m",
+      "query_template": "1 - sum(rate(pg36_shop_commit_visibility_probes_total{eligible=\"true\",within_bound=\"true\"}[$window])) / clamp_min(sum(rate(pg36_shop_commit_visibility_probes_total{eligible=\"true\"}[$window])), 1)",
+      "missing_semantics": "unknown and probe-pipeline failure; idle replay timestamps are not substituted",
+      "fallback": "execute a write carrying a unique token and poll the declared read path",
+      "user_facing": true
+    },
+    {
+      "objective_id": "CTRL-CORRECTNESS",
+      "metric_status": "reconciliation-metric-to-implement",
+      "source": "pg36_shop_reconciliation_mismatches",
+      "metric_type": "gauge",
+      "good_selector": "value = 0",
+      "total_selector": "not-applicable",
+      "dimensions": [
+        "service",
+        "invariant",
+        "environment"
+      ],
+      "recording_rule": null,
+      "query_template": "max(pg36_shop_reconciliation_mismatches{service=\"pg36_shop\"})",
+      "missing_semantics": "unknown; stale or missing reconciliation is itself a control failure",
+      "fallback": "run the signed reconciliation job and retain its input boundary and result hash",
+      "user_facing": true
+    },
+    {
+      "objective_id": "CTRL-RESTORE-READINESS",
+      "metric_status": "evidence-age-metric-to-implement",
+      "source": "pg36_shop_restore_evidence_age_seconds",
+      "metric_type": "gauge",
+      "good_selector": "value <= 7776000",
+      "total_selector": "not-applicable",
+      "dimensions": [
+        "service",
+        "recovery_class",
+        "environment"
+      ],
+      "recording_rule": null,
+      "query_template": "max(pg36_shop_restore_evidence_age_seconds{service=\"pg36_shop\"})",
+      "missing_semantics": "failed control; absence cannot prove recoverability",
+      "fallback": "inspect the immutable restore-run manifest and schedule a new isolated drill",
+      "user_facing": false
+    }
+  ],
+  "component_telemetry": [
+    {
+      "id": "PG-COMPONENT-ACTIVITY",
+      "layer": "PostgreSQL",
+      "sources": [
+        "pg_stat_activity",
+        "pg_stat_database",
+        "pg_stat_io"
+      ],
+      "purpose": "diagnose concurrency, errors, transactions, and I/O after a user symptom",
+      "may_page_without_user_or_integrity_impact": false
+    },
+    {
+      "id": "PG-COMPONENT-REPLICATION",
+      "layer": "PostgreSQL",
+      "sources": [
+        "pg_stat_replication",
+        "pg_stat_wal_receiver",
+        "WAL LSN distance"
+      ],
+      "purpose": "explain replica state and retained-WAL risk; not a commit-correlated freshness SLI by itself",
+      "may_page_without_user_or_integrity_impact": false
+    },
+    {
+      "id": "PG-COMPONENT-ARCHIVE",
+      "layer": "PostgreSQL and pgBackRest",
+      "sources": [
+        "pg_stat_archiver",
+        "pgBackRest check and restore evidence"
+      ],
+      "purpose": "detect recovery-path risk without claiming that backup-job success proves restore readiness",
+      "may_page_without_user_or_integrity_impact": true,
+      "page_exception": "imminent durability loss or violation of the recovery control objective"
+    },
+    {
+      "id": "PIGSTY-CORRELATION",
+      "layer": "Pigsty v4.4",
+      "sources": [
+        "VictoriaMetrics",
+        "VictoriaLogs",
+        "VMAlert",
+        "Alertmanager",
+        "Grafana"
+      ],
+      "purpose": "correlate application symptoms with PostgreSQL, PgBouncer, HAProxy, Patroni, host, and logs",
+      "required_labels": [
+        "cls",
+        "ins",
+        "ip"
+      ],
+      "may_page_without_user_or_integrity_impact": false
+    }
+  ],
+  "metamonitoring": {
+    "required": true,
+    "checks": [
+      "application exporter or ingestion series freshness",
+      "VMAlert rule evaluation failures",
+      "Alertmanager notification-path canary",
+      "VictoriaMetrics query and ingestion availability",
+      "external blackbox probe independent of the monitored service"
+    ],
+    "missing_is_healthy": false
+  }
+}
