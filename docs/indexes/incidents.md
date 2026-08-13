@@ -6,6 +6,8 @@ type: docs
 breadcrumbs: true
 comments: false
 book_kind: index
+search_keywords: [事故, 应急, 故障, 恢复, 切换, 取证, 首个安全动作]
+search_boost: 1.5
 ---
 
 > 先按症状选择“首个安全动作”，再进入正式章节。症状相似不代表修复动作相同。

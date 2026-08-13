@@ -6,6 +6,8 @@ type: docs
 breadcrumbs: true
 comments: false
 book_kind: index
+search_keywords: [分区, partition, 分区键, 裁剪, 生命周期]
+search_boost: 1.3
 ---
 
 > 分区不是一章讲完的孤立技巧，而是跨建模、计划、发布、场景与维护的五触点能力。

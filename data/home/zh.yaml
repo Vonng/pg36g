@@ -1,0 +1,184 @@
+# OINK 0.3.0 按此顺序组装首页；页面结构和内容均不需要覆盖主题模板。
+sections:
+  - hero
+  - metrics
+  - type: cards
+    key: pathways
+  - type: cards
+    key: parts
+  - principles
+  - faq
+  - cta
+
+hero:
+  eyebrow: PostgreSQL 18.4 · Pigsty v4.4.0 · 36 章实战
+  title_lines:
+    - PostgreSQL
+    - 36 计
+  lead: 从 SQL 到生产：用一套可复现、可观察、可验收的实验路径，连接数据库开发、平台建设、日常运营与事故恢复。
+  note: 每个实验都遵循“目标—前提—动作—证据—验收”闭环。
+  image:
+    light: logo.png
+    dark: logo.png
+    alt: PostgreSQL 36 计蓝象标识
+  actions:
+    - label: 从全书导读开始
+      url: guide/
+      icon: fa-solid fa-book-open
+      style: primary
+    - label: 浏览完整目录
+      url: toc/
+      icon: fa-solid fa-list-ol
+      style: ghost
+  detail:
+    label: 在 GitHub 上查看源码与勘误
+    url: https://github.com/Vonng/pg36g
+    icon: fa-brands fa-github
+    external: true
+
+metrics:
+  eyebrow: 全书规模
+  title: 一套可以按顺序学，也可按任务查的 PostgreSQL 实战手册
+  columns: 4
+  items:
+    - { value: 36, label: 正文章, icon: fa-solid fa-book }
+    - { value: 242, label: 正文节页, icon: fa-solid fa-file-lines }
+    - { value: 772, label: 稳定三级目, icon: fa-solid fa-link }
+    - { value: 36, label: 配套实验, icon: fa-solid fa-flask }
+
+pathways:
+  eyebrow: 阅读路径
+  title: 从你当前的问题出发
+  desc: 系统学习可以按卷与章推进；生产任务与事故处置则应先从专用索引定位。
+  columns: 4
+  link_label: 进入路线
+  items:
+    - title: 第一次系统阅读
+      meta: 导读
+      icon: fa-solid fa-route
+      desc: 先确认读者假设、版本边界、安全公约与实验合同，再按章推进。
+      url: guide/
+    - title: 按工程任务查找
+      meta: 索引
+      icon: fa-solid fa-list-check
+      desc: 从建模、慢 SQL、索引、迁移、容量与发布等任务直达相关章节。
+      url: indexes/tasks/
+    - title: 按事故症状应对
+      meta: 应急
+      icon: fa-solid fa-triangle-exclamation
+      desc: 先确认首个安全动作和明确禁止项，再进入恢复、切换或取证流程。
+      url: indexes/incidents/
+    - title: 准备可复现实验
+      meta: 实验
+      icon: fa-solid fa-flask-vial
+      desc: 使用可销毁的 Pigsty 沙箱，核对拓扑、凭据、风险等级与停止条件。
+      url: ch00/
+
+parts:
+  eyebrow: 六篇主线
+  title: 从会写 SQL，到能交付并运营 PostgreSQL 服务
+  columns: 3
+  link_label: 从本篇开始
+  items:
+    - title: 筑基
+      meta: 01 · 工程认知
+      icon: fa-solid fa-map
+      desc: 建立对象、连接、模型、事务与交付基线的共同坐标系。
+      url: postgresql-pigsty-map/
+    - title: 应用
+      meta: 02 · 稳定交付
+      icon: fa-solid fa-code
+      desc: 用计划、证据、索引、并发与发布规约把 SQL 变成可验收的应用。
+      url: query-plans-statistics/
+    - title: 扩展
+      meta: 03 · 能力边界
+      icon: fa-solid fa-puzzle-piece
+      desc: 评估存储过程、扩展、检索、时空与分析能力的适用边界。
+      url: functions-triggers-procedures/
+    - title: 规划
+      meta: 04 · 生产服务
+      icon: fa-solid fa-server
+      desc: 从 SLO、故障域、备份、接入与权限反推可交付的数据库服务。
+      url: deployment-baseline/
+    - title: 运营
+      meta: 05 · 证据驱动
+      icon: fa-solid fa-chart-line
+      desc: 用可观测性、容量、资源治理、维护、迁移与升级持续运营。
+      url: observability/
+    - title: 出山
+      meta: 06 · 恢复改进
+      icon: fa-solid fa-shield-halved
+      desc: 从现场保护到 PITR、切换、过载保护、数据取证与复盘固化。
+      url: incident-response/
+
+principles:
+  eyebrow: 实战方法
+  title: 不把命令、面板或一次跑分当成结论
+  columns: 3
+  items:
+    - icon: fa-solid fa-bullseye
+      title: 先定义验收标准
+      desc: 每章先说明目标、前置、风险与完成证据。
+    - icon: fa-solid fa-magnifying-glass-chart
+      title: 让证据区分假设
+      desc: 先保存现场与基线，再进行可回退、可对照的受控验证。
+    - icon: fa-solid fa-rotate-left
+      title: 把恢复路径写进方案
+      desc: 变更、演练与事故处置都需要明确停止条件和 after 验收。
+
+faq:
+  eyebrow: 阅读之前
+  title: 常见问题
+  items:
+    - question: 我只会通用 SQL，可以直接开始吗？
+      answer: 可以。本书默认你已掌握 Linux 与通用 SQL，会集中解释 PostgreSQL 特有语义与工程方法。先读[全书导读](guide/)即可判断前置是否齐备。
+      open: true
+    - question: 一定要使用 Pigsty 吗？
+      answer: PostgreSQL 是核心知识对象，Pigsty 是统一实验载体和生产参考实现。原生机制章节可在其他 PostgreSQL 环境中验证；涉及服务拓扑和平台证据时，正文会明确标注依赖。
+    - question: 能否把书中命令直接用在生产环境？
+      answer: 不能默认如此。先核对页面标注的 R0–R3 风险、目标拓扑、凭据、版本和停止条件；故障注入、恢复与破坏性动作只能在明确授权的隔离环境执行。
+
+cta:
+  title: 先花几分钟读导读，后面的 36 章会快得多。
+  desc: 确认版本、安全公约和实验合同，再开始第一个可验收的 PostgreSQL 实验。
+  actions:
+    - label: 阅读全书导读
+      url: guide/
+      icon: fa-solid fa-arrow-right
+      style: primary
+    - label: 准备实验环境
+      url: ch00/
+      icon: fa-solid fa-flask
+      style: ghost
+
+footer:
+  brand:
+    name: PostgreSQL 36 计
+    logo: logo.png
+    tagline: 从 SQL 到生产
+    slogan: PostgreSQL 与 Pigsty 实战
+  columns:
+    - title: 阅读
+      links:
+        - { label: 全书导读, url: guide/ }
+        - { label: 完整目录, url: toc/ }
+        - { label: 上卷：应用开发, url: upper-volume/ }
+        - { label: 下卷：运维管理, url: lower-volume/ }
+    - title: 索引
+      links:
+        - { label: 按角色阅读, url: indexes/roles/ }
+        - { label: 按任务查找, url: indexes/tasks/ }
+        - { label: 事故安全动作, url: indexes/incidents/ }
+        - { label: 技术边界索引, url: indexes/capabilities/ }
+    - title: 生态
+      links:
+        - { label: Pigsty, url: 'https://pgsty.com/', external: true }
+        - { label: PostgreSQL, url: 'https://www.postgresql.org/', external: true }
+        - { label: PG 扩展目录, url: 'https://ext.pgsty.com/zh', external: true }
+        - { label: 老冯云数, url: 'https://vonng.com/', external: true }
+    - title: 项目
+      links:
+        - { label: GitHub 源码, url: 'https://github.com/Vonng/pg36g', external: true }
+        - { label: 勘误与问题, url: 'https://github.com/Vonng/pg36g/issues', external: true }
+        - { label: 版本矩阵, url: appendices/a/ }
+        - { label: 实验环境合同, url: appendices/e/ }

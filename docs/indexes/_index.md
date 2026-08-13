@@ -6,6 +6,8 @@ type: docs
 breadcrumbs: true
 comments: false
 book_kind: index-hub
+search_keywords: [索引, 导航, 查找, 阅读路线]
+search_boost: 1.6
 ---
 
 > 除按章、节、目顺序阅读外，还可以按角色、任务、技术边界、事故症状或分区能力查找内容。

@@ -6,6 +6,8 @@ type: docs
 breadcrumbs: true
 comments: false
 book_kind: index
+search_keywords: [PostgreSQL, Pigsty, 平台, 能力, 边界, 责任]
+search_boost: 1.3
 ---
 
 > 按二级小节的主要责任归属索引。混合小节只标主责，具体正文仍需说明边界。

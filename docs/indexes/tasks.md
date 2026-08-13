@@ -6,6 +6,8 @@ type: docs
 breadcrumbs: true
 comments: false
 book_kind: index
+search_keywords: [任务, 建模, 慢 SQL, 索引, 迁移, 升级, 容量]
+search_boost: 1.4
 ---
 
 > 按实际任务查找入口。章节链接始终同时显示编号与功能标题，避免重排后语义丢失。

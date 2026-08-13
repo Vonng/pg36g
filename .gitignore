@@ -5,6 +5,7 @@ __pycache__/
 tmp/
 output/
 public/
+resources/
 .hugo_build.lock
 .claude
 CLAUDE.md

@@ -1,8 +1,10 @@
 ---
 title: PostgreSQL 36 计
 linkTitle: 首页
+description: 从 SQL 到生产：PostgreSQL 与 Pigsty 实战
 cascade:
   type: docs
+type: home
 breadcrumbs: false
 comments: false
 ---

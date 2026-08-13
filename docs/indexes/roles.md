@@ -6,6 +6,8 @@ type: docs
 breadcrumbs: true
 comments: false
 book_kind: index
+search_keywords: [角色, 开发者, DBA, 平台工程师, SRE, 阅读路线]
+search_boost: 1.3
 ---
 
 > 角色路线用于系统阅读；跨章跳读前仍应检查前置依赖。
