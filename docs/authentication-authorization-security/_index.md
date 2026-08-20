@@ -379,12 +379,6 @@ EX23-MULTIPLEXED-TEST-LOGIN
   生产应为 workload 配置独立 login 与 credential。
 ```
 
-## 所属位置
-
-- 卷别：[下卷：运维管理](/lower-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第四篇：规划——建设可交付的 PostgreSQL 服务
-- 兼容入口：`/ch23/`、`/volume-2/authentication-authorization-security/`
-
 ## 本章目录
 
 ### [23.1 威胁模型与信任边界](01/)

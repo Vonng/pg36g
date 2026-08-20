@@ -95,7 +95,7 @@ flowchart LR
 - JSON registry 固定字段、ID、版本和证据引用，防止文档与自动化各说各话；
 - 运行时 gate 连接真实 PostgreSQL，证明当前 target、session、catalog 与 query contract 符合预期。
 
-静态通过不证明数据库已经部署；inventory 已提交不证明 playbook 已应用；catalog 正确也不证明连接流量经过了预期的 HAProxy/Pgbouncer 服务。只有把配置、运行和路由证据放在一起，才能声称这条交付链已经闭合。
+静态通过不证明数据库已经部署；inventory 已提交不证明 playbook 已应用；catalog 正确也不证明连接流量经过了预期的 HAProxy/PgBouncer 服务。只有把配置、运行和路由证据放在一起，才能声称这条交付链已经闭合。
 
 ## 实验资产
 
@@ -117,12 +117,6 @@ flowchart LR
 - [统一质量门](/labs/ch06/quality-gate.sh)
 
 这些资产不包含密码，也不会创建或删除数据库。`live` 与 `negative` 只在已经通过 ch04-v1 验收的可写 L1 上运行：正向检查全部只读，负向检查只故意设置错误会话参数或错误 expected database，并要求以精确 SQLSTATE 拒绝。
-
-## 所属位置
-
-- 卷别：[上卷：应用开发](/upper-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第一篇：筑基——建立 PostgreSQL 工程认知
-- 兼容入口：`/ch06/`、`/volume-1/development-standards/`
 
 ## 本章目录
 

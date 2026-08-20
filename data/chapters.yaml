@@ -890,7 +890,7 @@
   idiom: 抽丝剥茧
   functional_title: 慢 SQL 诊断方法论
   slug: slow-query-diagnosis
-  goal: 从“用户说慢”出发，建立从范围界定、证据收集、假设排序到受控验证的诊断闭环。本章同时作为全书方法型样章。
+  goal: 从“用户说慢”出发，建立从范围界定、证据收集、假设排序到受控验证的诊断闭环，并示范全书通用的故障诊断方法。
   sections:
   - id: ch08-s01
     number: '8.1'
@@ -2389,7 +2389,7 @@
   idiom: 狡兔三窟
   functional_title: 高可用拓扑与容灾目标
   slug: high-availability
-  goal: 把复制、选主、故障域和业务 RPO/RTO 连接起来，通过一次可重复的切换演练证明高可用。本章同时作为全书架构型样章。
+  goal: 把复制、选主、故障域和业务 RPO/RTO 连接起来，通过一次可重复的切换演练证明高可用，并示范全书通用的架构验证方法。
   sections:
   - id: ch20-s01
     number: '20.1'
@@ -3894,7 +3894,7 @@
   idiom: 妙手回春
   functional_title: PITR 与误操作恢复
   slug: pitr
-  goal: 在隔离环境中确定恢复目标、执行 PITR、验证业务正确性并安全回切。本章同时作为全书事故型样章。
+  goal: 在隔离环境中确定恢复目标、执行 PITR、验证业务正确性并安全回切，并示范全书通用的事故恢复方法。
   sections:
   - id: ch32-s01
     number: '32.1'
@@ -4184,7 +4184,7 @@
       title: 识别高消耗查询和阻塞根节点
     - id: item-34-3-2
       number: 34.3.2
-      title: cancel、terminate 与回滚成本
+      title: cancel、terminate 与中止后成本
     - id: item-34-3-3
       number: 34.3.3
       title: 长事务和大事务结束前先评估后果

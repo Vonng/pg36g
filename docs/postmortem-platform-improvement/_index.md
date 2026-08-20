@@ -142,13 +142,10 @@ roadmap_status        = reference-proposal-requires-local-approval
 learner_assessment    = not-assessed
 ```
 
-## 所属位置
+## 阅读前后关系
 
-- 卷别：[下卷：运维管理](/lower-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第六篇：出山——按响应目标演练恢复与改进
 - 前置：[第 31 章 事件分级、现场保护与应急决策](/incident-response/)、
   [第 32～35 章恢复演练](/pitr/)
-- 兼容入口：`/ch36/`、`/volume-2/postmortem-platform-improvement/`
 
 ## 本章目录
 

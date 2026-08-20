@@ -98,12 +98,6 @@ unique probe  10000 rows / 5000 duplicate groups
 - [双 token reset](/labs/ch09/reset.sql)
 - [任务入口](/labs/ch09/task.sh)
 
-## 所属位置
-
-- 卷别：[上卷：应用开发](/upper-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第二篇：应用——从 SQL 正确走向稳定交付
-- 兼容入口：`/ch09/`、`/volume-1/index-design/`
-
 ## 本章目录
 
 ### [9.1 索引方法与操作符类](01/)

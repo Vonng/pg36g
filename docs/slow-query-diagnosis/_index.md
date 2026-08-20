@@ -81,12 +81,6 @@ book_status: draft
 - [状态验收](/labs/ch08/verify.sql)
 - [任务入口](/labs/ch08/task.sh)
 
-## 所属位置
-
-- 卷别：[上卷：应用开发](/upper-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第二篇：应用——从 SQL 正确走向稳定交付
-- 兼容入口：`/ch08/`、`/volume-1/slow-query-diagnosis/`
-
 ## 本章目录
 
 ### [8.1 先定义“慢”](01/)

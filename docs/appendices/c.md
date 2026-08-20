@@ -75,7 +75,7 @@ stop、rollback。客户端 retry 没有 backoff/jitter/idempotency 时，会把
 
 ### retention pressure 不走限流捷径
 
-WAL、XID 或磁盘满可能由仍被声明为“需要”的历史边界造成。取消慢 SQL不一定推进 slot
+WAL、XID 或磁盘满可能由仍被声明为“需要”的历史边界造成。取消慢 SQL 不一定推进 slot
 `restart_lsn` 或旧 `xmin`。先查 owner、恢复/复制语义，再清 exact owned consumer。
 
 详见 [ch22 连接预算](/connection-pooling-routing/)、
@@ -180,7 +180,7 @@ filesystem
 2. 保留管理连接和当前 slot/archive/replication evidence；
 3. 估算 time-to-full，而不是只报百分比；
 4. 确认能否安全扩容/迁移 filesystem；
-5. 对 exact owned consumer 修复或受批清理；
+5. 修复 exact owned consumer，或在审批后清理；
 6. 验证 archive continuity、replica/slot 和 backup。
 
 绝不手工删除 `pg_wal`、伪造 archive success 或随意 `pg_resetwal`。这些动作会破坏 crash

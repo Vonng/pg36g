@@ -261,12 +261,6 @@ EX22-RUNTIME-POOL-OVERRIDE
   只临时改变一个 PgBouncer 进程并恢复；不是声明式生产策略验收。
 ```
 
-## 所属位置
-
-- 卷别：[下卷：运维管理](/lower-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第四篇：规划——建设可交付的 PostgreSQL 服务
-- 兼容入口：`/ch22/`、`/volume-2/connection-pooling-routing/`
-
 ## 本章目录
 
 ### [22.1 服务端点的语义](01/)

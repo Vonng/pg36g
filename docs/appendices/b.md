@@ -181,7 +181,7 @@ target:
   environment:
   cluster/system:
   instance/database/object/session:
-risk: R0 | R1 | R2
+risk: R0 | R1 | R2 | R3
 authority:
 preconditions:
 expected:
@@ -195,9 +195,11 @@ after_evidence:
 |---|---|---|---|
 | R0 观察 | 不改变目标状态 | identity、catalog/stat、plan without ANALYZE | exact context、成本/隐私边界 |
 | R1 可逆变更 | 改对象/配置/流量，有验证过的回退 | fixture DDL、reload、bounded cancel、canary | owner、scope、before/after、rollback |
-| R2 破坏性演练 | 切换、恢复、损坏、重建或可能丢状态 | PITR、failover、byte fault、host rebuild | 隔离环境、guard、批准、恢复源、证据保留 |
+| R2 受控状态变更/演练 | 有非平凡状态影响，但范围隔离且恢复路径已验证 | 精确 cancel、一次性对象删除、隔离 PITR/failover、byte fault | guard、批准、恢复源、停止线、证据 |
+| R3 生产敏感/潜在不可逆 | 触及真实数据/流量、authority/lineage，或恢复昂贵 | 生产 failover/cutover、rewind/reinit、host rebuild、`pg_resetwal` | 原件保留、明确授权、独立复核、业务验收 |
 
-风险由**目标与后果**决定，不由命令长短决定。`SELECT` 可调用 volatile/security
+风险由**目标与后果**决定，不由命令长短决定。同一 PITR 机制在一次性隔离 candidate
+上可为 R2，切换生产 authority 或覆盖真实目标时应升为 R3。`SELECT` 可调用 volatile/security
 definer function；`EXPLAIN ANALYZE` 可执行写入；`VACUUM FULL`、`REINDEX`、DDL 和
 playbook 可能持锁、重写、重启或改变路由。
 
@@ -211,9 +213,9 @@ playbook 可能持锁、重写、重启或改变路由。
 | parameter reload | R1 | context/source、rendered diff | `pg_settings` + runtime |
 | restart-required config | R1/R2 | HA/traffic/rollback | identity、role、availability |
 | cancel exact query | R1 | PID reuse protection、owner | target gone、business effect |
-| switchover/failover | R2 | fence/authority/candidate/client contract | timeline、route、unknown |
-| restore/PITR | R2 | source/target/candidate/isolated destination | lineage、business manifest |
-| `pg_rewind`/base backup | R2 | system id/timeline/source direction | streaming lineage |
+| switchover/failover | R2/R3 | fence/authority/candidate/client contract | timeline、route、unknown |
+| restore/PITR | R2/R3 | source/target/candidate/isolated destination | lineage、business manifest |
+| `pg_rewind`/base backup | R2/R3 | system id/timeline/source direction | streaming lineage |
 | checksum fault injection | R2 | stopped disposable clone | original hash + recovery copy |
 
 `pg_resetwal`、`zero_damaged_pages`、`ignore_checksum_failure`、手改 relation/WAL 不属于

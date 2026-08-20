@@ -82,12 +82,6 @@ book_status: draft
 - [双令牌 reset](/labs/ch07/reset.sql)
 - [任务入口](/labs/ch07/task.sh)
 
-## 所属位置
-
-- 卷别：[上卷：应用开发](/upper-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第二篇：应用——从 SQL 正确走向稳定交付
-- 兼容入口：`/ch07/`、`/volume-1/query-plans-statistics/`
-
 ## 本章目录
 
 ### [7.1 优化器如何选择路径](01/)

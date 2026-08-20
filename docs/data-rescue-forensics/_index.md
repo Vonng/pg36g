@@ -157,14 +157,11 @@ blind evidence 泄露答案、原地修复、REFRESH 先于 REINDEX、业务 dig
 因此它证明的是机制与证据链，不是生产数据可恢复比例或 host rebuild RTO。最终门禁
 保持 `production_ch35_gate=pending`。
 
-## 所属位置
+## 阅读前后关系
 
-- 卷别：[下卷：运维管理](/lower-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第六篇：出山——按响应目标演练恢复与改进
 - 前置：[第 21 章 备份体系与恢复演练](/backup-recovery/)、
   [第 34 章 过载保护与资源故障判型](/overload-resource-incidents/)
 - 后续：[第 36 章 事故复盘、控制固化与平台演进](/postmortem-platform-improvement/)
-- 兼容入口：`/ch35/`、`/volume-2/data-rescue-forensics/`
 
 ## 本章目录
 

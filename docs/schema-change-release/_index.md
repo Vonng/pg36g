@@ -116,12 +116,6 @@ contract not executed
 - [v0.6 规则提案](/labs/ch11/baseline-v0.6-proposal.json)
 - [任务入口](/labs/ch11/task.sh)
 
-## 所属位置
-
-- 卷别：[上卷：应用开发](/upper-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第二篇：应用——从 SQL 正确走向稳定交付
-- 兼容入口：`/ch11/`、`/volume-1/schema-change-release/`
-
 ## 本章目录
 
 ### [11.1 识别 DDL 的四类风险](01/)

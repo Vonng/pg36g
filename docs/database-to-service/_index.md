@@ -173,12 +173,6 @@ application pgxpool MaxConns=2 in the failure lab
 
 这不是“当前所有环境的默认版本”，而是证据绑定的实际组合。
 
-## 所属位置
-
-- 卷别：[上卷：应用开发](/upper-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第二篇：应用——从 SQL 正确走向稳定交付
-- 兼容入口：`/ch12/`、`/volume-1/database-to-service/`
-
 ## 本章目录
 
 ### [12.1 数据库契约与应用边界](01/)

@@ -180,12 +180,6 @@ sandbox passed != production approved
 > 同一事实必须由合适的 authority 证明；差异必须被拒绝或登记为有范围的
 > exception，不能被一句“看起来正常”吞掉。
 
-## 所属位置
-
-- 卷别：[下卷：运维管理](/lower-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第四篇：规划——建设可交付的 PostgreSQL 服务
-- 兼容入口：`/ch19/`、`/volume-2/deployment-baseline/`
-
 ---
 
 [上一章：万法归宗：PostgreSQL 数据平台与替代边界](/data-platform-boundaries/) · [返回下卷导读](/lower-volume/) · [下一章：狡兔三窟：高可用拓扑与容灾目标](/high-availability/) ·

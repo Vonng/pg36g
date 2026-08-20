@@ -34,14 +34,24 @@ languages:
 
 markup:
   goldmark:
+    renderer:
+      unsafe: true          # OINK 的百分号容器 shortcode 会生成内联 HTML
     extensions:
       footnote: true         # 开启脚注语法：[^id] / [^id]: text
       linkify: true          # 自动将 URL 文本转为链接
       table: true            # 启用 Markdown 表格
       taskList: true         # 启用任务列表 [ ] / [x]
       typographer: true      # 智能排版（引号、破折号等）
+      passthrough:
+        enable: true
+        delimiters:
+          block: [['\[', '\]'], ['$$', '$$']]
+          inline: [['\(', '\)']]
     parser:
-      attribute: true        # 允许在标题后写 {#id .class key=val}，用于显式锚点
+      wrapStandAloneImageWithinParagraph: false # OINK 原生图片块需要直接附加属性
+      attribute:
+        block: true          # OINK 原生组件与编号对象需要块属性
+        title: true          # 允许在标题后写 {#id .class key=val}
       autoHeadingID: true    # 为标题自动生成 ID（手写 {#id} 会覆盖自动生成）
       autoHeadingIDType: github  # 自动 ID 规则：github / blackfriday / none
   highlight:
@@ -156,10 +166,10 @@ params:
   github_branch: main
   page_width: wide
   highlight_classes: true
-  offlineSearch: true
-  offlineSearchIndex: summary
-  offlineSearchSummaryLength: 90
-  offlineSearchMaxResults: 12
+  offline_search: true
+  offline_search_index: summary
+  offline_search_summary_length: 90
+  offline_search_max_results: 12
   copyright:
     authors: '[冯若航（Vonng）](https://vonng.com)'
     from_year: 2025
@@ -190,19 +200,16 @@ params:
     sidebar_width_min: 280
     sidebar_width_max: 520
     sidebar_item_overflow: wrap
-    showLightDarkModeMenu: true
-    typography:
-      preset: system
-    image_zoom:
-      enable: true
+    dark_mode: true
+    typography: system
+    image_zoom: true
     page_context_menu:
       enable: true
       assistant_links: true
     feedback:
       enable: false
-    ul_show: 1
-    scrollSpy:
-      disable: false
+    sidebar_expand_levels: 1
+    scroll_spy: true
     command_palette:
       commands:
         - id: book_toc

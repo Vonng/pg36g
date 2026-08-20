@@ -194,14 +194,11 @@ temporary root removed           true
 watchdog off；没有注入断电、存储故障、真实网络分区，也没有执行破坏性的 managed
 `reinit`。最终门禁保持 `production_ch33_gate=pending`。
 
-## 所属位置
+## 阅读前后关系
 
-- 卷别：[下卷：运维管理](/lower-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第六篇：出山——按响应目标演练恢复与改进
 - 前置：[第 20 章 高可用拓扑与容灾目标](/high-availability/)、
   [第 31 章 事件分级、现场保护与应急决策](/incident-response/)
 - 后续：[第 34 章 过载保护与资源故障判型](/overload-resource-incidents/)
-- 兼容入口：`/ch33/`、`/volume-2/failover-rebuild/`
 
 ## 本章目录
 

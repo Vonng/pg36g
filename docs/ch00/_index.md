@@ -28,7 +28,7 @@ working PostgreSQL connection
 redacted baseline evidence
 ```
 
-本书冻结的写作基线是 Pigsty `v4.4.0`、PostgreSQL `18.4` 与 Ubuntu 24.04 LTS
+本书采用的复现基线是 Pigsty `v4.4.0`、PostgreSQL `18.4` 与 Ubuntu 24.04 LTS
 reference environment。安装时固定 Pigsty release 与 PostgreSQL major，随后记录仓库
 实际提供的 minor/build；不要为了伪造一致性降级已经修复安全问题的 minor release。
 

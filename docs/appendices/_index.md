@@ -32,7 +32,7 @@ book_kind: appendices
 
 ## [附录 E：实验拓扑、风险与复位手册](e/)
 
-定义 L1/L2/L3 规格，区分 R0/R1/R2 风险，解释 `reset:sql`、`reset:cluster`、
+定义 L1/L2/L3 规格，区分 R0–R3 风险，解释 `reset:sql`、`reset:cluster`、
 `reset:host` 以及 snapshot/checksum/evidence 合同。
 
 ## [附录 F：术语与技术边界表](f/)

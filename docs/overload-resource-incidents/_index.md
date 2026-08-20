@@ -55,7 +55,7 @@ retention pressure
 5. 识别健康检查、短连接和无抖动重试造成的隐藏放大；
 6. 用 `pg_stat_activity`、wait event、阻塞树和执行计划识别失控工作；
 7. 区分 `pg_cancel_backend` 与 `pg_terminate_backend` 的影响和权限边界；
-8. 在结束长事务或大事务前评估锁释放、回滚 WAL、I/O 与恢复时间；
+8. 在结束长事务或大事务前评估锁释放、中止清理、既有 WAL、死版本与后续 vacuum 成本；
 9. 用并发最坏值估算 `work_mem`、并行 worker 与连接数的内存风险；
 10. 将 PostgreSQL 的 I/O 证据与主机设备延迟、队列和文件系统余量互证；
 11. 为限流、熔断、摘流、取消和只读降级写出收益、代价、停止线与回退；
@@ -168,14 +168,11 @@ exact temporary root remains   false
 它不证明生产连接上限、真实 OOM victim、文件系统填满行为、归档仓库故障或未知
 replication slot 可以安全删除；最终门禁固定为 `production_ch34_gate=pending`。
 
-## 所属位置
+## 阅读前后关系
 
-- 卷别：[下卷：运维管理](/lower-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第六篇：出山——按响应目标演练恢复与改进
 - 前置：[第 22 章 服务接入、连接池与路由](/connection-pooling-routing/)、
   [第 31 章 事件分级、现场保护与应急决策](/incident-response/)
 - 后续：[第 35 章 数据抢救与工程取证](/data-rescue-forensics/)
-- 兼容入口：`/ch34/`、`/volume-2/overload-resource-incidents/`
 
 ## 本章目录
 
@@ -195,7 +192,7 @@ replication slot 可以安全删除；最终门禁固定为 `production_ch34_gat
 ### [34.3 失控查询、锁与事务](03/)
 
 - [34.3.1 识别高消耗查询和阻塞根节点](03/#item-34-3-1)
-- [34.3.2 cancel、terminate 与回滚成本](03/#item-34-3-2)
+- [34.3.2 cancel、terminate 与中止后成本](03/#item-34-3-2)
 - [34.3.3 长事务和大事务结束前先评估后果](03/#item-34-3-3)
 
 ### [34.4 CPU、内存、I/O 与 OOM](04/)

@@ -96,16 +96,20 @@ no production route or public exposure
 public IP、egress、object storage/API。价格随 region/日期变化，本书不冻结金额。每个
 环境设置 owner、expiration 与 budget alert，并把保留 evidence 的费用计入。
 
-## E.2 R0/R1/R2 风险标记 {#appendix-e-2}
+## E.2 R0–R3 风险标记 {#appendix-e-2}
 
-`L1/L2/L3` 描述实验环境；`R0/R1/R2` 描述动作风险。两者不能互推：L3 中仍有 R0
+`L1/L2/L3` 描述实验环境；`R0–R3` 描述动作风险。两者不能互推：L3 中仍有 R0
 查询，L1 上误删唯一数据仍是破坏性动作。
 
 | 风险 | 定义 | 例子 | 必备 |
 |---|---|---|---|
 | R0 观察 | 不改变目标状态 | identity/catalog/stats、plain `EXPLAIN`、capture | exact context、query cost、隐私 |
 | R1 可逆变更 | 改状态但有已验证回退 | fixture DDL、bounded config、canary、精确 cancel | owner、before/after、stop、rollback |
-| R2 破坏性演练 | 切换、恢复、损坏、重建或可能丢状态 | PITR、failover、fault injection、host rebuild | 隔离、恢复源、guard、批准、证据 |
+| R2 受控状态变更/演练 | 有非平凡状态影响，但范围隔离且恢复路径已验证 | 一次性对象删除、隔离 PITR/failover、fault injection | guard、批准、恢复源、停止线、证据 |
+| R3 生产敏感/潜在不可逆 | 触及真实数据/流量、authority/lineage，或恢复昂贵 | 生产 failover/cutover、rewind/reinit、host rebuild、`pg_resetwal` | 原件保留、明确授权、独立复核、业务验收 |
+
+同一命令没有固定风险等级：在 disposable clone 上恢复一份 candidate 可以是 R2；让它
+接管生产流量、覆盖真实目标或改变唯一权威时就是 R3。
 
 ### 风险升级因素
 

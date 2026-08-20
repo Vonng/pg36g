@@ -100,12 +100,6 @@ ch10_outbox            committed external-effect intent
 - [v0.5 规则提案](/labs/ch10/baseline-v0.5-proposal.json)
 - [任务入口](/labs/ch10/task.sh)
 
-## 所属位置
-
-- 卷别：[上卷：应用开发](/upper-volume/)（独立导读页，不构成章节父目录）
-- 教学分组：第二篇：应用——从 SQL 正确走向稳定交付
-- 兼容入口：`/ch10/`、`/volume-1/concurrency-isolation/`
-
 ## 本章目录
 
 ### [10.1 隔离级别与可观察现象](01/)

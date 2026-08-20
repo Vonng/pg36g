@@ -24,7 +24,7 @@ longitude  numeric,
 latitude   numeric
 ```
 
-这四个字段看起来够用，却没有回答最关键的问题：
+这三个字段看起来够用，却没有回答最关键的问题：
 
 ```text
 created_at 是事情发生、服务器接收，还是规则生效的时间？

@@ -228,7 +228,7 @@ BRIN 依赖物理相关性，不是“时序表默认更快”；空间 + 时间
 
 ## D.5 ch28：分区生命周期、冻结与退役 {#appendix-d-5}
 
-[ch28.7](/vacuum-freeze-bloat/07/) 把 partition state 作为有限状态机：
+[ch28.5](/vacuum-freeze-bloat/05/) 把 partition state 作为有限状态机：
 
 ```text
 future -> writable -> sealed -> validated -> archived

@@ -1079,7 +1079,7 @@ book_kind: table-of-contents
   - [34.2.3 限流、队列、连接预算与指数退避](/overload-resource-incidents/02/#item-34-2-3)
 - [34.3 失控查询、锁与事务](/overload-resource-incidents/03/)
   - [34.3.1 识别高消耗查询和阻塞根节点](/overload-resource-incidents/03/#item-34-3-1)
-  - [34.3.2 cancel、terminate 与回滚成本](/overload-resource-incidents/03/#item-34-3-2)
+  - [34.3.2 cancel、terminate 与中止后成本](/overload-resource-incidents/03/#item-34-3-2)
   - [34.3.3 长事务和大事务结束前先评估后果](/overload-resource-incidents/03/#item-34-3-3)
 - [34.4 CPU、内存、I/O 与 OOM](/overload-resource-incidents/04/)
   - [34.4.1 饱和、排队、抖动与抢占](/overload-resource-incidents/04/#item-34-4-1)
