@@ -1,11 +1,10 @@
 ---
-title: 第 35 章 数据抢救与工程取证——起死回生
-linkTitle: 35 数据抢救与工程取证——起死回生
+title: 数据抢救与工程取证——起死回生
+linkTitle: 数据抢救与工程取证——起死回生
 weight: 450
 aliases:
 - "/ch35/"
 - "/volume-2/data-rescue-forensics/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch35
 book_number: 35
 book_part: part-6
-book_status: draft
+book_status: reviewed
 ---
 
 当数据库报告 checksum failure、invalid page、索引不一致或 collation version mismatch，
@@ -92,7 +91,7 @@ process started
 ## 正式实验
 
 本章对 managed `pg-test` 只做 before/after L0 read-only capture。真实 fault 全部在
-`pg-test-3` 的一次性 PostgreSQL 18.4 中：
+`pg-test-3` 的一次性 PostgreSQL 18.6 中：
 
 ```text
 /tmp/pg36-ch35-forensics-<run-id>
