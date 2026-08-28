@@ -1,11 +1,10 @@
 ---
-title: 第 13 章 言出法随：函数、触发器与存储过程
-linkTitle: 13 言出法随：函数、触发器与存储过程
+title: 言出法随：函数、触发器与存储过程
+linkTitle: 言出法随：函数、触发器与存储过程
 weight: 230
 aliases:
 - "/ch13/"
 - "/volume-1/functions-triggers-procedures/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch13
 book_number: 13
 book_part: part-3
-book_status: draft
+book_status: reviewed
 ---
 
 数据库端逻辑最危险的误解，是把“PostgreSQL 能做”当成“应该放进
@@ -130,7 +129,7 @@ capture_payment(...)
 - [Pigsty 声明片段](/labs/ch13/pigsty-declaration.example.yml)
 - [v1.1 proposal](/labs/ch13/baseline-v1.1-proposal.json)
 
-正式实验在 PostgreSQL 18.4 直连路径运行，同时把适用范围限制为
+正式实验在 PostgreSQL 18.6 直连路径运行，同时把适用范围限制为
 PostgreSQL 14–18。它没有经过 PgBouncer，因此不能声称 pooler 路径已验证。
 
 ## 快速运行
@@ -246,7 +245,7 @@ SQLSTATE、批次关系和 canonical proposal checksum。
 ## 版本与证据边界
 
 本章使用 PostgreSQL 14–18 共有的核心能力；`anycompatible` 多态类型族从
-14 开始，因此实验下限设为 14。PostgreSQL 18.4 是本次实际验证版本，
+14 开始，因此实验下限设为 14。PostgreSQL 18.6 是本次实际验证版本，
 不是暗示 14–17 会自动通过所有环境差异。
 
 权威语义以以下文档为准：
