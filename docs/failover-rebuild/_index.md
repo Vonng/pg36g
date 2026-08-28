@@ -1,11 +1,10 @@
 ---
-title: 第 33 章 故障切换与集群重建——力挽狂澜
-linkTitle: 33 故障切换与集群重建——力挽狂澜
+title: 故障切换与集群重建——力挽狂澜
+linkTitle: 故障切换与集群重建——力挽狂澜
 weight: 430
 aliases:
 - "/ch33/"
 - "/volume-2/failover-rebuild/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch33
 book_number: 33
 book_part: part-6
-book_status: draft
+book_status: reviewed
 ---
 
 第 20 章演练的是**健康集群上的计划切换**；第 31 章要求事故处理中先保护现场、分清
