@@ -1,11 +1,10 @@
 ---
-title: 第 11 章 守正出奇：模式变更与安全发布
-linkTitle: 11 守正出奇：模式变更与安全发布
+title: 守正出奇：模式变更与安全发布
+linkTitle: 守正出奇：模式变更与安全发布
 weight: 210
 aliases:
 - "/ch11/"
 - "/volume-1/schema-change-release/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch11
 book_number: 11
 book_part: part-2
-book_status: draft
+book_status: reviewed
 ---
 
 PostgreSQL 能在事务中执行许多 DDL，但“能回滚”不等于“能在线发布”。一次模式变更能否安全进入生产，至少同时取决于：
@@ -68,7 +67,7 @@ legacy
 
 ## 实验边界
 
-实验基线为 PostgreSQL 18.4、Pigsty v4.4.0、Ubuntu 24.04 L1；主体发布路径面向 PostgreSQL 14–18。所有可重建对象都位于 `shop_private`，以 `ch11_` 开头并带固定 marker，不修改 `shop.*` 业务表：
+实验基线为 PostgreSQL 18.6、Pigsty v4.5.0、Ubuntu 24.04 L1；主体发布路径面向 PostgreSQL 14–18。所有可重建对象都位于 `shop_private`，以 `ch11_` 开头并带固定 marker，不修改 `shop.*` 业务表：
 
 ```text
 ch11_order                 50,000-row legacy order fixture
@@ -164,7 +163,7 @@ contract not executed
 
 ## 实测摘要
 
-一次 PostgreSQL 18.4 全量验收得到：
+一次 PostgreSQL 18.6 全量验收得到：
 
 ```text
 risk:
