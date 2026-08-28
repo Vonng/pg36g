@@ -1,11 +1,10 @@
 ---
-title: 第 8 章 抽丝剥茧：慢 SQL 诊断方法论
-linkTitle: '08 抽丝剥茧：慢 SQL 诊断方法论'
+title: 抽丝剥茧：慢 SQL 诊断方法论
+linkTitle: 抽丝剥茧：慢 SQL 诊断方法论
 weight: 180
 aliases:
 - "/ch08/"
 - "/volume-1/slow-query-diagnosis/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch08
 book_number: 8
 book_part: part-2
-book_status: draft
+book_status: reviewed
 ---
 
 “数据库慢”不是根因，甚至还不是一个足够好的问题。它可能表示某个请求在连接池排队、某条 SQL 被事务锁住、一个参数命中了错误的通用计划、结果集已经算完却写不进慢客户端，也可能只是用户把一次偶发抖动概括成了整体退化。
@@ -54,7 +53,7 @@ book_status: draft
 
 ## 实验边界
 
-实验基线为 PostgreSQL 18.4、Pigsty v4.4.0、Ubuntu 24.04 L1；SQL 与诊断原则保持 PostgreSQL 14–18 可用。实验复用：
+实验基线为 PostgreSQL 18.6、Pigsty v4.5.0、Ubuntu 24.04 L1；SQL 与诊断原则保持 PostgreSQL 14–18 可用。实验复用：
 
 - ch07 的 90000/10 tenant skew，制造 generic/custom estimate 对照；
 - ch05 的 rollback-only 行锁编排，制造一条可证明的 blocker edge；
@@ -127,7 +126,7 @@ book_status: draft
 
 ## 实测摘要
 
-一次 PostgreSQL 18.4 全量验收得到：
+一次 PostgreSQL 18.6 全量验收得到：
 
 ```text
 estimate:
