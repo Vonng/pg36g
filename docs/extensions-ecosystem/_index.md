@@ -1,11 +1,10 @@
 ---
-title: 第 14 章 博采众长：内核分支与扩展生态
-linkTitle: 14 博采众长：内核分支与扩展生态
+title: 博采众长：内核分支与扩展生态
+linkTitle: 博采众长：内核分支与扩展生态
 weight: 240
 aliases:
 - "/ch14/"
 - "/volume-1/extensions-ecosystem/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch14
 book_number: 14
 book_part: part-3
-book_status: draft
+book_status: reviewed
 ---
 
 PostgreSQL 的扩展生态很强，但“有这个扩展”不是架构理由，“能够安装”也
@@ -155,11 +154,11 @@ vector plan     = HNSW index scan
 - [最终状态](/labs/ch14/final-state.sql)
 - [自动审校器](/labs/ch14/review.py)
 - [精确复位](/labs/ch14/reset.sql)
-- [Pigsty 4.4 声明片段](/labs/ch14/pigsty-declaration.example.yml)
+- [Pigsty 4.5 声明片段](/labs/ch14/pigsty-declaration.example.yml)
 - [v1.2 proposal](/labs/ch14/baseline-v1.2-proposal.json)
 
-正式本地证据在 Homebrew PostgreSQL 18.4 上采集。正文把平台映射核对到
-Pigsty 4.4，但没有在 Pigsty L1 主机上运行，因此输出明确记录：
+正式本地证据在 Homebrew PostgreSQL 18.6 上采集。正文把平台映射核对到
+Pigsty 4.5，但没有在 Pigsty L1 主机上运行，因此输出明确记录：
 
 ```text
 validation_path=direct-postgresql
@@ -266,7 +265,7 @@ release_candidate_checksum=6a4b74baec5f522eb098c868f1d4f1b441bf5b5f6708411588af0
 - [14.5.2 声明安装与数据库内 `CREATE EXTENSION`](05/#item-14-5-2)
 - [14.5.3 从监控和日志识别加载失败](05/#item-14-5-3)
 
-把原生机制映射到 Pigsty 4.4，但始终回到节点文件、live 参数和系统目录
+把原生机制映射到 Pigsty 4.5，但始终回到节点文件、live 参数和系统目录
 复核。
 
 ### [14.6 建立可复用扩展 ADR](06/)
@@ -288,7 +287,7 @@ release_candidate_checksum=6a4b74baec5f522eb098c868f1d4f1b441bf5b5f6708411588af0
 ## 版本与证据边界
 
 本章原理以 PostgreSQL 14–18 为范围；可执行 baseline 固定
-`pg_trgm` 1.3/1.6、`vector` 0.8.4，并在 PostgreSQL 18.4 上验证。目标环境
+`pg_trgm` 1.3/1.6、`vector` 0.8.4，并在 PostgreSQL 18.6 上验证。目标环境
 没有这些精确版本时，不应伪造通过，而应复制 ADR、更新版本范围和 golden，
 重新评审。
 
