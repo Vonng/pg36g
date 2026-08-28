@@ -1,0 +1,10 @@
+{{ define "main" -}}
+{{- /* A Book home with layout: landing would otherwise resolve the generic
+     non-home landing data contract. Mirror OINK's home renderer so the cover
+     stays data/home/<lang>.yaml while every descendant uses the Book shell. */ -}}
+{{- $home := partial "landing/home-data.html" . -}}
+{{- if and $home (not (isset $home "sections")) -}}
+  {{- errorf "data/home: sections is required; list the section keys in render order" -}}
+{{- end -}}
+{{- partial "landing/render.html" (dict "page" . "data" $home) -}}
+{{- end }}

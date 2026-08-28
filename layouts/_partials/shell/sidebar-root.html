@@ -1,0 +1,52 @@
+{{- /* OINK's Book resolver scopes a nested Book page to .FirstSection. PG36 keeps its
+     chapters as top-level sections with stable root URLs, so its one book
+     needs the home content tree instead. Keep the upstream resolver intact
+     and add only the explicit params.ui.book_sidebar_root = home choice. */ -}}
+{{- $page := . -}}
+{{- $root := cond $page.Site.Params.ui.sidebar_root_enabled $page.Site.Home $page.FirstSection -}}
+{{- $config := partialCached "shell/config.html" $page $page.Site.Language.Lang -}}
+{{- $bookRoot := $page.Site.Params.ui.book_sidebar_root | default "section" -}}
+
+{{- if not (in (slice "home" "section") $bookRoot) -}}
+  {{- warnf "params.ui.book_sidebar_root must be home or section; got %q; using section" $bookRoot -}}
+  {{- $bookRoot = "section" -}}
+{{- end -}}
+
+{{- if $page.Site.Params.ui.sidebar_root_enabled -}}
+  {{- if and $page.IsSection (eq $page.Params.sidebar_root_for "self") -}}
+    {{- $root = $page -}}
+  {{- else -}}
+    {{- range $page.Ancestors -}}
+      {{- if not .IsSection }}{{ continue }}{{ end -}}
+      {{- $rootFor := .Params.sidebar_root_for -}}
+      {{- if not $rootFor }}{{ continue }}{{ end -}}
+      {{- if not (in (slice "self" "children") $rootFor) -}}
+        {{- warnf "%s: sidebar_root_for should be 'self' or 'children', got %q" .Path $rootFor -}}
+        {{- continue -}}
+      {{- end -}}
+      {{- $root = . -}}
+      {{- break -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if and (eq $page.Type "blog") (eq $root $page.Site.Home) -}}
+  {{- with $page.Site.GetPage (printf "/%s" $config.blogSection) }}{{ $root = . }}{{ end -}}
+{{- end -}}
+
+{{- if and (eq $page.Type "docs") (eq $root $page.Site.Home) (ne $config.docsRoot "home") -}}
+  {{- with $page.Site.GetPage (printf "/%s" $config.docsSection) }}{{ $root = . }}{{ end -}}
+{{- end -}}
+
+{{- if and (eq $page.Type "book") (eq $root $page.Site.Home) (ne $bookRoot "home") -}}
+  {{- with $page.FirstSection }}{{ $root = . }}{{ end -}}
+{{- end -}}
+
+{{- if eq $page.Kind "term" -}}
+  {{- $tops := slice -}}
+  {{- range $page.Pages }}{{ with .FirstSection }}{{ $tops = $tops | append . }}{{ end }}{{ end -}}
+  {{- $tops = $tops | uniq -}}
+  {{- if eq (len $tops) 1 }}{{ $root = index $tops 0 }}{{ end -}}
+{{- end -}}
+
+{{- return $root -}}

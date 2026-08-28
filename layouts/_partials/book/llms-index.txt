@@ -1,0 +1,30 @@
+{{- $english := eq .Site.Language.Lang "en" -}}
+{{- $indexTitle := cond $english "Content index" "内容索引" -}}
+{{- $homeLabel := cond $english "Home" "首页" -}}
+{{- $languagesTitle := cond $english "Languages" "语言" -}}
+{{- $homeURL := .Site.Home.Permalink -}}
+{{- with .Site.Home.OutputFormats.Get "markdown" }}{{ $homeURL = .Permalink }}{{ end -}}
+# {{ .Site.Title }}
+
+{{ with .Site.Params.description | strings.TrimSpace -}}
+> {{ replace . "\n" "\n> " }}
+
+{{ end -}}
+## {{ $indexTitle }}
+
+- [{{ $homeLabel }}]({{ $homeURL }})
+{{ range .Site.RegularPages.ByWeight -}}
+  {{- if or (.Params.sidebar_divider | default false) (.Params.toc_hide | default false) }}{{ continue }}{{ end -}}
+  {{- $url := .Permalink -}}
+  {{- with .OutputFormats.Get "markdown" }}{{ $url = .Permalink }}{{ end }}
+- [{{ .Title | strings.TrimSpace }}]({{ $url }})
+{{ end -}}
+
+## {{ $languagesTitle }}
+
+{{ range hugo.Sites -}}
+  {{- $home := .Home -}}
+  {{- $url := $home.Permalink -}}
+  {{- with $home.OutputFormats.Get "markdown" }}{{ $url = .Permalink }}{{ end }}
+- [{{ $home.Language.Label }}]({{ $url }})
+{{ end -}}

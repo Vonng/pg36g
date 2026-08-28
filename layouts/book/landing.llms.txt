@@ -1,0 +1,1 @@
+{{- partial "book/llms-index.txt" . -}}
