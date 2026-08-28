@@ -2,7 +2,6 @@
 title: 序言
 linkTitle: 序言
 weight: 2
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: preface

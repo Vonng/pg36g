@@ -1,91 +1,37 @@
 ---
-title: PostgreSQL 36 计
+title: PG 三十六计
 linkTitle: 首页
 description: 从 SQL 到生产：PostgreSQL 与 Pigsty 实战
-cascade:
-  type: docs
-type: home
+type: book
+layout: landing
+book_kind: book
+book_status: reviewed
+outputs: [HTML, print, markdown, LLMS]
+search_exclude: true
+sidebar_enabled: false
 breadcrumbs: false
 comments: false
+cascade:
+  type: book
 ---
 
-> 从 SQL 到生产：PostgreSQL 与 Pigsty 实战
+《PG 三十六计》面向已经掌握 Linux 与通用 SQL、希望系统完成 PostgreSQL
+应用开发和生产落地的读者。PostgreSQL 是核心知识对象；Pigsty 是统一实验载体、
+观察窗口与生产参考实现。
 
-本书默认读者已经掌握 Linux 与通用 SQL，以 PostgreSQL 为核心知识对象，以 Pigsty 为统一实验载体、观察窗口和生产参考实现。
+全书分为应用开发与运维管理两卷，共六篇三十六章。正文从对象、模型、查询与并发
+出发，经过发布、扩展、部署、HA、备份、可观测、容量与维护，最终进入事故响应、
+恢复、取证和复盘改进。
 
-## 开始阅读
+## 阅读与查找
 
-- [全书导读：读者假设、安全、版本与实验契约](/guide/)
-- [第 0 章：准备实验环境（可跳过）](/ch00/)
-- [完整目录：章、节、目](/toc/)
-- [上卷导读与索引：应用开发](/upper-volume/)
-- [下卷导读与索引：运维管理](/lower-volume/)
-- [索引中心：角色、任务、能力、事故与分区](/indexes/)
-- [序言：定位、利益披露与命名原则](/preface/)
+- [全书导读](/guide/)说明读者假设、安全公约、版本边界与实验合同。
+- [完整编号目录](/toc/)定位全部章节、独立节页和稳定三级锚点。
+- [索引中心](/indexes/)按角色、任务、技术边界、事故症状与分区触点查找内容。
+- [第 0 章](/ch00/)准备可销毁的 Pigsty 实验环境；已有合适环境时可以跳过。
 
-## 36 章正文
+## 当前复现基线
 
-上卷从数据库对象、建模与查询出发，走到应用交付和能力扩展；下卷从生产规划出发，走到运营、恢复与复盘。第一次阅读建议按章推进，遇到具体任务时可从[索引中心](/indexes/)直接进入。
-
-### 第一篇：筑基——建立 PostgreSQL 工程认知
-
-- [ch01 盲人摸象：PostgreSQL 与 Pigsty 全局地图](/postgresql-pigsty-map/)
-- [ch02 手到擒来：psql 与可复现工作流](/psql-workflow/)
-- [ch03 正本清源：从业务规则到关系模型](/logical-data-model/)
-- [ch04 量体裁衣：数据类型、约束与可靠数据表达](/data-types-constraints/)
-- [ch05 运筹帷幄：查询、事务与锁的核心心智模型](/query-transaction-locks/)
-- [ch06 立木取信：开发规约与交付基线](/development-standards/)
-
-### 第二篇：应用——从 SQL 正确走向稳定交付
-
-- [ch07 追本溯源：执行计划与统计信息](/query-plans-statistics/)
-- [ch08 抽丝剥茧：慢 SQL 诊断方法论](/slow-query-diagnosis/)
-- [ch09 巧夺天工：索引设计与效果验证](/index-design/)
-- [ch10 顾此失彼：并发控制与隔离异常](/concurrency-isolation/)
-- [ch11 守正出奇：模式变更与安全发布](/schema-change-release/)
-- [ch12 一气呵成：从数据库契约到后端服务](/database-to-service/)
-
-### 第三篇：扩展——扩大 PostgreSQL 的能力边界
-
-- [ch13 言出法随：函数、触发器与存储过程](/functions-triggers-procedures/)
-- [ch14 博采众长：内核分支与扩展生态](/extensions-ecosystem/)
-- [ch15 见微知著：全文、模糊与向量检索](/search/)
-- [ch16 经天纬地：时序、空间与时空查询](/spatiotemporal/)
-- [ch17 合纵连横：分析加速与分布式选型](/analytics-distributed/)
-- [ch18 万法归宗：PostgreSQL 数据平台与替代边界](/data-platform-boundaries/)
-
-### 第四篇：规划——建设可交付的 PostgreSQL 服务
-
-- [ch19 开天辟地：环境规划与部署基线](/deployment-baseline/)
-- [ch20 狡兔三窟：高可用拓扑与容灾目标](/high-availability/)
-- [ch21 未雨绸缪：备份体系与恢复演练](/backup-recovery/)
-- [ch22 四通八达：服务接入、连接池与路由](/connection-pooling-routing/)
-- [ch23 固若金汤：认证、授权与数据安全](/authentication-authorization-security/)
-- [ch24 纲举目张：SLO、SOP 与组织治理](/slo-sop-governance/)
-
-### 第五篇：运营——用证据驱动日常维护与演进
-
-- [ch25 望闻问切：监控体系与可观测诊断](/observability/)
-- [ch26 胸有成竹：容量规划与压测基线](/capacity-benchmarking/)
-- [ch27 精益求精：参数调优与资源治理](/configuration-tuning/)
-- [ch28 除旧布新：VACUUM、冻结与膨胀治理](/vacuum-freeze-bloat/)
-- [ch29 移花接木：逻辑复制、迁移与异构同步](/logical-replication-migration/)
-- [ch30 推陈出新：版本升级与回滚策略](/version-upgrade/)
-
-### 第六篇：出山——按响应目标演练恢复与改进
-
-- [ch31 事件分级、现场保护与应急决策——枕戈待旦](/incident-response/)
-- [ch32 PITR 与误操作恢复——妙手回春](/pitr/)
-- [ch33 故障切换与集群重建——力挽狂澜](/failover-rebuild/)
-- [ch34 过载保护与资源故障判型——李代桃僵](/overload-resource-incidents/)
-- [ch35 数据抢救与工程取证——起死回生](/data-rescue-forensics/)
-- [ch36 事故复盘、控制固化与平台演进——举一反三](/postmortem-platform-improvement/)
-
-## 如何使用当前版本
-
-全书 36 章均有完整正文和配套实验资产。正文与实验以 PostgreSQL 18.4、Pigsty
-v4.4.0 为复现基线；涉及其他受支持版本的结论会就地说明适用范围。
-
-不要把示例命令与示例输出拆开阅读：每项实验的价值都在“目标—前提—动作—证据—验收”
-这条链上。开始前先读[全书导读](/guide/)和[附录 E：实验环境合同](/appendices/e/)；
-版本差异与勘误见[附录 A](/appendices/a/)。
+正文与实验以 PostgreSQL 18.6、Pigsty v4.5.0 为当前基线。涉及其他受支持版本的
+结论会就地说明适用范围。示例命令、示例输出和单次跑分都不能脱离目标、前提、
+风险、证据、验收与复位链条单独使用。

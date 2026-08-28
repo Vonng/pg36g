@@ -6,12 +6,10 @@ aliases:
 - "/volume-2/"
 - "/ops/"
 - "/dba/"
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: volume-overview
-book_number: 2
-book_status: draft
+book_status: reviewed
 ---
 
 > **本卷导读**：下卷面向 DBA、平台工程师与生产负责人，沿着“规划交付—高可用与备份—安全接入—可观测运营—迁移升级—事故恢复与复盘”的路径，把 PostgreSQL 知识转化为可持续运行的数据库服务能力。

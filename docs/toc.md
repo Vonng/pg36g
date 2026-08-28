@@ -2,7 +2,6 @@
 title: 完整目录
 linkTitle: 目录
 weight: 4
-type: docs
 breadcrumbs: false
 comments: false
 book_kind: table-of-contents
