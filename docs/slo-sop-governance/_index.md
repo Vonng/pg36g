@@ -1,11 +1,10 @@
 ---
-title: 第 24 章 纲举目张：SLO、SOP 与组织治理
-linkTitle: 24 纲举目张：SLO、SOP 与组织治理
+title: 纲举目张：SLO、SOP 与组织治理
+linkTitle: 纲举目张：SLO、SOP 与组织治理
 weight: 340
 aliases:
 - "/ch24/"
 - "/volume-2/slo-sop-governance/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch24
 book_number: 24
 book_part: part-4
-book_status: draft
+book_status: reviewed
 ---
 
 数据库平台最危险的状态，不是“什么都没有”，而是看起来什么都有：
@@ -110,7 +109,7 @@ book_status: draft
 
 本章收束第 19–23 章已经获得的事实：
 
-- [第 19 章 部署基线](/deployment-baseline/)：四机 Pigsty v4.4.0 /
+- [第 19 章 部署基线](/deployment-baseline/)：四机 Pigsty v4.5.0 /
   PostgreSQL 18 沙箱，以及六项明确例外；
 - [第 20 章 高可用](/high-availability/)：计划切换、write gap、
   timeline 和未知写结果；
@@ -293,7 +292,7 @@ $$
 
 ## 观察与告警的边界
 
-Pigsty v4.4 提供：
+Pigsty v4.5 提供：
 
 ```text
 VictoriaMetrics       time-series ingestion / storage / query
