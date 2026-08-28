@@ -1,11 +1,10 @@
 ---
-title: 第 32 章 PITR 与误操作恢复——妙手回春
-linkTitle: 32 PITR 与误操作恢复——妙手回春
+title: PITR 与误操作恢复——妙手回春
+linkTitle: PITR 与误操作恢复——妙手回春
 weight: 420
 aliases:
 - "/ch32/"
 - "/volume-2/pitr/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch32
 book_number: 32
 book_part: part-6
-book_status: draft
+book_status: reviewed
 ---
 
 第 21 章已经证明一条基础备份与连续 WAL 可以在隔离实例中恢复；第 31 章又要求事故
@@ -138,7 +137,7 @@ $$
 target             pg36-l2-vagrant/pg-test
 source             pg-test-1, managed primary
 restore host       pg-test-3, live replica remains unchanged
-PostgreSQL         18.4
+PostgreSQL         18.6
 Pig                1.5.1
 pgBackRest         2.59.0
 fixture            5,000 accounts
