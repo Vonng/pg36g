@@ -1,11 +1,10 @@
 ---
-title: 第 7 章 追本溯源：执行计划与统计信息
-linkTitle: 07 追本溯源：执行计划与统计信息
+title: 追本溯源：执行计划与统计信息
+linkTitle: 追本溯源：执行计划与统计信息
 weight: 170
 aliases:
 - "/ch07/"
 - "/volume-1/query-plans-statistics/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch07
 book_number: 7
 book_part: part-2
-book_status: draft
+book_status: reviewed
 ---
 
 第 5 章已经说明：优化器比较的是基于统计与成本参数的候选路径，不是在预言未来耗时；第 6 章又把“看到 Seq Scan 或高 cost 不直接判错”写进 `PREF-PLAN-005`。本章开始为这条规则补运行证据。
@@ -55,7 +54,7 @@ book_status: draft
 
 ## 实验边界
 
-实验基线为 PostgreSQL 18.4、Pigsty v4.4.0、Ubuntu 24.04 L1；SQL 保持 PostgreSQL 14–18 可用。fixture 只创建：
+实验基线为 PostgreSQL 18.6、Pigsty v4.5.0、Ubuntu 24.04 L1；SQL 保持 PostgreSQL 14–18 可用。fixture 只创建：
 
 - `shop_private.ch07_plan_probe`（100000 行）；
 - `shop_private.ch07_event_probe`（3650 行、四个季度分区）；
@@ -129,7 +128,7 @@ book_status: draft
 
 ## 实测摘要
 
-一次 PostgreSQL 18.4 运行得到：
+一次 PostgreSQL 18.6 运行得到：
 
 ```text
 correlated_estimate≈6300 → 25000 / actual=25000
