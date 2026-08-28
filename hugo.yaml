@@ -1,6 +1,6 @@
 baseURL: https://pg36g.vonng.com/
 locale: zh-CN
-title: PostgreSQL 36 计
+title: PG 三十六计
 
 enableRobotsTXT: true
 enableGitInfo: true
@@ -11,7 +11,7 @@ services:
     ID: G-MY3FSJ7R6E
 
 outputs:
-  home: [HTML, markdown, LLMS]
+  home: [HTML, print, markdown, LLMS]
   page: [HTML, markdown]
   section: [HTML, RSS, print, markdown]
 
@@ -25,12 +25,69 @@ module:
 contentDir: docs
 
 defaultContentLanguage: zh
+defaultContentLanguageInSubdir: false
 languages:
   zh:
     label: 简体中文
     locale: zh-CN
     weight: 1
-    title: PostgreSQL 36 计
+    title: PG 三十六计
+    params:
+      description: 从 SQL 到生产：PostgreSQL 与 Pigsty 实战
+      time_format_default: 2006年1月2日
+      ui:
+        command_palette:
+          commands:
+            - id: book_toc
+              title: 打开完整目录
+              description: 浏览 36 章、节页与稳定锚点
+              url: /toc/
+              icon: fa-solid fa-list-ol
+              keywords: [目录, 章节, toc]
+            - id: incident_guide
+              title: 查找事故首个安全动作
+              description: 按症状进入恢复、切换或取证章节
+              url: /indexes/incidents/
+              icon: fa-solid fa-triangle-exclamation
+              keywords: [事故, 应急, 恢复, 故障]
+            - id: lab_contract
+              title: 查看实验环境合同
+              description: 确认版本、拓扑、风险与停止条件
+              url: /appendices/e/
+              icon: fa-solid fa-flask-vial
+              keywords: [实验, 沙箱, 安全, 版本]
+  en:
+    label: English guide
+    locale: en-US
+    weight: 2
+    title: PostgreSQL 36 Stratagems
+    params:
+      description: A production field guide to PostgreSQL and Pigsty; the full manuscript is in Chinese.
+      time_format_default: Jan 2, 2006
+      ui:
+        command_palette:
+          commands:
+            - id: book_toc
+              title: Open the complete contents
+              description: Browse all 36 chapters and their stable anchors
+              # Keep the English overview open while handing readers to the
+              # Chinese manuscript. The explicit default port prevents Hugo's
+              # relLangURL from rewriting this canonical route under /en/.
+              url: https://pg36g.vonng.com:443/toc/
+              icon: fa-solid fa-list-ol
+              keywords: [contents, chapters, toc]
+            - id: incident_guide
+              title: Find the first safe incident action
+              description: Route a symptom to recovery, failover, or forensics
+              url: https://pg36g.vonng.com:443/indexes/incidents/
+              icon: fa-solid fa-triangle-exclamation
+              keywords: [incident, emergency, recovery, failure]
+            - id: lab_contract
+              title: Read the lab environment contract
+              description: Confirm versions, topology, risk, and stop conditions
+              url: https://pg36g.vonng.com:443/appendices/e/
+              icon: fa-solid fa-flask-vial
+              keywords: [lab, sandbox, safety, version]
 
 markup:
   goldmark:
@@ -60,103 +117,6 @@ markup:
     startLevel: 2            # ToC 从 h2 开始
     endLevel: 4              # ToC 到 h4 结束
 
-menus:
-  main:
-    - identifier: guide
-      name: 开始阅读
-      pageRef: /guide
-      weight: 10
-      params:
-        icon: fa-solid fa-book-open
-    - identifier: guide-lab
-      parent: guide
-      name: 准备实验环境
-      pageRef: /ch00
-      weight: 10
-      params:
-        icon: fa-solid fa-flask
-        description: 从可销毁的 Pigsty 沙箱开始
-    - identifier: guide-toc
-      parent: guide
-      name: 完整目录
-      pageRef: /toc
-      weight: 20
-      params:
-        icon: fa-solid fa-list-ol
-        description: 36 章、独立节页与稳定锚点
-    - identifier: toc
-      name: 全书结构
-      pageRef: /toc
-      weight: 20
-      params:
-        icon: fa-solid fa-layer-group
-    - identifier: toc-upper
-      parent: toc
-      name: 上卷：应用开发
-      pageRef: /upper-volume
-      weight: 10
-      params:
-        icon: fa-solid fa-code
-        description: 从工程认知到稳定交付与能力扩展
-    - identifier: toc-lower
-      parent: toc
-      name: 下卷：运维管理
-      pageRef: /lower-volume
-      weight: 20
-      params:
-        icon: fa-solid fa-server
-        description: 从生产规划到运营、恢复与复盘
-    - identifier: indexes
-      name: 索引中心
-      pageRef: /indexes
-      weight: 30
-      params:
-        icon: fa-solid fa-compass
-    - identifier: indexes-roles
-      parent: indexes
-      name: 按角色阅读
-      pageRef: /indexes/roles
-      weight: 10
-      params:
-        icon: fa-solid fa-users
-        description: 开发、DBA、平台与事故响应路线
-    - identifier: indexes-tasks
-      parent: indexes
-      name: 按任务查找
-      pageRef: /indexes/tasks
-      weight: 20
-      params:
-        icon: fa-solid fa-list-check
-        description: 从实际工程任务进入相关章节
-    - identifier: indexes-incidents
-      parent: indexes
-      name: 事故症状与安全动作
-      pageRef: /indexes/incidents
-      weight: 30
-      params:
-        icon: fa-solid fa-triangle-exclamation
-        description: 先判定首个安全动作，再进入正式章节
-    - identifier: indexes-capabilities
-      parent: indexes
-      name: 技术边界索引
-      pageRef: /indexes/capabilities
-      weight: 40
-      params:
-        icon: fa-solid fa-diagram-project
-        description: PostgreSQL、平台与 Pigsty 的责任边界
-    - identifier: appendices
-      name: 附录
-      pageRef: /appendices
-      weight: 40
-      params:
-        icon: fa-solid fa-bookmark
-    - identifier: github
-      name: GitHub
-      url: https://github.com/Vonng/pg36g
-      weight: 90
-      params:
-        icon: fa-brands fa-github
-
 params:
   description: 从 SQL 到生产：PostgreSQL 与 Pigsty 实战
   time_format_default: 2006年1月2日
@@ -165,6 +125,7 @@ params:
   github_project_repo: https://github.com/Vonng/pg36g
   github_branch: main
   page_width: wide
+  reading_width: normal
   highlight_classes: true
   offline_search: true
   offline_search_index: summary
@@ -190,18 +151,29 @@ params:
       theme: auto
       loading: lazy
   ui:
-    quick_links: [guide, toc, indexes]
+    shell_types: [book]
+    quick_links: [contents, indexes]
+    navbar_enabled: true
+    landing_search: true
+    footer_style: fat
     sidebar_icon_policy: groups
     sidebar_menu_compact: true
     sidebar_menu_foldable: true
     sidebar_menu_truncate: 2000
     sidebar_root_enabled: true
     sidebar_root_menu: false
-    sidebar_width_min: 280
+    # OINK's Book resolver normally scopes nested books to FirstSection. This
+    # book keeps all 36 chapter sections at the site root, so the project shim
+    # in layouts/_partials/shell/sidebar-root.html preserves the home tree.
+    book_sidebar_root: home
+    sidebar_width_min: 320
     sidebar_width_max: 520
     sidebar_item_overflow: wrap
+    sidebar_headings: false
+    book_draft_banner: false
+    pager_types: [book]
+    keyboard_nav: true
     dark_mode: true
-    typography: system
     image_zoom: true
     page_context_menu:
       enable: true
@@ -210,23 +182,3 @@ params:
       enable: false
     sidebar_expand_levels: 1
     scroll_spy: true
-    command_palette:
-      commands:
-        - id: book_toc
-          title: 打开完整目录
-          description: 浏览 36 章、节页与稳定锚点
-          url: /toc/
-          icon: fa-solid fa-list-ol
-          keywords: [目录, 章节, toc]
-        - id: incident_guide
-          title: 查找事故首个安全动作
-          description: 按症状进入恢复、切换或取证章节
-          url: /indexes/incidents/
-          icon: fa-solid fa-triangle-exclamation
-          keywords: [事故, 应急, 恢复, 故障]
-        - id: lab_contract
-          title: 查看实验环境合同
-          description: 确认版本、拓扑、风险与停止条件
-          url: /appendices/e/
-          icon: fa-solid fa-flask-vial
-          keywords: [实验, 沙箱, 安全, 版本]

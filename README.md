@@ -1,4 +1,4 @@
-# PostgreSQL 36 计
+# PG 三十六计
 
 [![Website: pg36g](https://img.shields.io/badge/在线阅读-pg36g.vonng.com-slategray?style=flat)](https://pg36g.vonng.com)
 
@@ -6,7 +6,7 @@
 
 **作者**：[冯若航（Vonng）](https://vonng.com)，Pigsty 作者与维护者。
 
-![PostgreSQL 36 计](static/logo.png)
+![PG 三十六计](static/logo.png)
 
 ## 这本书解决什么问题
 
@@ -15,7 +15,7 @@ PostgreSQL 为核心知识对象，以 Pigsty 为统一实验载体、观察窗�
 把应用开发、平台建设、日常运营、故障恢复与复盘改进连接成一条可验证的学习路径。
 
 当前仓库包含 36 个正文章、242 个独立节页、772 个三级目，以及 ch01–ch36 的
-配套实验资产。正文使用 PostgreSQL 18.4、Pigsty v4.4.0 作为复现基线；版本差异、
+配套实验资产。正文使用 PostgreSQL 18.6、Pigsty v4.5.0 作为复现基线；版本差异、
 实验拓扑、风险等级和不能外推的结论会在页面中明确标注。
 
 ## 阅读入口
@@ -27,8 +27,12 @@ PostgreSQL 为核心知识对象，以 Pigsty 为统一实验载体、观察窗�
 - [下卷导读](https://pg36g.vonng.com/lower-volume/)：运维管理
 - [索引中心](https://pg36g.vonng.com/indexes/)：按角色、任务、事故与能力查找
 
-36 个章节在站点中直接作为顶层导航项；“上卷／下卷”是并列的导读与索引页，
-不形成章节父目录或中间 URL 层级。
+站点使用 OINK v0.8.0 的 Book shell：顶层“目录”下拉收纳 36 章，“索引”下拉
+提供角色、任务、能力边界、事故症状、分区触点与完整编号目录。章节 URL 仍保持
+扁平、稳定；“上卷／下卷”是并列的导读页，不形成中间 URL 层级。
+
+[English guide](https://pg36g.vonng.com/en/) 提供英文定位与入口说明；完整正文、
+实验和工程索引仍以中文为准。
 
 ## 36 章目录
 
@@ -93,13 +97,13 @@ PostgreSQL 为核心知识对象，以 Pigsty 为统一实验载体、观察窗�
 ## 本地验证
 
 ```bash
-make check-book
-make build
+make check
 ```
 
-`check-book` 会核对章节元数据、目录与索引覆盖、相邻节导航、历史 URL 别名、
-内部链接和 Hugo 构建。实验中的生产 gate、凭据和破坏性动作不会因为站点构建通过
-而自动获得批准；请始终遵守各章写明的目标、拓扑、风险和停止条件。
+`make check` 会核对章节元数据、目录与索引覆盖、相邻节导航、历史 URL 别名、
+内部链接、Go Module 完整性，并使用发布锁定的 OINK 版本执行严格 Hugo 构建。
+实验中的生产 gate、凭据和破坏性动作不会因为站点构建通过而自动获得批准；
+请始终遵守各章写明的目标、拓扑、风险和停止条件。
 
 ## 许可证
 
