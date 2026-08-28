@@ -1,11 +1,10 @@
 ---
-title: 第 28 章 除旧布新：VACUUM、冻结与膨胀治理
-linkTitle: 28 除旧布新：VACUUM、冻结与膨胀治理
+title: 除旧布新：VACUUM、冻结与膨胀治理
+linkTitle: 除旧布新：VACUUM、冻结与膨胀治理
 weight: 380
 aliases:
 - "/ch28/"
 - "/volume-2/vacuum-freeze-bloat/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch28
 book_number: 28
 book_part: part-5
-book_status: draft
+book_status: reviewed
 ---
 
 PostgreSQL 的写入并不在提交时把旧世界擦掉。
@@ -90,7 +89,7 @@ workload reuse behavior
 ```text
 database   pg36_maintenance
 role       dbuser_pg36maint
-PostgreSQL 18.4
+PostgreSQL 18.6
 data       synthetic only
 risk       L2 bounded disposable fixture
 ```
@@ -260,7 +259,7 @@ logical manifest
 
 ## 版本与证据权威
 
-本章命令以 PostgreSQL 18 为基线，正式 run 使用 18.4；平台示例以 Pigsty 4.4 为
+本章命令以 PostgreSQL 18 为基线，正式 run 使用 18.6；平台示例以 Pigsty 4.5 为
 参考实现。维护与紧急恢复语义应按**实际安装 major/minor 的 PostgreSQL 官方文档**
 执行，不把旧版本博客或平台二次说明覆盖到新版本。
 
