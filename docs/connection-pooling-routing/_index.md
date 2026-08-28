@@ -1,11 +1,10 @@
 ---
-title: 第 22 章 四通八达：服务接入、连接池与路由
-linkTitle: 22 四通八达：服务接入、连接池与路由
+title: 四通八达：服务接入、连接池与路由
+linkTitle: 四通八达：服务接入、连接池与路由
 weight: 320
 aliases:
 - "/ch22/"
 - "/volume-2/connection-pooling-routing/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch22
 book_number: 22
 book_part: part-4
-book_status: draft
+book_status: reviewed
 ---
 
 应用需要的不是“连接 `10.10.10.11`”，而是：
@@ -72,7 +71,7 @@ discovery     一个地址、VIP、DNS、多 host 还是驱动拓扑发现
 - [第 18 章 PostgreSQL 数据平台与替代边界](/data-platform-boundaries/) 已定义服务、SLO 和
   责任边界；
 - [第 19 章 部署基线](/deployment-baseline/) 已固定 exact Pigsty
-  v4.4.0 四机沙箱；
+  v4.5.0 四机沙箱；
 - [第 20 章 高可用](/high-availability/) 已解释 Patroni、timeline、
   计划切换与提交结果未知；
 - [第 21 章 备份体系与恢复演练](/backup-recovery/) 已证明 HA、backup 和 service
@@ -134,7 +133,7 @@ SHOW POOLS 有空位
 
 ## Pigsty 默认服务语义
 
-本章 exact v4.4.0 沙箱保留四个服务：
+本章 exact v4.5.0 沙箱保留四个服务：
 
 | 名称 | 入口 | 目标 | Patroni 检查 | 本章用途 |
 |---|---:|---|---|---|
@@ -155,8 +154,8 @@ SHOW POOLS 有空位
 ```text
 target          pg36-l2-vagrant/pg-test
 entry           10.10.10.11 HAProxy
-Pigsty          v4.4.0
-PostgreSQL      18.4
+Pigsty          v4.5.0
+PostgreSQL      18.6
 PgBouncer       1.25.2, transaction mode
 HAProxy         3.4.2
 fixture         database/user test/test, schema pg36_ch22
