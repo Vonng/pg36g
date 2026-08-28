@@ -1,11 +1,10 @@
 ---
-title: 第 34 章 过载保护与资源故障判型——李代桃僵
-linkTitle: 34 过载保护与资源故障判型——李代桃僵
+title: 过载保护与资源故障判型——李代桃僵
+linkTitle: 过载保护与资源故障判型——李代桃僵
 weight: 440
 aliases:
 - "/ch34/"
 - "/volume-2/overload-resource-incidents/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch34
 book_number: 34
 book_part: part-6
-book_status: draft
+book_status: reviewed
 ---
 
 数据库“慢、满、连不上”时，最危险的动作往往不是没有动作，而是把正确手段用在了
@@ -125,7 +124,7 @@ managed pg-test
   Patroni / SQL read-only capture before and after
   no connection storm, slot, cancel, service or route mutation
 
-pg-test-3 disposable PostgreSQL 18.4
+pg-test-3 disposable PostgreSQL 18.6
   /tmp/pg36-ch34-overload-<run-id>
   listen_addresses=''
   private Unix socket
