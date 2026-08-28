@@ -1,11 +1,10 @@
 ---
-title: 第 4 章 量体裁衣：数据类型、约束与可靠数据表达
-linkTitle: 04 量体裁衣：数据类型、约束与可靠数据表达
+title: 量体裁衣：数据类型、约束与可靠数据表达
+linkTitle: 量体裁衣：数据类型、约束与可靠数据表达
 weight: 140
 aliases:
 - "/ch04/"
 - "/volume-1/data-types-constraints/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch04
 book_number: 4
 book_part: part-1
-book_status: draft
+book_status: reviewed
 ---
 
 逻辑模型说明“系统要保存什么事实”，物理模式则必须回答“这些事实允许以什么二进制表示、何时判错、怎样迁移、付出多少读写成本”。把 `price numeric`、`status text` 和 `created_at timestamptz` 写进表，只是选了类型类别；若没有精度、值域、时区、状态转换和失败语义，它们仍不是可靠的数据合同。
@@ -46,7 +45,7 @@ model_version=ch03-v0
 relation_checksum=cd7daa66543a6b5e0a5d7fc269558a6c
 ```
 
-沿用 ch02 的私有 `PGSERVICEFILE` 与 `pg36-admin` service。实验基线是 PostgreSQL 18.4、Pigsty v4.4.0、Ubuntu 24.04；本章实际使用的 DDL 保持 PostgreSQL 14–18 可用。PG18 新增但旧版本没有的能力会单独标注，不能倒推成全版本事实。
+沿用 ch02 的私有 `PGSERVICEFILE` 与 `pg36-admin` service。实验基线是 PostgreSQL 18.6、Pigsty v4.5.0、Ubuntu 24.04；本章实际使用的 DDL 保持 PostgreSQL 14–18 可用。PG18 新增但旧版本没有的能力会单独标注，不能倒推成全版本事实。
 
 下载资产：
 
@@ -171,7 +170,7 @@ partition_decision=not-now
 relation_checksum=f8a7bfae59c6d16cd323abecfefe1014
 ```
 
-迁移已在 PostgreSQL 18.4 实测以下路径：首次升级、重复升级跳过、复位后从 v0 重建、空库 fresh install、fresh install 重跑、应用角色生成 identity 与执行状态转换、两位以上金额迁移前拒绝且事务完整回滚。
+迁移已在 PostgreSQL 18.6 实测以下路径：首次升级、重复升级跳过、复位后从 v0 重建、空库 fresh install、fresh install 重跑、应用角色生成 identity 与执行状态转换、两位以上金额迁移前拒绝且事务完整回滚。
 
 ## 章节验收
 
@@ -197,7 +196,7 @@ relation_checksum=f8a7bfae59c6d16cd323abecfefe1014
 - [PostgreSQL 18：generated column](https://www.postgresql.org/docs/18/ddl-generated-columns.html)
 - [PostgreSQL 18：约束](https://www.postgresql.org/docs/18/ddl-constraints.html)
 - [PostgreSQL 18：表分区](https://www.postgresql.org/docs/18/ddl-partitioning.html)
-- [Pigsty v4.4：默认 meta 模板](https://pigsty.io/docs/conf/meta/)
+- [Pigsty v4.5：默认 meta 模板](https://pigsty.io/docs/conf/meta/)
 
 ---
 
