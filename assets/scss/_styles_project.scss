@@ -1,0 +1,234 @@
+// PostgreSQL 36 计 publication layer ---------------------------------------
+// Keep OINK's Book/Landing interaction contracts and add only the book's
+// editorial voice, information density, and 400px desktop navigation measure.
+
+:root {
+  --pg36-blue: #336791;
+  --pg36-blue-deep: #173e5b;
+  --pg36-sky: #78a9ca;
+  --pg36-gold: #c99235;
+  --pg36-surface: color-mix(in srgb, var(--bs-body-bg) 94%, var(--pg36-blue));
+
+  // OINK persists a reader's drag choice. For a first visit, the full 36-chapter
+  // tree gets the requested 400px measure on a normal desktop.
+  --td-shell-sidebar-w: 400px;
+}
+
+[data-bs-theme='dark'] {
+  --pg36-blue: #8bc1e6;
+  --pg36-blue-deep: #b8d9ef;
+  --pg36-sky: #9dcae7;
+  --pg36-gold: #e2b96b;
+  --pg36-surface: color-mix(in srgb, var(--bs-body-bg) 88%, white);
+}
+
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  :root {
+    // Preserve a usable reading column at intermediate widths; the value
+    // reaches 400px again before the wide-desktop layout takes over.
+    --td-shell-sidebar-w: clamp(320px, 34vw, 400px);
+  }
+}
+
+// Book shell ----------------------------------------------------------------
+// Typography stays on the OINK preset; only spacing, color, and structure are
+// layered here.
+
+.td-book .td-content {
+  text-wrap: pretty;
+}
+
+.td-book .td-content > h1 .td-book-number,
+.td-book .td-book-number {
+  color: var(--pg36-blue);
+  font-variant-numeric: tabular-nums;
+}
+
+.td-book .td-content > h2 {
+  margin-block-start: 3.45rem;
+  padding-block-end: 0.5rem;
+  border-block-end: 1px solid var(--bs-border-color);
+}
+
+.td-book .td-content > :where(p, li, dd) {
+  hanging-punctuation: first allow-end last;
+}
+
+.td-book .td-content > blockquote {
+  padding: 0.2rem 0 0.2rem 1.35rem;
+  border-inline-start: 3px solid color-mix(in srgb, var(--pg36-blue) 62%, transparent);
+  color: var(--bs-secondary-color);
+}
+
+.td-book .td-content > hr {
+  width: 12rem;
+  max-width: 100%;
+  margin: 3.25rem auto;
+  border: 0;
+  border-block-start: 1px solid var(--bs-border-color);
+  opacity: 0.75;
+}
+
+// The native OINK navbar intentionally uses one-column dropdowns. Keep that
+// contract for all 36 chapters, but make the panel readable and viewport-safe.
+.td-nav-menu__panel[id^='td-navbar-desktop-contents-'] {
+  width: unquote('min(430px, calc(100vw - 32px))');
+  max-width: none;
+  max-height: calc(100vh - 76px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.td-nav-menu__panel[id^='td-navbar-desktop-contents-']
+  .td-nav-menu__item-link {
+  align-items: flex-start;
+}
+
+.td-nav-menu__panel[id^='td-navbar-desktop-contents-']
+  .td-navbar-entry__label {
+  overflow: visible;
+  line-height: 1.38;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.td-nav-menu__panel[id^='td-navbar-desktop-indexes-'] {
+  min-width: unquote('min(360px, calc(100vw - 32px))');
+  max-width: unquote('min(400px, calc(100vw - 32px))');
+}
+
+// Landing cover -------------------------------------------------------------
+
+.pg36-hero {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 77% 36%, color-mix(in srgb, var(--pg36-sky) 17%, transparent), transparent 31%),
+    linear-gradient(180deg, color-mix(in srgb, var(--pg36-blue) 3%, transparent), transparent 70%),
+    var(--bs-body-bg);
+}
+
+// The one-line CJK title reads best without the latin-display negative
+// tracking a long English wordmark would want.
+.pg36-hero .td-landing-hero__title {
+  letter-spacing: 0;
+}
+
+.pg36-hero .td-landing-hero__title strong {
+  color: var(--pg36-blue);
+  font-weight: 760;
+}
+
+.pg36-hero .td-landing-hero__media {
+  position: relative;
+  transform: none;
+  filter: drop-shadow(0 30px 40px rgba(25, 69, 101, 0.2));
+}
+
+[data-bs-theme='dark'] .pg36-hero .td-landing-hero__media {
+  filter: drop-shadow(0 30px 44px rgba(0, 0, 0, 0.48));
+}
+
+.pg36-purpose {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--pg36-blue) 7%, transparent), transparent 46%),
+    var(--bs-body-bg);
+}
+
+.pg36-purpose .td-landing-section__head,
+.pg36-evidence .td-landing-section__head {
+  max-width: 64rem;
+}
+
+.pg36-purpose .td-landing-markdown {
+  display: grid;
+  max-width: none;
+  grid-template-columns: minmax(15rem, 0.9fr) repeat(2, minmax(0, 1fr));
+  gap: clamp(22px, 3vw, 42px);
+  align-items: start;
+}
+
+.pg36-purpose .td-landing-markdown > * {
+  margin: 0;
+}
+
+.pg36-purpose .td-landing-markdown blockquote {
+  padding: clamp(22px, 3vw, 32px);
+  border: 1px solid color-mix(in srgb, var(--pg36-blue) 28%, var(--td-line));
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--pg36-blue) 7%, var(--td-paper));
+  color: var(--bs-body-color);
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  line-height: 1.7;
+}
+
+.pg36-parts .td-landing-card,
+.pg36-indexes .td-landing-card {
+  border-top: 3px solid color-mix(in srgb, var(--pg36-blue) 54%, var(--td-line));
+}
+
+.pg36-parts .td-landing-card__media,
+.pg36-indexes .td-landing-card__media {
+  border-color: color-mix(in srgb, var(--pg36-blue) 26%, var(--td-line));
+  background: color-mix(in srgb, var(--pg36-blue) 8%, transparent);
+  color: var(--pg36-blue);
+}
+
+.pg36-indexes {
+  background:
+    radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--pg36-gold) 9%, transparent), transparent 32%),
+    color-mix(in srgb, var(--bs-secondary-bg) 34%, transparent);
+}
+
+.pg36-evidence .td-landing-markdown {
+  max-width: 66rem;
+  margin-inline: auto;
+  padding: clamp(28px, 5vw, 52px);
+  border: 1px solid color-mix(in srgb, var(--pg36-blue) 24%, var(--td-line));
+  border-radius: clamp(14px, 2vw, 24px);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--pg36-blue) 7%, transparent), transparent 48%),
+    var(--td-paper);
+  box-shadow: 0 24px 64px rgba(23, 62, 91, 0.09);
+}
+
+.pg36-evidence .td-landing-markdown ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 30px;
+  margin: 1.5rem 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: pg36-evidence;
+}
+
+.pg36-evidence .td-landing-markdown li {
+  position: relative;
+  margin: 0;
+  padding-inline-start: 2.5rem;
+  counter-increment: pg36-evidence;
+}
+
+.pg36-evidence .td-landing-markdown li::before {
+  content: counter(pg36-evidence, decimal-leading-zero);
+  position: absolute;
+  inset-block-start: 0.08rem;
+  inset-inline-start: 0;
+  color: var(--pg36-blue);
+  font-family: var(--td-meta-font-family);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 900px) {
+  .pg36-purpose .td-landing-markdown {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .pg36-evidence .td-landing-markdown ol {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
