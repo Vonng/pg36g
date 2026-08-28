@@ -1,11 +1,10 @@
 ---
-title: 第 5 章 运筹帷幄：查询、事务与锁的核心心智模型
-linkTitle: 05 运筹帷幄：查询、事务与锁的核心心智模型
+title: 运筹帷幄：查询、事务与锁的核心心智模型
+linkTitle: 运筹帷幄：查询、事务与锁的核心心智模型
 weight: 150
 aliases:
 - "/ch05/"
 - "/volume-1/query-transaction-locks/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch05
 book_number: 5
 book_part: part-1
-book_status: draft
+book_status: reviewed
 ---
 
 前四章已经把连接、工具、逻辑模型与物理数据合同固定下来。接下来遇到的三个问题看似分散：为什么同一条 SQL 会选择不同路径，为什么一个会话看不见另一个会话刚写的值，为什么一个“正在运行”的请求其实在等锁。它们必须放在同一张图中理解：SQL 被转换为执行计划，执行节点在某个 MVCC 快照上访问 tuple version，写操作再通过事务状态、锁和 WAL 协调并发与恢复。
@@ -49,7 +48,7 @@ order_count=2
 relation_checksum=f8a7bfae59c6d16cd323abecfefe1014
 ```
 
-实验基线为 PostgreSQL 18.4、Pigsty v4.4.0、Ubuntu 24.04；本章 SQL 和 shell 路径保持 PostgreSQL 14–18 可用。页面讲到 PostgreSQL 18 当前行为时，以 18 版官方文档为准；Pigsty 面板名以 v4.4 文档为准。不同大版本、内核分支或定制 dashboard 必须重新核对，不能仅凭截图类推。
+实验基线为 PostgreSQL 18.6、Pigsty v4.5.0、Ubuntu 24.04；本章 SQL 和 shell 路径保持 PostgreSQL 14–18 可用。页面讲到 PostgreSQL 18 当前行为时，以 18 版官方文档为准；Pigsty 面板名以 v4.5 文档为准。不同大版本、内核分支或定制 dashboard 必须重新核对，不能仅凭截图类推。
 
 下载资产：
 
@@ -158,7 +157,7 @@ manifest
   → verify-after
 ```
 
-一次 PostgreSQL 18.4 实测中，关键证据为：
+一次 PostgreSQL 18.6 实测中，关键证据为：
 
 ```text
 assigned_xid_before_write=<none>
@@ -214,7 +213,7 @@ relation_checksum=f8a7bfae59c6d16cd323abecfefe1014
 - [PostgreSQL 18：Write-Ahead Logging](https://www.postgresql.org/docs/18/wal-intro.html)
 - [PostgreSQL 18：System Information Functions](https://www.postgresql.org/docs/18/functions-info.html)
 - [PostgreSQL 18：Cumulative Statistics](https://www.postgresql.org/docs/18/monitoring-stats.html)
-- [Pigsty v4.4：PostgreSQL dashboards](https://pigsty.io/docs/pgsql/dashboard/)
+- [Pigsty v4.5：PostgreSQL dashboards](https://pigsty.io/docs/pgsql/dashboard/)
 
 ---
 
