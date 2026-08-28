@@ -1,11 +1,10 @@
 ---
-title: 第 15 章 见微知著：全文、模糊与向量检索
-linkTitle: 15 见微知著：全文、模糊与向量检索
+title: 见微知著：全文、模糊与向量检索
+linkTitle: 见微知著：全文、模糊与向量检索
 weight: 250
 aliases:
 - "/ch15/"
 - "/volume-1/search/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch15
 book_number: 15
 book_part: part-3
-book_status: draft
+book_status: reviewed
 ---
 
 搜索不是“给某一列加个索引”。它至少包含四个问题：
@@ -147,7 +146,7 @@ filtered -> HNSW index scan + active/category filter
 - [检索 ADR](/labs/ch15/search-adr.md)
 - [冻结夹具清单](/labs/ch15/fixture-manifest.json)
 - [v1.3 proposal](/labs/ch15/baseline-v1.3-proposal.json)
-- [Pigsty 4.4 声明片段](/labs/ch15/pigsty-declaration.example.yml)
+- [Pigsty 4.5 声明片段](/labs/ch15/pigsty-declaration.example.yml)
 
 输入与实现：
 
@@ -193,7 +192,7 @@ PG36_EVIDENCE_DIR="$PWD/evidence/ch15" \
 11. 证明错误 token、错误 target、活跃 worker 时 reset 分别被拒绝；
 12. 不用 `CASCADE` 精确复位，确认第 14 章扩展保留，再完整重建复验。
 
-正式 Homebrew PostgreSQL 18.4 证据两轮均得到：
+正式 Homebrew PostgreSQL 18.6 证据两轮均得到：
 
 ```text
 status=ok
@@ -276,7 +275,7 @@ release_candidate_checksum=bf92a6ad0f60dc3e125b39dbf67bf4d6c5e50275192bd01a7ca4c
 ## 版本与证据边界
 
 本章原理覆盖 PostgreSQL 14–18；可执行 baseline 固定 `pg_trgm` 1.6、
-`vector` 0.8.4，并在 PostgreSQL 18.4 上验证。实验使用英语配置，因为冻结
+`vector` 0.8.4，并在 PostgreSQL 18.6 上验证。实验使用英语配置，因为冻结
 语料是英语。中文、多语言与混合字段不能照抄 `english`，应重新选择 tokenizer/
 dictionary、语料和指标。
 
@@ -292,7 +291,7 @@ Pigsty 映射按 4.4 文档在 2026-07-29 核验。本地证据路径是直接 P
 - [PostgreSQL 18：文本搜索索引](https://www.postgresql.org/docs/18/textsearch-indexes.html)
 - [PostgreSQL 18：`pg_trgm`](https://www.postgresql.org/docs/18/pgtrgm.html)
 - [pgvector 0.8.4 README](https://github.com/pgvector/pgvector/blob/v0.8.4/README.md)
-- [Pigsty 4.4：默认扩展](https://pigsty.io/docs/pgsql/ext/extension/)
+- [Pigsty 4.5：默认扩展](https://pigsty.io/docs/pgsql/ext/extension/)
 
 ---
 
