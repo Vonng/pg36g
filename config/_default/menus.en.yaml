@@ -1,0 +1,313 @@
+main:
+- identifier: contents
+  name: Contents
+  url: https://pg36g.vonng.com:443/toc/
+  weight: 10
+  params:
+    icon: fa-solid fa-list-ol
+- identifier: chapter-01
+  parent: contents
+  name: 01 · System Map
+  url: https://pg36g.vonng.com:443/postgresql-pigsty-map/
+  weight: 10
+  params:
+    icon: fa-solid fa-map
+- identifier: chapter-02
+  parent: contents
+  name: 02 · Reproducible psql Workflows
+  url: https://pg36g.vonng.com:443/psql-workflow/
+  weight: 20
+  params:
+    icon: fa-solid fa-map
+- identifier: chapter-03
+  parent: contents
+  name: 03 · Relational Data Modeling
+  url: https://pg36g.vonng.com:443/logical-data-model/
+  weight: 30
+  params:
+    icon: fa-solid fa-map
+- identifier: chapter-04
+  parent: contents
+  name: 04 · Types, Constraints, and Reliable Data
+  url: https://pg36g.vonng.com:443/data-types-constraints/
+  weight: 40
+  params:
+    icon: fa-solid fa-map
+- identifier: chapter-05
+  parent: contents
+  name: 05 · Queries, Transactions, and Locks
+  url: https://pg36g.vonng.com:443/query-transaction-locks/
+  weight: 50
+  params:
+    icon: fa-solid fa-map
+- identifier: chapter-06
+  parent: contents
+  name: 06 · Development Standards
+  url: https://pg36g.vonng.com:443/development-standards/
+  weight: 60
+  params:
+    icon: fa-solid fa-map
+- identifier: chapter-07
+  parent: contents
+  name: 07 · Query Plans and Statistics
+  url: https://pg36g.vonng.com:443/query-plans-statistics/
+  weight: 70
+  params:
+    icon: fa-solid fa-code
+- identifier: chapter-08
+  parent: contents
+  name: '08 · Slow Query Diagnosis'
+  url: https://pg36g.vonng.com:443/slow-query-diagnosis/
+  weight: 80
+  params:
+    icon: fa-solid fa-code
+- identifier: chapter-09
+  parent: contents
+  name: '09 · Index Design'
+  url: https://pg36g.vonng.com:443/index-design/
+  weight: 90
+  params:
+    icon: fa-solid fa-code
+- identifier: chapter-10
+  parent: contents
+  name: 10 · Concurrency and Isolation
+  url: https://pg36g.vonng.com:443/concurrency-isolation/
+  weight: 100
+  params:
+    icon: fa-solid fa-code
+- identifier: chapter-11
+  parent: contents
+  name: 11 · Safe Schema Changes
+  url: https://pg36g.vonng.com:443/schema-change-release/
+  weight: 110
+  params:
+    icon: fa-solid fa-code
+- identifier: chapter-12
+  parent: contents
+  name: 12 · Database-to-Service Delivery
+  url: https://pg36g.vonng.com:443/database-to-service/
+  weight: 120
+  params:
+    icon: fa-solid fa-code
+- identifier: chapter-13
+  parent: contents
+  name: 13 · Functions, Triggers, and Procedures
+  url: https://pg36g.vonng.com:443/functions-triggers-procedures/
+  weight: 130
+  params:
+    icon: fa-solid fa-puzzle-piece
+- identifier: chapter-14
+  parent: contents
+  name: 14 · Extensions Ecosystem
+  url: https://pg36g.vonng.com:443/extensions-ecosystem/
+  weight: 140
+  params:
+    icon: fa-solid fa-puzzle-piece
+- identifier: chapter-15
+  parent: contents
+  name: 15 · Full-text, Fuzzy, and Vector Search
+  url: https://pg36g.vonng.com:443/search/
+  weight: 150
+  params:
+    icon: fa-solid fa-puzzle-piece
+- identifier: chapter-16
+  parent: contents
+  name: 16 · Time-series and Geospatial Data
+  url: https://pg36g.vonng.com:443/spatiotemporal/
+  weight: 160
+  params:
+    icon: fa-solid fa-puzzle-piece
+- identifier: chapter-17
+  parent: contents
+  name: 17 · Analytics and Distributed Options
+  url: https://pg36g.vonng.com:443/analytics-distributed/
+  weight: 170
+  params:
+    icon: fa-solid fa-puzzle-piece
+- identifier: chapter-18
+  parent: contents
+  name: 18 · Data Platform Boundaries
+  url: https://pg36g.vonng.com:443/data-platform-boundaries/
+  weight: 180
+  params:
+    icon: fa-solid fa-puzzle-piece
+- identifier: chapter-19
+  parent: contents
+  name: 19 · Deployment Baseline
+  url: https://pg36g.vonng.com:443/deployment-baseline/
+  weight: 190
+  params:
+    icon: fa-solid fa-server
+- identifier: chapter-20
+  parent: contents
+  name: 20 · High Availability
+  url: https://pg36g.vonng.com:443/high-availability/
+  weight: 200
+  params:
+    icon: fa-solid fa-server
+- identifier: chapter-21
+  parent: contents
+  name: 21 · Backup and Recovery Drills
+  url: https://pg36g.vonng.com:443/backup-recovery/
+  weight: 210
+  params:
+    icon: fa-solid fa-server
+- identifier: chapter-22
+  parent: contents
+  name: 22 · Connection Pooling and Routing
+  url: https://pg36g.vonng.com:443/connection-pooling-routing/
+  weight: 220
+  params:
+    icon: fa-solid fa-server
+- identifier: chapter-23
+  parent: contents
+  name: 23 · Authentication, Authorization, and Security
+  url: https://pg36g.vonng.com:443/authentication-authorization-security/
+  weight: 230
+  params:
+    icon: fa-solid fa-server
+- identifier: chapter-24
+  parent: contents
+  name: 24 · SLO, SOP, and Governance
+  url: https://pg36g.vonng.com:443/slo-sop-governance/
+  weight: 240
+  params:
+    icon: fa-solid fa-server
+- identifier: chapter-25
+  parent: contents
+  name: 25 · Observability
+  url: https://pg36g.vonng.com:443/observability/
+  weight: 250
+  params:
+    icon: fa-solid fa-chart-line
+- identifier: chapter-26
+  parent: contents
+  name: 26 · Capacity Planning and Benchmarking
+  url: https://pg36g.vonng.com:443/capacity-benchmarking/
+  weight: 260
+  params:
+    icon: fa-solid fa-chart-line
+- identifier: chapter-27
+  parent: contents
+  name: 27 · Configuration Tuning
+  url: https://pg36g.vonng.com:443/configuration-tuning/
+  weight: 270
+  params:
+    icon: fa-solid fa-chart-line
+- identifier: chapter-28
+  parent: contents
+  name: 28 · VACUUM, Freeze, and Bloat
+  url: https://pg36g.vonng.com:443/vacuum-freeze-bloat/
+  weight: 280
+  params:
+    icon: fa-solid fa-chart-line
+- identifier: chapter-29
+  parent: contents
+  name: 29 · Logical Replication and Migration
+  url: https://pg36g.vonng.com:443/logical-replication-migration/
+  weight: 290
+  params:
+    icon: fa-solid fa-chart-line
+- identifier: chapter-30
+  parent: contents
+  name: 30 · Version Upgrades and Rollback
+  url: https://pg36g.vonng.com:443/version-upgrade/
+  weight: 300
+  params:
+    icon: fa-solid fa-chart-line
+- identifier: chapter-31
+  parent: contents
+  name: 31 · Incident Response
+  url: https://pg36g.vonng.com:443/incident-response/
+  weight: 310
+  params:
+    icon: fa-solid fa-shield-halved
+- identifier: chapter-32
+  parent: contents
+  name: 32 · PITR and Operator-error Recovery
+  url: https://pg36g.vonng.com:443/pitr/
+  weight: 320
+  params:
+    icon: fa-solid fa-shield-halved
+- identifier: chapter-33
+  parent: contents
+  name: 33 · Failover and Cluster Rebuild
+  url: https://pg36g.vonng.com:443/failover-rebuild/
+  weight: 330
+  params:
+    icon: fa-solid fa-shield-halved
+- identifier: chapter-34
+  parent: contents
+  name: 34 · Overload and Resource Incidents
+  url: https://pg36g.vonng.com:443/overload-resource-incidents/
+  weight: 340
+  params:
+    icon: fa-solid fa-shield-halved
+- identifier: chapter-35
+  parent: contents
+  name: 35 · Data Rescue and Forensics
+  url: https://pg36g.vonng.com:443/data-rescue-forensics/
+  weight: 350
+  params:
+    icon: fa-solid fa-shield-halved
+- identifier: chapter-36
+  parent: contents
+  name: 36 · Postmortems and Platform Improvement
+  url: https://pg36g.vonng.com:443/postmortem-platform-improvement/
+  weight: 360
+  params:
+    icon: fa-solid fa-shield-halved
+- identifier: indexes
+  name: Indexes
+  url: https://pg36g.vonng.com:443/indexes/
+  weight: 20
+  params:
+    icon: fa-solid fa-compass
+- identifier: indexes-roles
+  parent: indexes
+  name: Read by role
+  url: https://pg36g.vonng.com:443/indexes/roles/
+  weight: 10
+  params:
+    icon: fa-solid fa-users
+- identifier: indexes-tasks
+  parent: indexes
+  name: Find by task
+  url: https://pg36g.vonng.com:443/indexes/tasks/
+  weight: 20
+  params:
+    icon: fa-solid fa-list-check
+- identifier: indexes-capabilities
+  parent: indexes
+  name: Capability boundaries
+  url: https://pg36g.vonng.com:443/indexes/capabilities/
+  weight: 30
+  params:
+    icon: fa-solid fa-diagram-project
+- identifier: indexes-incidents
+  parent: indexes
+  name: Incident symptoms and first safe actions
+  url: https://pg36g.vonng.com:443/indexes/incidents/
+  weight: 40
+  params:
+    icon: fa-solid fa-triangle-exclamation
+- identifier: indexes-partition
+  parent: indexes
+  name: Five partitioning touchpoints
+  url: https://pg36g.vonng.com:443/indexes/partition/
+  weight: 50
+  params:
+    icon: fa-solid fa-table-cells-large
+- identifier: indexes-toc
+  parent: indexes
+  name: Complete numbered contents
+  url: https://pg36g.vonng.com:443/toc/
+  weight: 60
+  params:
+    icon: fa-solid fa-list-ol
+- identifier: github
+  name: GitHub
+  url: https://github.com/Vonng/pg36g
+  weight: 90
+  params:
+    icon: fa-brands fa-github
