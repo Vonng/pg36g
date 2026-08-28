@@ -2,7 +2,6 @@
 title: 事故症状与首个安全动作
 linkTitle: 事故症状与首个安全动作
 weight: 40
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: index

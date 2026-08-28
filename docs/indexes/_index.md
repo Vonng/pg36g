@@ -2,7 +2,6 @@
 title: 索引中心
 linkTitle: 索引
 weight: 910
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: index-hub

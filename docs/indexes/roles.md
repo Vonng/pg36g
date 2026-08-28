@@ -2,7 +2,6 @@
 title: 按角色阅读
 linkTitle: 按角色阅读
 weight: 10
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: index

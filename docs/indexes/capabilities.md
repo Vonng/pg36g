@@ -2,7 +2,6 @@
 title: 技术边界索引
 linkTitle: 技术边界索引
 weight: 30
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: index

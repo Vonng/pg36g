@@ -2,7 +2,6 @@
 title: 按任务查找
 linkTitle: 按任务查找
 weight: 20
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: index

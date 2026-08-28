@@ -2,7 +2,6 @@
 title: 分区能力五触点
 linkTitle: 分区能力五触点
 weight: 50
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: index
