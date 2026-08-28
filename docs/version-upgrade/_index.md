@@ -1,11 +1,10 @@
 ---
-title: 第 30 章 推陈出新：版本升级与回滚策略
-linkTitle: 30 推陈出新：版本升级与回滚策略
+title: 推陈出新：版本升级与回滚策略
+linkTitle: 推陈出新：版本升级与回滚策略
 weight: 400
 aliases:
 - "/ch30/"
 - "/volume-2/version-upgrade/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch30
 book_number: 30
 book_part: part-5
-book_status: draft
+book_status: reviewed
 ---
 
 第 29 章已经把逻辑复制、全量校验、切流和回退组织成迁移状态机。版本升级是在这条主线
@@ -109,7 +108,7 @@ collation、扩展或业务结果不一致。
 
 ## 写作与验收提示
 
-本章提供一个真实、隔离的 PostgreSQL 17.10→18.4 参考实验。它在 Pigsty
+本章提供一个真实、隔离的 PostgreSQL 17.10→18.6 参考实验。它在 Pigsty
 `pg-meta` 主机的随机 `/tmp` 目录中创建两套 Unix-socket-only 临时集群，不接触
 Pigsty 管理的数据目录与服务。正式证据证明：
 
@@ -142,8 +141,8 @@ remote and fixture cleanup        verified
 - [PostgreSQL 18：`ALTER COLLATION`](https://www.postgresql.org/docs/18/sql-altercollation.html)
 - [PostgreSQL 18：`pg_verifybackup`](https://www.postgresql.org/docs/18/app-pgverifybackup.html)
 - [PostgreSQL 18：版本 18 发行说明](https://www.postgresql.org/docs/18/release-18.html)
-- [Pigsty v4.4：PostgreSQL 大、小版本升级](https://pigsty.io/docs/pgsql/admin/upgrade/)
-- [Pigsty v4.4：数据迁移](https://pigsty.io/docs/pgsql/migration/)
+- [Pigsty v4.5：PostgreSQL 大、小版本升级](https://pigsty.io/docs/pgsql/admin/upgrade/)
+- [Pigsty v4.5：数据迁移](https://pigsty.io/docs/pgsql/migration/)
 
 ---
 
