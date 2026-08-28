@@ -2,7 +2,6 @@
 title: 全书导读
 linkTitle: 导读
 weight: 1
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: guide
@@ -52,10 +51,10 @@ book_kind: guide
 
 | 项目 | 复现基线 | 兼容与取证规则 |
 |---|---|---|
-| PostgreSQL | 18.4 | 示例在 18.4 验证；核心概念面向当前受支持的 14–18，版本差异就地说明 |
-| Pigsty | v4.4.0 正式版 | 不以 `main` 开发分支代替发布版；配置、端口和 CLI 行为绑定 v4.4 |
-| L1 操作系统 | Ubuntu 24.04.4 LTS 参考环境 | 同时允许 Pigsty v4.4 支持的发行版与架构；证据必须记录实际版本、内核和架构 |
-| Patroni、PgBouncer、HAProxy、pgBackRest | 由 Pigsty v4.4 对应发行版仓库提供 | 不假设不同发行版安装出完全相同的小版本；每次实验从实际节点采样 |
+| PostgreSQL | 18.6 | 示例在 18.6 验证；核心概念面向当前受支持的 14–18，版本差异就地说明 |
+| Pigsty | v4.5.0 正式版 | 不以 `main` 开发分支代替发布版；配置、端口和 CLI 行为绑定 v4.5 |
+| L1 操作系统 | Ubuntu 24.04.4 LTS 参考环境 | 同时允许 Pigsty v4.5 支持的发行版与架构；证据必须记录实际版本、内核和架构 |
+| Patroni、PgBouncer、HAProxy、pgBackRest | 由 Pigsty v4.5 对应发行版仓库提供 | 不假设不同发行版安装出完全相同的小版本；每次实验从实际节点采样 |
 | 实验拓扑 | L1 单节点；L2 一台控制 VM + 三成员数据库；L3 隔离事故克隆 | 正式 sandbox 规格、例外与限制见附录 E |
 
 PostgreSQL 19 beta 只可用于兼容性观察，不作为生产结论基线。所有容易随版本变化的结论必须标注适用范围。面板讲指标语义，不依赖易漂移的点击路径；Pigsty 结论尽量回到 SQL、配置或原生组件验证。
