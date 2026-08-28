@@ -1,11 +1,10 @@
 ---
-title: 第 23 章 固若金汤：认证、授权与数据安全
-linkTitle: 23 固若金汤：认证、授权与数据安全
+title: 固若金汤：认证、授权与数据安全
+linkTitle: 固若金汤：认证、授权与数据安全
 weight: 330
 aliases:
 - "/ch23/"
 - "/volume-2/authentication-authorization-security/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch23
 book_number: 23
 book_part: part-4
-book_status: draft
+book_status: reviewed
 ---
 
 数据库安全不是在系统外面再围一堵墙，而是让每一次越过边界都留下可验证的
@@ -82,7 +81,7 @@ PostgreSQL role 已创建   != PgBouncer 已交付该身份
 - [第 6 章 开发规约](/development-standards/) 已处理参数绑定、受控
   `search_path`、`SECURITY DEFINER` 和 secret-free 交付；
 - [第 10 章 并发控制](/concurrency-isolation/) 已建立事务与 session 边界；
-- [第 19 章 部署基线](/deployment-baseline/) 已固定 Pigsty v4.4.0 四机
+- [第 19 章 部署基线](/deployment-baseline/) 已固定 Pigsty v4.5.0 四机
   nonproduction sandbox；
 - [第 20 章 高可用](/high-availability/) 已区分 data plane、control plane
   与 break-glass；
@@ -213,8 +212,8 @@ owner             USING + WITH CHECK，且 FORCE RLS
 
 ```text
 target          pg36-l2-vagrant/pg-test
-Pigsty          v4.4.0
-PostgreSQL      18.4
+Pigsty          v4.5.0
+PostgreSQL      18.6
 PgBouncer       1.25.2, transaction mode
 database        test
 fixture         schema pg36_ch23, two tenants, four synthetic rows
