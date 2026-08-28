@@ -1,11 +1,10 @@
 ---
-title: 第 3 章 正本清源：从业务规则到关系模型
-linkTitle: 03 正本清源：从业务规则到关系模型
+title: 正本清源：从业务规则到关系模型
+linkTitle: 正本清源：从业务规则到关系模型
 weight: 130
 aliases:
 - "/ch03/"
 - "/volume-1/logical-data-model/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch03
 book_number: 3
 book_part: part-1
-book_status: draft
+book_status: reviewed
 ---
 
 表不是字段清单的容器，关系模型也不是把接口 JSON 原样搬进数据库。建模首先要辨认系统承诺保存哪些事实、谁拥有这些事实、哪些组合状态绝不允许出现；表、键和外键只是把这些判断变成可验证结构。
