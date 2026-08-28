@@ -1,11 +1,10 @@
 ---
-title: 第 20 章 狡兔三窟：高可用拓扑与容灾目标
-linkTitle: 20 狡兔三窟：高可用拓扑与容灾目标
+title: 狡兔三窟：高可用拓扑与容灾目标
+linkTitle: 狡兔三窟：高可用拓扑与容灾目标
 weight: 300
 aliases:
 - "/ch20/"
 - "/volume-2/high-availability/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch20
 book_number: 20
 book_part: part-4
-book_status: draft
+book_status: reviewed
 ---
 
 三台 PostgreSQL 都在运行，不等于“高可用”；一次 `patronictl list`
@@ -27,7 +26,7 @@ book_status: draft
 
 我们先从 failure model、RPO/RTO 和 degradation target 出发，再进入
 PostgreSQL 的 WAL、LSN、timeline、复制槽与同步提交；随后解释 Patroni、
-DCS、租约与 fencing 如何组合；最后在第 19 章保留的 Pigsty v4.4.0
+DCS、租约与 fencing 如何组合；最后在第 19 章保留的 Pigsty v4.5.0
 四机沙箱上完成一次有客户端证据的计划切换。
 
 本章的正式结论很克制：
@@ -104,8 +103,8 @@ business loss
 
 ```text
 target       pg36-l2-vagrant/pg-test
-Pigsty       exact v4.4.0 tag
-PostgreSQL   18.4
+Pigsty       exact v4.5.0 tag
+PostgreSQL   18.6
 Patroni      4.1.3
 DCS          one etcd member (sandbox exception)
 members      pg-test-1 / pg-test-2 / pg-test-3
