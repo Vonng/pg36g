@@ -1,11 +1,10 @@
 ---
-title: 第 1 章 盲人摸象：PostgreSQL 与 Pigsty 全局地图
-linkTitle: 01 盲人摸象：PostgreSQL 与 Pigsty 全局地图
+title: 盲人摸象：PostgreSQL 与 Pigsty 全局地图
+linkTitle: 盲人摸象：PostgreSQL 与 Pigsty 全局地图
 weight: 110
 aliases:
 - "/ch01/"
 - "/volume-1/postgresql-pigsty-map/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,14 +12,14 @@ book_kind: chapter
 book_id: ch01
 book_number: 1
 book_part: part-1
-book_status: draft
+book_status: reviewed
 ---
 
 会写 SQL，并不等于知道 SQL 落在了哪里。一个连接 URI 里同时出现主机、端口、数据库和角色；连接成功后又会遇到实例、模式、关系、后端进程、WAL、服务端点与集群等词。它们属于不同层次，却经常被笼统地叫作“数据库”。许多误操作、权限错误和接入故障，都始于这张地图没有画清楚。
 
 本章不急着介绍 PostgreSQL 的所有功能。我们只完成一件事：建立一套此后能够反复使用的坐标系。读者将从一条真实连接出发，逐层确认连接落点、对象边界、查询路径与服务拓扑，最后创建全书贯穿案例 `pg36_shop` 的最小基线。
 
-> **版本基线**：本章按 PostgreSQL 18.4、Pigsty v4.4.0 和单节点 L1 沙箱编写。核心 PostgreSQL 概念适用于当前受支持的大版本；Pigsty 的端口、组件和配置入口以 v4.4.0 为准。所有命令都先查询实际运行版本，书中示例输出只展示需要判断的字段。
+> **版本基线**：本章按 PostgreSQL 18.6、Pigsty v4.5.0 和单节点 L1 沙箱编写。核心 PostgreSQL 概念适用于当前受支持的大版本；Pigsty 的端口、组件和配置入口以 v4.5.0 为准。所有命令都先查询实际运行版本，书中示例输出只展示需要判断的字段。
 
 ## 本章目标
 
@@ -139,8 +138,8 @@ ch02《psql 与可复现工作流》不再解释这些对象是什么，而会�
 - [PostgreSQL 18：体系结构基础](https://www.postgresql.org/docs/18/tutorial-arch.html)
 - [PostgreSQL 18：数据库角色](https://www.postgresql.org/docs/18/database-roles.html)
 - [PostgreSQL 18：psql](https://www.postgresql.org/docs/18/app-psql.html)
-- [Pigsty v4.4：PGSQL 集群模型](https://pigsty.io/docs/concept/model/pgsql/)
-- [Pigsty v4.4：服务与接入](https://pigsty.io/docs/pgsql/service/)
+- [Pigsty v4.5：PGSQL 集群模型](https://pigsty.io/docs/concept/model/pgsql/)
+- [Pigsty v4.5：服务与接入](https://pigsty.io/docs/pgsql/service/)
 
 ---
 
