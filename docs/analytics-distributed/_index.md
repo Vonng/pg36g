@@ -1,11 +1,10 @@
 ---
-title: 第 17 章 合纵连横：分析加速与分布式选型
-linkTitle: 17 合纵连横：分析加速与分布式选型
+title: 合纵连横：分析加速与分布式选型
+linkTitle: 合纵连横：分析加速与分布式选型
 weight: 270
 aliases:
 - "/ch17/"
 - "/volume-1/analytics-distributed/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch17
 book_number: 17
 book_part: part-3
-book_status: draft
+book_status: reviewed
 ---
 
 “数据越来越多，所以要上分布式”不是一个架构结论，只是一句尚未完成的
@@ -123,7 +122,7 @@ two-stage remote daily + coordinator monthly aggregation
 | 月报校验和 | `644d45544ebbc2a80c42270c38ac6885` |
 
 这里的“返回行数”描述数据流形状，不是网络字节，也不是耗时。三个数据库都在
-一台机器的一个 PostgreSQL 18.4 实例中，没有独立 CPU、磁盘、网络或故障域。
+一台机器的一个 PostgreSQL 18.6 实例中，没有独立 CPU、磁盘、网络或故障域。
 
 ## 先看单机还能做什么
 
@@ -268,7 +267,7 @@ all:
         pg_conf: olap.yml
 ```
 
-路径 B 是在硬门槛满足后评估 Citus。Pigsty 4.4 文档要求 Citus 拓扑声明
+路径 B 是在硬门槛满足后评估 Citus。Pigsty 4.5 文档要求 Citus 拓扑声明
 `pg_mode: citus`、`pg_shard`、各分片的 `pg_group`、`pg_primary_db`，
 并配置数据节点间访问规则；完整生产设计还必须补齐 coordinator/worker HA、
 服务路由、备份恢复、再平衡、监控和升级。
@@ -289,7 +288,7 @@ Pigsty 的
 - [ADR-017](/labs/ch17/analytics-distributed-adr.md)
 - [冻结夹具清单](/labs/ch17/fixture-manifest.json)
 - [v1.5 proposal](/labs/ch17/baseline-v1.5-proposal.json)
-- [Pigsty 4.4 拓扑草图](/labs/ch17/pigsty-declaration.example.yml)
+- [Pigsty 4.5 拓扑草图](/labs/ch17/pigsty-declaration.example.yml)
 
 生成与建立：
 
