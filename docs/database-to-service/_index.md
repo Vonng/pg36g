@@ -1,11 +1,10 @@
 ---
-title: 第 12 章 一气呵成：从数据库契约到后端服务
-linkTitle: 12 一气呵成：从数据库契约到后端服务
+title: 一气呵成：从数据库契约到后端服务
+linkTitle: 一气呵成：从数据库契约到后端服务
 weight: 220
 aliases:
 - "/ch12/"
 - "/volume-1/database-to-service/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch12
 book_number: 12
 book_part: part-2
-book_status: draft
+book_status: reviewed
 ---
 
 前十一章分别建立了模型、查询、事务、诊断、索引、并发与模式发布能力。本章把这些能力压进一个真实服务边界：
@@ -72,7 +71,7 @@ Pigsty owns:
 - 用低基数 `application_name`、trace ID、query identity 和 outbox 关联请求；
 - 同时观察请求延迟、pool wait、数据库 wait、SQLSTATE 和业务结果；
 - 通过 Pigsty primary service 接入生产应用，通过 direct service 做受控管理；
-- 拒绝把 PostgreSQL 18.4 直连实验冒充 Pigsty/PgBouncer 已验证；
+- 拒绝把 PostgreSQL 18.6 直连实验冒充 Pigsty/PgBouncer 已验证；
 - 冻结一个可运行参考服务，并把累计规约形成 v1.0 release candidate。
 
 ## 参考服务与实验边界
@@ -140,7 +139,7 @@ setup 与 reset 都先检查对象 marker。reset 还要求精确动作令牌、
 - [隔离模式与最小权限](/labs/ch12/setup.sql)
 - [最终 SQL 验收](/labs/ch12/verify.sql)
 - [双 token reset](/labs/ch12/reset.sql)
-- [Pigsty v4.4 声明示例](/labs/ch12/pigsty-declaration.example.yml)
+- [Pigsty v4.5 声明示例](/labs/ch12/pigsty-declaration.example.yml)
 - [systemd 服务单元示例](/labs/ch12/pg36-api.service.example)
 - [HTTP 与故障矩阵](/labs/ch12/run_service_lab.py)
 - [证据审查器](/labs/ch12/review.py)
@@ -163,7 +162,7 @@ service/
 本章验证的 frozen 组合是：
 
 ```text
-PostgreSQL 18.4
+PostgreSQL 18.6
 pgx v5.10.0
 Go 1.26.4 runtime
 QueryExecModeExec
@@ -221,7 +220,7 @@ application pgxpool MaxConns=2 in the failure lab
 
 ## 实测摘要
 
-`task.sh all` 先运行完整服务矩阵，再证明错误 token、错误 target 和 active service 都不能 reset；随后执行精确 reset，从空模式重建并再次运行同一套矩阵。第二轮 PostgreSQL 18.4 证据：
+`task.sh all` 先运行完整服务矩阵，再证明错误 token、错误 target 和 active service 都不能 reset；随后执行精确 reset，从空模式重建并再次运行同一套矩阵。第二轮 PostgreSQL 18.6 证据：
 
 ```text
 business:
