@@ -24,9 +24,9 @@
 
 @media (min-width: 768px) and (max-width: 1199.98px) {
   :root {
-    // Preserve a usable reading column at intermediate widths; the value
-    // reaches 400px again before the wide-desktop layout takes over.
-    --td-shell-sidebar-w: clamp(320px, 34vw, 400px);
+    // Stay inside the configured 360–420px drag bounds while preserving a
+    // usable reading column; the first-visit width reaches 400px on desktop.
+    --td-shell-sidebar-w: clamp(360px, 34vw, 400px);
   }
 }
 
