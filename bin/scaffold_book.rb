@@ -333,11 +333,10 @@ end
 
 def chapter_metadata(chapter)
   {
-    "title" => "第 #{chapter['number']} 章 #{chapter['title']}",
-    "linkTitle" => format("%02d %s", chapter["number"], chapter["title"]),
+    "title" => chapter["title"],
+    "linkTitle" => chapter["title"],
     "weight" => 100 + chapter["number"] * 10,
     "aliases" => chapter["aliases"],
-    "type" => "docs",
     "math" => true,
     "breadcrumbs" => true,
     "comments" => false,
@@ -351,10 +350,9 @@ end
 
 def section_metadata(chapter, section)
   metadata = {
-    "title" => "#{section['number']} #{section['title']}",
-    "linkTitle" => "#{section['number']} #{section['title']}",
+    "title" => section["title"],
+    "linkTitle" => section["title"],
     "weight" => section["index"] * 10,
-    "type" => "docs",
     "math" => true,
     "breadcrumbs" => true,
     "comments" => false,
@@ -756,7 +754,7 @@ def write_data_files(chapters, refresh: false)
     "# Generated from plan/book-outline-final.md by bin/scaffold_book.rb.\n" +
       YAML.dump(
         {
-          "title" => "PostgreSQL 36 计",
+          "title" => "PG 三十六计",
           "subtitle" => "从 SQL 到生产：PostgreSQL 与 Pigsty 实战",
           "status" => "scaffold",
           "source_outline" => "plan/book-outline-final.md",
@@ -776,9 +774,15 @@ def write_scaffold(text, chapter_zero, chapters)
   write_document(
     DOCS_DIR.join("_index.md"),
     {
-      "title" => "PostgreSQL 36 计",
+      "title" => "PG 三十六计",
       "linkTitle" => "首页",
-      "cascade" => { "type" => "docs" },
+      "type" => "book",
+      "layout" => "landing",
+      "book_kind" => "book",
+      "outputs" => %w[HTML print markdown LLMS],
+      "search_exclude" => true,
+      "sidebar_enabled" => false,
+      "cascade" => { "type" => "book" },
       "breadcrumbs" => false,
       "comments" => false
     },
@@ -793,7 +797,6 @@ def write_scaffold(text, chapter_zero, chapters)
       "title" => "全书导读",
       "linkTitle" => "导读",
       "weight" => 1,
-      "type" => "docs",
       "breadcrumbs" => true,
       "comments" => false,
       "book_kind" => "guide"
@@ -830,7 +833,6 @@ def write_scaffold(text, chapter_zero, chapters)
       "title" => "序言",
       "linkTitle" => "序言",
       "weight" => 2,
-      "type" => "docs",
       "breadcrumbs" => true,
       "comments" => false,
       "book_kind" => "preface"
@@ -845,7 +847,6 @@ def write_scaffold(text, chapter_zero, chapters)
       "linkTitle" => "第 0 章 准备实验环境",
       "weight" => 3,
       "aliases" => chapter_zero["aliases"],
-      "type" => "docs",
       "breadcrumbs" => true,
       "comments" => false,
       "book_kind" => "chapter-zero",
@@ -872,11 +873,9 @@ def write_scaffold(text, chapter_zero, chapters)
         "linkTitle" => volume["title"],
         "weight" => volume["weight"],
         "aliases" => volume["aliases"],
-        "type" => "docs",
         "breadcrumbs" => true,
         "comments" => false,
         "book_kind" => "volume-overview",
-        "book_number" => volume["number"],
         "book_status" => "scaffold"
       },
       volume_page_body(volume, chapters)
@@ -902,7 +901,6 @@ def write_scaffold(text, chapter_zero, chapters)
       "title" => "完整目录",
       "linkTitle" => "目录",
       "weight" => 4,
-      "type" => "docs",
       "breadcrumbs" => false,
       "comments" => false,
       "book_kind" => "table-of-contents"
@@ -916,7 +914,6 @@ def write_scaffold(text, chapter_zero, chapters)
       "title" => "索引中心",
       "linkTitle" => "索引",
       "weight" => 910,
-      "type" => "docs",
       "breadcrumbs" => true,
       "comments" => false,
       "book_kind" => "index-hub"
@@ -949,7 +946,6 @@ def write_scaffold(text, chapter_zero, chapters)
         "title" => title,
         "linkTitle" => title,
         "weight" => weight,
-        "type" => "docs",
         "breadcrumbs" => true,
         "comments" => false,
         "book_kind" => "index"
@@ -965,7 +961,6 @@ def write_scaffold(text, chapter_zero, chapters)
       "title" => "附录与速查",
       "linkTitle" => "附录",
       "weight" => 900,
-      "type" => "docs",
       "breadcrumbs" => true,
       "comments" => false,
       "book_kind" => "appendices"
@@ -990,7 +985,6 @@ def write_scaffold(text, chapter_zero, chapters)
         "title" => "附录 #{appendix['letter']}：#{appendix['title']}",
         "linkTitle" => "附录 #{appendix['letter']} #{appendix['title']}",
         "weight" => (appendix_index + 1) * 10,
-        "type" => "docs",
         "breadcrumbs" => true,
         "comments" => false,
         "book_kind" => "appendix",

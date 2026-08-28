@@ -88,8 +88,8 @@ chapters.each_with_index do |chapter, chapter_index|
   chapter_content = chapter_page.read
   chapter_metadata = front_matter(chapter_page)
   expected_chapter_metadata = {
-    "title" => "第 #{chapter['number']} 章 #{chapter['title']}",
-    "linkTitle" => format("%02d %s", chapter["number"], chapter["title"]),
+    "title" => chapter["title"],
+    "linkTitle" => chapter["title"],
     "book_kind" => "chapter",
     "book_id" => chapter["id"],
     "book_number" => chapter["number"],
@@ -142,8 +142,8 @@ chapters.each_with_index do |chapter, chapter_index|
     fail_check("#{section['id']} has invalid book status: #{status.inspect}") unless allowed_statuses.include?(status)
     fail_check("#{section['id']} is still a scaffold") if status == "scaffold"
     expected_section_metadata = {
-      "title" => "#{section['number']} #{section['title']}",
-      "linkTitle" => "#{section['number']} #{section['title']}",
+      "title" => section["title"],
+      "linkTitle" => section["title"],
       "weight" => section["index"] * 10,
       "book_kind" => "section",
       "book_chapter" => chapter["id"],
