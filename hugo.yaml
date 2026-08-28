@@ -166,9 +166,9 @@ params:
     # book keeps all 36 chapter sections at the site root, so the project shim
     # in layouts/_partials/shell/sidebar-root.html preserves the home tree.
     book_sidebar_root: home
-    sidebar_width_min: 320
-    sidebar_width_max: 520
-    sidebar_item_overflow: wrap
+    sidebar_width_min: 360
+    sidebar_width_max: 420
+    sidebar_item_overflow: ellipsis
     sidebar_headings: false
     book_draft_banner: false
     pager_types: [book]
