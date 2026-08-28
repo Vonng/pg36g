@@ -1,11 +1,10 @@
 ---
-title: 第 27 章 精益求精：参数调优与资源治理
-linkTitle: 27 精益求精：参数调优与资源治理
+title: 精益求精：参数调优与资源治理
+linkTitle: 精益求精：参数调优与资源治理
 weight: 370
 aliases:
 - "/ch27/"
 - "/volume-2/configuration-tuning/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch27
 book_number: 27
 book_part: part-5
-book_status: draft
+book_status: reviewed
 ---
 
 调优不是把一份“最佳参数”复制到 `postgresql.conf`。
