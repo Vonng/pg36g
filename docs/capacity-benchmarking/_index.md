@@ -1,11 +1,10 @@
 ---
-title: 第 26 章 胸有成竹：容量规划与压测基线
-linkTitle: 26 胸有成竹：容量规划与压测基线
+title: 胸有成竹：容量规划与压测基线
+linkTitle: 胸有成竹：容量规划与压测基线
 weight: 360
 aliases:
 - "/ch26/"
 - "/volume-2/capacity-benchmarking/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch26
 book_number: 26
 book_part: part-5
-book_status: draft
+book_status: reviewed
 ---
 
 一张写着“12 万 TPS”的截图，没有回答容量问题。
@@ -60,8 +59,8 @@ select-only
 
 第 26 章参考运行不是“性能榜单”，而是一组教学用、有界的证据链：
 
-- Pigsty `v4.4.0` 教学沙箱；
-- PostgreSQL `18.4`；
+- Pigsty `v4.5.0` 教学沙箱；
+- PostgreSQL `18.6`；
 - 独立 `pg-meta-1` load generator：2 vCPU、约 3.8 GiB RAM；
 - `pg-test-1` primary：1 vCPU、约 1.9 GiB RAM；
 - `shared_buffers`：512,753,664 bytes；
