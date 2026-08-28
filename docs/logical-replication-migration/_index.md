@@ -1,11 +1,10 @@
 ---
-title: 第 29 章 移花接木：逻辑复制、迁移与异构同步
-linkTitle: 29 移花接木：逻辑复制、迁移与异构同步
+title: 移花接木：逻辑复制、迁移与异构同步
+linkTitle: 移花接木：逻辑复制、迁移与异构同步
 weight: 390
 aliases:
 - "/ch29/"
 - "/volume-2/logical-replication-migration/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch29
 book_number: 29
 book_part: part-5
-book_status: draft
+book_status: reviewed
 ---
 
 逻辑复制能让数据流动，但“数据正在流动”离“迁移已经成功”还很远。
@@ -106,7 +105,7 @@ publication 是某一个数据库中的变更集合；subscription 定义下游�
 ```text
 source       pg-test / pg36_shop_src
 target       pg-meta / pg36_shop_dst
-PostgreSQL   18.4 on both sides
+PostgreSQL   18.6 on both sides
 wal_level    logical
 data         synthetic only
 route        private evidence simulation only
@@ -277,7 +276,7 @@ orphan / negative / invalid      0 / 0 / 0
 
 ## 版本与证据权威
 
-本章 PostgreSQL 语义以 18 为基线，正式 run 使用 18.4。逻辑复制能力跨版本变化明显：
+本章 PostgreSQL 语义以 18 为基线，正式 run 使用 18.6。逻辑复制能力跨版本变化明显：
 row filter、column list、binary、streaming、two-phase、conflict statistics、failover
 slot、generated columns 与 subscription 权限都必须以源、目标**实际 major/minor**
 的官方文档为准。
