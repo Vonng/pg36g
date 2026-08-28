@@ -1,11 +1,10 @@
 ---
-title: 第 36 章 事故复盘、控制固化与平台演进——举一反三
-linkTitle: 36 事故复盘、控制固化与平台演进——举一反三
+title: 事故复盘、控制固化与平台演进——举一反三
+linkTitle: 事故复盘、控制固化与平台演进——举一反三
 weight: 460
 aliases:
 - "/ch36/"
 - "/volume-2/postmortem-platform-improvement/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch36
 book_number: 36
 book_part: part-6
-book_status: draft
+book_status: reviewed
 ---
 
 服务恢复解决的是“现在还能不能用”，事故复盘要解决的是“为什么系统允许这条失效链
