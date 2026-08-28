@@ -143,9 +143,12 @@
 .pg36-purpose .td-landing-markdown {
   display: grid;
   max-width: none;
-  grid-template-columns: minmax(15rem, 0.9fr) repeat(2, minmax(0, 1fr));
-  gap: clamp(22px, 3vw, 42px);
-  align-items: start;
+  overflow: hidden;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid color-mix(in srgb, var(--pg36-blue) 24%, var(--td-line));
+  border-radius: clamp(16px, 2vw, 24px);
+  background: var(--td-paper);
+  box-shadow: 0 24px 64px rgba(23, 62, 91, 0.08);
 }
 
 .pg36-purpose .td-landing-markdown > * {
@@ -153,18 +156,81 @@
 }
 
 .pg36-purpose .td-landing-markdown blockquote {
-  padding: clamp(22px, 3vw, 32px);
-  border: 1px solid color-mix(in srgb, var(--pg36-blue) 28%, var(--td-line));
-  border-radius: 1rem;
-  background: color-mix(in srgb, var(--pg36-blue) 7%, var(--td-paper));
+  position: relative;
+  grid-column: 1 / -1;
+  padding: clamp(24px, 3vw, 34px) clamp(28px, 4vw, 48px);
+  border: 0;
+  border-block-end: 1px solid color-mix(in srgb, var(--pg36-blue) 20%, var(--td-line));
+  border-radius: 0;
+  background:
+    linear-gradient(105deg, color-mix(in srgb, var(--pg36-blue) 11%, transparent), transparent 68%),
+    color-mix(in srgb, var(--pg36-blue) 3%, var(--td-paper));
   color: var(--bs-body-color);
-  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
-  line-height: 1.7;
+  font-size: clamp(1.08rem, 1.35vw, 1.28rem);
+  line-height: 1.65;
+}
+
+.pg36-purpose .td-landing-markdown blockquote::before {
+  position: absolute;
+  content: '';
+  inset-block: clamp(24px, 3vw, 34px);
+  inset-inline-start: clamp(16px, 2.2vw, 26px);
+  width: 3px;
+  border-radius: 999px;
+  background: var(--pg36-gold);
+}
+
+.pg36-purpose .td-landing-markdown blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.pg36-purpose .td-landing-markdown > p {
+  padding: clamp(26px, 3.4vw, 42px) clamp(28px, 4vw, 48px);
+  color: var(--bs-secondary-color);
+  line-height: 1.85;
+}
+
+.pg36-purpose .td-landing-markdown > p + p {
+  border-inline-start: 1px solid color-mix(in srgb, var(--pg36-blue) 18%, var(--td-line));
 }
 
 .pg36-parts .td-landing-card,
 .pg36-indexes .td-landing-card {
+  position: relative;
+  isolation: isolate;
   border-top: 3px solid color-mix(in srgb, var(--pg36-blue) 54%, var(--td-line));
+}
+
+// Keep the descriptive action text, but stretch its link over the complete
+// card. Keyboard focus follows the same visible boundary as pointer hover.
+.pg36-parts .td-landing-card,
+.pg36-indexes .td-landing-card {
+  a:not(.td-landing-card-link) {
+    position: relative;
+    z-index: 2;
+  }
+
+  > .td-landing-card-link {
+    &::after {
+      position: absolute;
+      z-index: 1;
+      content: '';
+      inset: 0;
+      border-radius: inherit;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  &:has(> .td-landing-card-link:focus-visible) {
+    border-color: var(--pg36-gold);
+    outline: 3px solid color-mix(in srgb, var(--pg36-gold) 72%, transparent);
+    outline-offset: 3px;
+    box-shadow: var(--td-shadow);
+    transform: translateY(-3px);
+  }
 }
 
 .pg36-parts .td-landing-card__media,
@@ -224,6 +290,11 @@
 @media (max-width: 900px) {
   .pg36-purpose .td-landing-markdown {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pg36-purpose .td-landing-markdown > p + p {
+    border-block-start: 1px solid color-mix(in srgb, var(--pg36-blue) 18%, var(--td-line));
+    border-inline-start: 0;
   }
 }
 
