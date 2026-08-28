@@ -2,11 +2,10 @@
 title: 附录 F：术语与技术边界表
 linkTitle: 附录 F 术语与技术边界表
 weight: 60
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: appendix
-book_status: draft
+book_status: reviewed
 ---
 
 同一个词在 PostgreSQL、Pigsty、云平台和 Kubernetes 中可能指不同对象。本附录固定
@@ -34,7 +33,7 @@ metadata 和 filesystem/OS。平台结论最终要能回到这些语义验证。
 
 PostgreSQL 数据库服务的参考实现/发行与管理平台。它把多个独立组件通过配置、playbook、
 service 和监控组合起来。`pig` 是相关 CLI/package/operations 工具，其版本号与 Pigsty
-release 不同，例如正式实验观察到 `pig 1.5.1` 与 Pigsty `v4.4.0`。
+release 不同，例如正式实验观察到 `pig 1.5.1` 与 Pigsty `v4.5.0`。
 
 ### Patroni 与 DCS
 

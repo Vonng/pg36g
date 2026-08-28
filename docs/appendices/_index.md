@@ -2,7 +2,6 @@
 title: 附录与速查
 linkTitle: 附录
 weight: 900
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: appendices
@@ -13,7 +12,7 @@ book_kind: appendices
 
 ## [附录 A：版本矩阵与差异注记](a/)
 
-冻结 PostgreSQL 18.4、Pigsty v4.4.0、`pig` 1.5.1 与正式 L1/L2/L3 基线；说明哪些
+冻结 PostgreSQL 18.6、Pigsty v4.5.0、`pig` 1.5.1 与正式 L1/L2/L3 基线；说明哪些
 结论必须按版本重验，以及勘误如何保留历史适用范围。
 
 ## [附录 B：对象、视图、命令与证据速查](b/)

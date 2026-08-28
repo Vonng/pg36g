@@ -2,11 +2,10 @@
 title: 附录 E：实验拓扑、风险与复位手册
 linkTitle: 附录 E 实验拓扑、风险与复位手册
 weight: 50
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: appendix
-book_status: draft
+book_status: reviewed
 ---
 
 本附录定义实验“在哪里运行、能改变什么、怎样回到可信状态”。它不是生产授权书；
@@ -40,7 +39,7 @@ pg-test-3  10.10.10.13  pg-test replica/offline + disposable drill host
 合同：
 
 ```text
-Pigsty v4.4.0 / PostgreSQL 18
+Pigsty v4.5.0 / PostgreSQL 18
 Ubuntu 24.04 / aarch64 in formal run
 UTC + synchronized clocks
 data_checksums=on / UTF8 / C.UTF-8 / scram-sha-256 / SSL

@@ -2,11 +2,10 @@
 title: 附录 C：症状与首个安全动作索引
 linkTitle: 附录 C 症状与首个安全动作索引
 weight: 30
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: appendix
-book_status: draft
+book_status: reviewed
 ---
 
 这是“先别把事故变糟”的路由表，不是自动诊断器。任何症状先确认 environment、

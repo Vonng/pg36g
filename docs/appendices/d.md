@@ -2,11 +2,10 @@
 title: 附录 D：分区能力索引
 linkTitle: 附录 D 分区能力索引
 weight: 40
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: appendix
-book_status: draft
+book_status: reviewed
 ---
 
 分区不是一个孤立功能：是否该用、查询能否裁剪、如何在线迁移、时间边界怎样表达、

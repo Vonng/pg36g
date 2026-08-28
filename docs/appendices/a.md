@@ -2,11 +2,10 @@
 title: 附录 A：版本矩阵与差异注记
 linkTitle: 附录 A 版本矩阵与差异注记
 weight: 10
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: appendix
-book_status: draft
+book_status: reviewed
 ---
 
 本附录是全书的版本控制面。正文中的原理尽量保持跨小版本稳定，但命令、默认值、组件组合和界面必须绑定实际版本。读者复现实验时，先记录事实，再判断差异是否影响结论。
@@ -17,13 +16,13 @@ book_status: draft
 
 | 层次 | 基线 | 说明 |
 |---|---|---|
-| PostgreSQL 服务端 | 18.4 | 正式实验基线 |
+| PostgreSQL 服务端 | 18.6 | 正式实验基线 |
 | PostgreSQL 兼容阅读范围 | 14–18 | 仅在结论确实成立时采用；差异必须显式说明 |
-| Pigsty | v4.4.0 | 2026-07-10 正式发布版本 |
+| Pigsty | v4.5.0 | 2026-07-10 正式发布版本 |
 | `pig` CLI | 1.5.1 | L2/L3 正式实验观察版本；与 Pigsty release 分开记录 |
 | L1 参考 OS | Ubuntu 24.04.4 LTS | AMD64 与 ARM64 均可；记录实际补丁版本 |
 | L2 正式环境 | Ubuntu 24.04 / aarch64 四 VM | 1×`pg-meta` + 3×`pg-test`；共享 hypervisor |
-| L3 正式环境 | L2 host 上的私有 disposable PG18.4 clone | exact temporary root、Unix socket、无业务路由 |
+| L3 正式环境 | L2 host 上的私有 disposable PG18.6 clone | exact temporary root、Unix socket、无业务路由 |
 
 L2 的三台 `pg-test` VM 在正式 run 中只有 1 vCPU、约 1.9 GiB RAM，是明确记录的
 sandbox exception；它证明实验在该下限跑通，不构成生产 sizing。精确资源、网络和

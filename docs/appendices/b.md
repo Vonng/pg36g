@@ -2,15 +2,14 @@
 title: 附录 B：对象、视图、命令与证据速查
 linkTitle: 附录 B 对象、视图、命令与证据速查
 weight: 20
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: appendix
-book_status: draft
+book_status: reviewed
 ---
 
 本附录用于事故前后的快速定位，不替代正文中的机制、权限与风险判断。所有视图和命令
-按 PostgreSQL 18 / Pigsty v4.4 基线列出；跨版本先查[附录 A](../a/)。
+按 PostgreSQL 18 / Pigsty v4.5 基线列出；跨版本先查[附录 A](../a/)。
 
 ## B.1 连接、角色、对象、事务、锁和计划 {#appendix-b-1}
 
