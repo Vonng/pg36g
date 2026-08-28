@@ -1,11 +1,10 @@
 ---
-title: 第 25 章 望闻问切：监控体系与可观测诊断
-linkTitle: 25 望闻问切：监控体系与可观测诊断
+title: 望闻问切：监控体系与可观测诊断
+linkTitle: 望闻问切：监控体系与可观测诊断
 weight: 350
 aliases:
 - "/ch25/"
 - "/volume-2/observability/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch25
 book_number: 25
 book_part: part-5
-book_status: draft
+book_status: reviewed
 ---
 
 “有监控”很容易，“知道发生了什么”很难。
@@ -344,8 +343,8 @@ governance_status: proposed-not-accepted
 
 | 项目 | 观察值 |
 |---|---:|
-| Pigsty | v4.4.0 |
-| PostgreSQL | 18.4 |
+| Pigsty | v4.5.0 |
+| PostgreSQL | 18.6 |
 | pg_exporter | v1.4.0 |
 | VictoriaMetrics | v1.148.0 |
 | VictoriaLogs | v1.52.0 |
