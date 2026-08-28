@@ -1,11 +1,10 @@
 ---
-title: 第 6 章 立木取信：开发规约与交付基线
-linkTitle: 06 立木取信：开发规约与交付基线
+title: 立木取信：开发规约与交付基线
+linkTitle: 立木取信：开发规约与交付基线
 weight: 160
 aliases:
 - "/ch06/"
 - "/volume-1/development-standards/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch06
 book_number: 6
 book_part: part-1
-book_status: draft
+book_status: reviewed
 ---
 
 前五章已经留下了一批反复出现的工程判断：连接前先确认目标，运行角色不能等于对象所有者，关键不变量要进入约束，事务失败后必须显式恢复，分页需要稳定全序，实验结束要证明状态复原。它们此时还散落在不同章节里；如果只把这些句子摘成一张“最佳实践清单”，读者很快就会遇到两个问题：规则为什么成立，以及遇到例外时该听谁的。
@@ -62,7 +61,7 @@ book_status: draft
 | default | 10 | 团队默认 | 有 owner、expiry 与补偿检查的 `waiver` |
 | preference | 5 | 场景评审 | reviewer 根据证据决定 |
 
-规则数量不是成熟度指标。v0.1 的证据只来自 ch01–ch05，范围限定为 `pg36_shop` 教学应用及 Pigsty L1 工作流；PostgreSQL 兼容目标为 14–18，当前真实验证版本为 18.4，Pigsty 说明以 v4.4.0 为准。Ubuntu 24.04 是 L1 目标平台，本章同时在 macOS/Homebrew 的 PostgreSQL 18.4 本地实验实例上验证 SQL 与 gate。任何内核分支、驱动、连接池模式和组织安全要求都可能收紧或改写规则边界。
+规则数量不是成熟度指标。v0.1 的证据只来自 ch01–ch05，范围限定为 `pg36_shop` 教学应用及 Pigsty L1 工作流；PostgreSQL 兼容目标为 14–18，当前真实验证版本为 18.6，Pigsty 说明以 v4.5.0 为准。Ubuntu 24.04 是 L1 目标平台，本章同时在 macOS/Homebrew 的 PostgreSQL 18.6 本地实验实例上验证 SQL 与 gate。任何内核分支、驱动、连接池模式和组织安全要求都可能收紧或改写规则边界。
 
 v0.1 还故意保留一个可见缺口：10 条 safety 中，`SAFE-RETR-008`“只按 SQLSTATE 整体重试且副作用幂等”目前只有 review check，尚无自动或运行时检查。第 10 章完成并发与重试实验前，它不能被宣称为自动闭合；质量门会输出：
 
@@ -207,9 +206,9 @@ Pigsty 提供可复现的基础设施入口，PostgreSQL catalog 和实验后验
 - [PostgreSQL 18：Sorting Rows](https://www.postgresql.org/docs/18/queries-order.html)
 - [PostgreSQL 18：LIMIT and OFFSET](https://www.postgresql.org/docs/18/queries-limit.html)
 - [PostgreSQL 18：WITH Queries](https://www.postgresql.org/docs/18/queries-with.html)
-- [Pigsty v4.4：User/Role](https://pigsty.io/docs/pgsql/config/user/)
-- [Pigsty v4.4：Database](https://pigsty.io/docs/pgsql/config/db/)
-- [Pigsty v4.4：Service/Access](https://pigsty.io/docs/pgsql/service/)
+- [Pigsty v4.5：User/Role](https://pigsty.io/docs/pgsql/config/user/)
+- [Pigsty v4.5：Database](https://pigsty.io/docs/pgsql/config/db/)
+- [Pigsty v4.5：Service/Access](https://pigsty.io/docs/pgsql/service/)
 
 ---
 
