@@ -1,11 +1,10 @@
 ---
-title: 第 10 章 顾此失彼：并发控制与隔离异常
-linkTitle: 10 顾此失彼：并发控制与隔离异常
+title: 顾此失彼：并发控制与隔离异常
+linkTitle: 顾此失彼：并发控制与隔离异常
 weight: 200
 aliases:
 - "/ch10/"
 - "/volume-1/concurrency-isolation/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch10
 book_number: 10
 book_part: part-2
-book_status: draft
+book_status: reviewed
 ---
 
 单条 SQL 正确、单个事务顺序执行正确，不代表并发执行仍正确。并发控制的起点不是先选隔离级别，而是写出业务不变量和允许的失败语义：
@@ -56,7 +55,7 @@ PostgreSQL 的 Read Committed、Repeatable Read 与 Serializable 不是“性能
 
 ## 实验边界
 
-实验基线为 PostgreSQL 18.4、Pigsty v4.4.0、Ubuntu 24.04 L1；主体机制保持 PostgreSQL 14–18 可用。只创建六张带固定 marker 的表：
+实验基线为 PostgreSQL 18.6、Pigsty v4.5.0、Ubuntu 24.04 L1；主体机制保持 PostgreSQL 14–18 可用。只创建六张带固定 marker 的表：
 
 ```text
 ch10_inventory        two SKUs / available=100 / version=0
@@ -146,7 +145,7 @@ ch10_outbox            committed external-effect intent
 
 ## 实测摘要
 
-一次 PostgreSQL 18.4 全量验收得到：
+一次 PostgreSQL 18.6 全量验收得到：
 
 ```text
 lost:
