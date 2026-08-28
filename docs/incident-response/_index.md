@@ -1,11 +1,10 @@
 ---
-title: 第 31 章 事件分级、现场保护与应急决策——枕戈待旦
-linkTitle: 31 事件分级、现场保护与应急决策——枕戈待旦
+title: 事件分级、现场保护与应急决策——枕戈待旦
+linkTitle: 事件分级、现场保护与应急决策——枕戈待旦
 weight: 410
 aliases:
 - "/ch31/"
 - "/volume-2/incident-response/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch31
 book_number: 31
 book_part: part-6
-book_status: draft
+book_status: reviewed
 ---
 
 前十二章已经建立部署、HA、备份、安全、可观测、容量、调优、维护、迁移与升级能力。
@@ -110,7 +109,7 @@ detect symptom
 响应：
 
 ```text
-PostgreSQL                         18.4
+PostgreSQL                         18.6
 Patroni topology                   1 primary + 2 replicas
 timeline                           11
 pgBackRest status / backups        0 / 6
