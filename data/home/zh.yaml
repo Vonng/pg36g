@@ -1,152 +1,153 @@
-# OINK 0.3.0 按此顺序组装首页；页面结构和内容均不需要覆盖主题模板。
+# 这是一部书的封面与导览，不是产品功能页。内容顺序围绕“为何读、读什么、如何查、怎样验证”。
 sections:
   - hero
-  - metrics
-  - type: cards
-    key: pathways
-  - type: cards
-    key: parts
-  - principles
-  - faq
-  - cta
+  - { type: markdown, key: purpose }
+  - { type: cards, key: parts }
+  - { type: cards, key: indexes }
+  - { type: markdown, key: evidence }
+  - { type: cta, key: start }
 
 hero:
-  eyebrow: PostgreSQL 18.4 · Pigsty v4.4.0 · 36 章实战
+  class: pg36-hero
+  eyebrow: PostgreSQL 18.6 · Pigsty v4.5.0 · 中文原创
   title_lines:
-    - PostgreSQL
-    - 36 计
-  lead: 从 SQL 到生产：用一套可复现、可观察、可验收的实验路径，连接数据库开发、平台建设、日常运营与事故恢复。
-  note: 每个实验都遵循“目标—前提—动作—证据—验收”闭环。
+    - 'PG **三十六计**'
+  title_size: 4.8rem
+  lead: 从会写 SQL，到能把 PostgreSQL 作为一项可靠的生产服务交付、运营、恢复并持续改进。
+  note: 36 章正文与配套实验；每个结论都要求版本、前提、证据和停止线。
   image:
     light: logo.png
     dark: logo.png
-    alt: PostgreSQL 36 计蓝象标识
+    alt: PG 三十六计蓝象
+  media:
+    ratio: 1.35fr 0.82fr
+    max_width: 430px
   actions:
-    - label: 从全书导读开始
-      url: guide/
-      icon: fa-solid fa-book-open
-      style: primary
-    - label: 浏览完整目录
+    - label: 查看 36 章目录
       url: toc/
       icon: fa-solid fa-list-ol
+      style: primary
+    - label: 从第一章开始
+      url: postgresql-pigsty-map/
+      icon: fa-solid fa-book-open
       style: ghost
   detail:
-    label: 在 GitHub 上查看源码与勘误
-    url: https://github.com/Vonng/pg36g
-    icon: fa-brands fa-github
-    external: true
+    label: 先确认读者假设、安全公约与实验合同
+    url: guide/
+    icon: fa-solid fa-shield-halved
 
-metrics:
-  eyebrow: 全书规模
-  title: 一套可以按顺序学，也可按任务查的 PostgreSQL 实战手册
-  columns: 4
-  items:
-    - { value: 36, label: 正文章, icon: fa-solid fa-book }
-    - { value: 242, label: 正文节页, icon: fa-solid fa-file-lines }
-    - { value: 772, label: 稳定三级目, icon: fa-solid fa-link }
-    - { value: 36, label: 配套实验, icon: fa-solid fa-flask }
+purpose:
+  class: pg36-purpose
+  eyebrow: 这本书解决什么问题
+  title: 把数据库知识变成可验收的工程能力
+  body: |
+    > PostgreSQL 是核心知识对象；Pigsty 是统一实验载体、观察窗口与生产参考实现。
 
-pathways:
-  eyebrow: 阅读路径
-  title: 从你当前的问题出发
-  desc: 系统学习可以按卷与章推进；生产任务与事故处置则应先从专用索引定位。
-  columns: 4
-  link_label: 进入路线
-  items:
-    - title: 第一次系统阅读
-      meta: 导读
-      icon: fa-solid fa-route
-      desc: 先确认读者假设、版本边界、安全公约与实验合同，再按章推进。
-      url: guide/
-    - title: 按工程任务查找
-      meta: 索引
-      icon: fa-solid fa-list-check
-      desc: 从建模、慢 SQL、索引、迁移、容量与发布等任务直达相关章节。
-      url: indexes/tasks/
-    - title: 按事故症状应对
-      meta: 应急
-      icon: fa-solid fa-triangle-exclamation
-      desc: 先确认首个安全动作和明确禁止项，再进入恢复、切换或取证流程。
-      url: indexes/incidents/
-    - title: 准备可复现实验
-      meta: 实验
-      icon: fa-solid fa-flask-vial
-      desc: 使用可销毁的 Pigsty 沙箱，核对拓扑、凭据、风险等级与停止条件。
-      url: ch00/
+    本书不按命令、参数或产品功能堆砌知识点。上卷从对象、模型、查询、并发与发布出发，回答“怎样写对并稳定交付”；下卷从部署、HA、备份、可观测与容量出发，回答“怎样持续运行并在故障中保住选择”。
+
+    每一章最终都要交付一种可以复现、审查或演练的能力。平台实现会回到 PostgreSQL 原生 SQL、系统目录、日志或组件证据复核；示例输出不会被当成脱离版本和拓扑的普遍结论。
 
 parts:
-  eyebrow: 六篇主线
-  title: 从会写 SQL，到能交付并运营 PostgreSQL 服务
+  class: pg36-parts
+  eyebrow: 六篇正文
+  title: 从工程认知，到恢复与改进
+  desc: 三篇应用开发、三篇运维管理；每篇六章，共同组成一条完整的生产路径。
   columns: 3
-  link_label: 从本篇开始
+  link_label: 进入本篇
   items:
     - title: 筑基
-      meta: 01 · 工程认知
+      meta: 01 · ch01–ch06
       icon: fa-solid fa-map
-      desc: 建立对象、连接、模型、事务与交付基线的共同坐标系。
+      desc: 连接落点、对象坐标、关系模型、事务心智与开发交付基线。
       url: postgresql-pigsty-map/
     - title: 应用
-      meta: 02 · 稳定交付
+      meta: 02 · ch07–ch12
       icon: fa-solid fa-code
-      desc: 用计划、证据、索引、并发与发布规约把 SQL 变成可验收的应用。
+      desc: 用计划、统计、索引、并发控制与变更规约把 SQL 变成稳定服务。
       url: query-plans-statistics/
     - title: 扩展
-      meta: 03 · 能力边界
+      meta: 03 · ch13–ch18
       icon: fa-solid fa-puzzle-piece
-      desc: 评估存储过程、扩展、检索、时空与分析能力的适用边界。
+      desc: 判断存储过程、扩展、检索、时空与分析能力应该用到哪里、止于哪里。
       url: functions-triggers-procedures/
     - title: 规划
-      meta: 04 · 生产服务
+      meta: 04 · ch19–ch24
       icon: fa-solid fa-server
-      desc: 从 SLO、故障域、备份、接入与权限反推可交付的数据库服务。
+      desc: 从 SLO、故障域与恢复目标反推部署、HA、备份、接入和权限设计。
       url: deployment-baseline/
     - title: 运营
-      meta: 05 · 证据驱动
+      meta: 05 · ch25–ch30
       icon: fa-solid fa-chart-line
-      desc: 用可观测性、容量、资源治理、维护、迁移与升级持续运营。
+      desc: 用可观测性、容量基线、资源治理、维护、迁移和升级持续运营。
       url: observability/
     - title: 出山
-      meta: 06 · 恢复改进
+      meta: 06 · ch31–ch36
       icon: fa-solid fa-shield-halved
-      desc: 从现场保护到 PITR、切换、过载保护、数据取证与复盘固化。
+      desc: 从现场保护进入 PITR、切换、过载处置、数据取证与复盘固化。
       url: incident-response/
 
-principles:
-  eyebrow: 实战方法
-  title: 不把命令、面板或一次跑分当成结论
+indexes:
+  class: pg36-indexes
+  eyebrow: 工程索引
+  title: 不必为了一个现场问题从第一章翻起
+  desc: 下面五个索引直接把角色、任务、技术边界或事故症状映射到正式章节；编号目录负责精确定位到节与目。
   columns: 3
+  link_label: 打开索引
   items:
-    - icon: fa-solid fa-bullseye
-      title: 先定义验收标准
-      desc: 每章先说明目标、前置、风险与完成证据。
-    - icon: fa-solid fa-magnifying-glass-chart
-      title: 让证据区分假设
-      desc: 先保存现场与基线，再进行可回退、可对照的受控验证。
-    - icon: fa-solid fa-rotate-left
-      title: 把恢复路径写进方案
-      desc: 变更、演练与事故处置都需要明确停止条件和 after 验收。
+    - title: 按角色阅读
+      meta: 开发 · DBA · 平台 · 响应者
+      icon: fa-solid fa-users
+      desc: 找到与你当前职责相邻的必读章、补充章与事故章。
+      url: indexes/roles/
+    - title: 按任务查找
+      meta: 建模 · 发布 · 迁移 · 容量
+      icon: fa-solid fa-list-check
+      desc: 从要完成的工程任务反查概念、实验与验收位置。
+      url: indexes/tasks/
+    - title: 技术边界索引
+      meta: PostgreSQL · 平台 · Pigsty
+      icon: fa-solid fa-diagram-project
+      desc: 区分原生机制、通用平台职责与参考实现，避免把产品映射当成标准。
+      url: indexes/capabilities/
+    - title: 事故症状与首个安全动作
+      meta: 先保护现场，再选择路线
+      icon: fa-solid fa-triangle-exclamation
+      desc: 从症状进入 PITR、HA、过载或完整性路线，并明确第一个禁止动作。
+      url: indexes/incidents/
+    - title: 分区能力五触点
+      meta: 模型 · 查询 · 维护 · 迁移 · 恢复
+      icon: fa-solid fa-table-cells-large
+      desc: 把“要不要分区”放回生命周期判断，而不是只看建表语法。
+      url: indexes/partition/
+    - title: 完整编号目录
+      meta: 36 章 · 242 节 · 772 目
+      icon: fa-solid fa-list-ol
+      desc: 精确定位章节、独立节页与稳定三级锚点。
+      url: toc/
 
-faq:
-  eyebrow: 阅读之前
-  title: 常见问题
-  items:
-    - question: 我只会通用 SQL，可以直接开始吗？
-      answer: 可以。本书默认你已掌握 Linux 与通用 SQL，会集中解释 PostgreSQL 特有语义与工程方法。先读[全书导读](guide/)即可判断前置是否齐备。
-      open: true
-    - question: 一定要使用 Pigsty 吗？
-      answer: PostgreSQL 是核心知识对象，Pigsty 是统一实验载体和生产参考实现。原生机制章节可在其他 PostgreSQL 环境中验证；涉及服务拓扑和平台证据时，正文会明确标注依赖。
-    - question: 能否把书中命令直接用在生产环境？
-      answer: 不能默认如此。先核对页面标注的 R0–R3 风险、目标拓扑、凭据、版本和停止条件；故障注入、恢复与破坏性动作只能在明确授权的隔离环境执行。
+evidence:
+  class: pg36-evidence
+  eyebrow: 实验契约
+  title: 命令跑通，只说明命令跑通
+  body: |
+    每个实验都沿着同一条证据链组织：
 
-cta:
-  title: 先花几分钟读导读，后面的 36 章会快得多。
-  desc: 确认版本、安全公约和实验合同，再开始第一个可验收的 PostgreSQL 实验。
+    1. **目标与前提**：先写清版本、拓扑、凭据、数据状态与完成标准。
+    2. **风险与停止线**：用 R0–R3 标出观察、可回退变更、故障注入与破坏性动作。
+    3. **动作与证据**：同时保存 SQL、配置、日志、计划、时间线或监控事实，不用单一面板替代判断。
+    4. **验收与复位**：证明结果、记录不能外推的边界，并把环境恢复到下一章可以继续使用的状态。
+
+    正文以 PostgreSQL 18.6 与 Pigsty v4.5.0 为当前复现基线；涉及其他版本时，会就地标明差异，而不是让读者猜测。
+
+start:
+  title: 目录负责浏览，索引负责解决问题，导读负责避免做错实验。
+  desc: 第一次打开本书，建议先花几分钟确认版本、安全公约和实验环境合同。
   actions:
     - label: 阅读全书导读
       url: guide/
       icon: fa-solid fa-arrow-right
       style: primary
-    - label: 准备实验环境
-      url: ch00/
-      icon: fa-solid fa-flask
+    - label: 打开完整目录
+      url: toc/
+      icon: fa-solid fa-list-ol
       style: ghost

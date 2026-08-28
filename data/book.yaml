@@ -1,6 +1,6 @@
 # Generated from plan/book-outline-final.md by bin/scaffold_book.rb.
 ---
-title: PostgreSQL 36 计
+title: PG 三十六计
 subtitle: 从 SQL 到生产：PostgreSQL 与 Pigsty 实战
 status: draft
 source_outline: plan/book-outline-final.md

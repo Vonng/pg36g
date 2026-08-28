@@ -1,0 +1,154 @@
+# The English surface is an honest guide into the Chinese manuscript, not a claim of a full translation.
+sections:
+  - hero
+  - { type: markdown, key: purpose }
+  - { type: cards, key: parts }
+  - { type: cards, key: indexes }
+  - { type: markdown, key: evidence }
+  - { type: cta, key: start }
+
+hero:
+  class: pg36-hero
+  eyebrow: CHINESE-LANGUAGE FIELD GUIDE · PostgreSQL 18.6 · Pigsty v4.5.0
+  title_lines:
+    - PostgreSQL
+    - '**36 Stratagems**'
+  title_size: 4.55rem
+  lead: A 36-chapter path from writing SQL to delivering, operating, recovering, and continuously improving PostgreSQL in production.
+  note: This landing page is in English; the manuscript, labs, and detailed indexes are currently in Chinese.
+  image:
+    light: logo.png
+    dark: logo.png
+    alt: Blue elephant mark for PostgreSQL 36 Stratagems
+  media:
+    ratio: 1.35fr 0.82fr
+    max_width: 430px
+  actions:
+    - label: Browse all 36 chapters
+      url: https://pg36g.vonng.com:443/toc/
+      icon: fa-solid fa-list-ol
+      style: primary
+    - label: Start with Chapter 1
+      url: https://pg36g.vonng.com:443/postgresql-pigsty-map/
+      icon: fa-solid fa-book-open
+      style: ghost
+  detail:
+    label: Read the Chinese guide, safety rules, and lab contract
+    url: https://pg36g.vonng.com:443/guide/
+    icon: fa-solid fa-shield-halved
+
+purpose:
+  class: pg36-purpose
+  eyebrow: What the book is for
+  title: Turn database knowledge into evidence-backed engineering capability
+  body: |
+    > PostgreSQL is the subject. Pigsty is the common lab environment, observation surface, and one production reference implementation.
+
+    This is not a catalogue of commands, parameters, or product features. The first volume moves from objects, modeling, queries, concurrency, and releases toward reliable application delivery. The second moves from deployment, HA, backup, observability, and capacity toward incident recovery and durable improvement.
+
+    Every chapter is expected to produce something reproducible, reviewable, or drillable. Platform claims return to PostgreSQL SQL, catalogs, logs, or component evidence; sample output is never presented as a version-free universal truth.
+
+parts:
+  class: pg36-parts
+  eyebrow: Six parts
+  title: From system foundations to recovery and improvement
+  desc: Three parts for application engineering and three for operations, six chapters each.
+  columns: 3
+  link_label: Open this part
+  items:
+    - title: Foundations
+      meta: 01 · ch01–ch06
+      icon: fa-solid fa-map
+      desc: Connection targets, object maps, relational modeling, transaction semantics, and delivery baselines.
+      url: https://pg36g.vonng.com:443/postgresql-pigsty-map/
+    - title: Applications
+      meta: 02 · ch07–ch12
+      icon: fa-solid fa-code
+      desc: Plans, statistics, indexes, concurrency control, and release discipline for dependable services.
+      url: https://pg36g.vonng.com:443/query-plans-statistics/
+    - title: Extensions
+      meta: 03 · ch13–ch18
+      icon: fa-solid fa-puzzle-piece
+      desc: Where procedures, extensions, search, spatiotemporal, and analytical capabilities fit—and where they stop.
+      url: https://pg36g.vonng.com:443/functions-triggers-procedures/
+    - title: Planning
+      meta: 04 · ch19–ch24
+      icon: fa-solid fa-server
+      desc: Derive deployment, HA, backup, access, and security from SLOs, failure domains, and recovery goals.
+      url: https://pg36g.vonng.com:443/deployment-baseline/
+    - title: Operations
+      meta: 05 · ch25–ch30
+      icon: fa-solid fa-chart-line
+      desc: Observability, capacity baselines, resource governance, maintenance, migration, and upgrades.
+      url: https://pg36g.vonng.com:443/observability/
+    - title: Recovery
+      meta: 06 · ch31–ch36
+      icon: fa-solid fa-shield-halved
+      desc: Scene preservation, PITR, failover, overload control, data forensics, and postmortem hardening.
+      url: https://pg36g.vonng.com:443/incident-response/
+
+indexes:
+  class: pg36-indexes
+  eyebrow: Operational indexes
+  title: A live problem should not require starting at Chapter 1
+  desc: Five indexes map roles, tasks, capability boundaries, and symptoms to the formal chapters; the numbered contents locates every section and stable anchor.
+  columns: 3
+  link_label: Open the Chinese index
+  items:
+    - title: Read by role
+      meta: Developer · DBA · Platform · Responder
+      icon: fa-solid fa-users
+      desc: Find the core, supporting, and incident chapters adjacent to your responsibilities.
+      url: https://pg36g.vonng.com:443/indexes/roles/
+    - title: Find by task
+      meta: Modeling · Release · Migration · Capacity
+      icon: fa-solid fa-list-check
+      desc: Work backward from an engineering task to its concepts, labs, and acceptance checks.
+      url: https://pg36g.vonng.com:443/indexes/tasks/
+    - title: Capability boundaries
+      meta: PostgreSQL · Platform · Pigsty
+      icon: fa-solid fa-diagram-project
+      desc: Separate native mechanisms, generic platform duties, and a concrete reference implementation.
+      url: https://pg36g.vonng.com:443/indexes/capabilities/
+    - title: Incident symptoms and first safe actions
+      meta: Preserve the scene before choosing a route
+      icon: fa-solid fa-triangle-exclamation
+      desc: Route symptoms into PITR, HA, overload, or integrity work while naming the first prohibited action.
+      url: https://pg36g.vonng.com:443/indexes/incidents/
+    - title: Five partitioning touchpoints
+      meta: Model · Query · Maintain · Migrate · Recover
+      icon: fa-solid fa-table-cells-large
+      desc: Evaluate partitioning across the data lifecycle instead of reducing it to table syntax.
+      url: https://pg36g.vonng.com:443/indexes/partition/
+    - title: Complete numbered contents
+      meta: 36 chapters · 242 sections · 772 anchors
+      icon: fa-solid fa-list-ol
+      desc: Locate every chapter, standalone section page, and stable third-level anchor.
+      url: https://pg36g.vonng.com:443/toc/
+
+evidence:
+  class: pg36-evidence
+  eyebrow: Lab contract
+  title: A command succeeding proves only that the command succeeded
+  body: |
+    Every lab follows the same evidence chain:
+
+    1. **Goal and prerequisites** — version, topology, credentials, data state, and acceptance criteria.
+    2. **Risk and stop line** — R0–R3 distinguish observation, reversible change, fault injection, and destructive work.
+    3. **Action and evidence** — SQL, configuration, logs, plans, timelines, and monitoring facts are kept together.
+    4. **Acceptance and reset** — prove the result, state what cannot be generalized, and restore a usable environment.
+
+    PostgreSQL 18.6 and Pigsty v4.5.0 are the current reproducibility baseline. Other versions are called out where they matter.
+
+start:
+  title: Contents are for browsing; indexes are for solving; the guide keeps labs safe.
+  desc: Before Chapter 1, confirm the Chinese reader assumptions, safety rules, and disposable lab contract.
+  actions:
+    - label: Open the Chinese guide
+      url: https://pg36g.vonng.com:443/guide/
+      icon: fa-solid fa-arrow-right
+      style: primary
+    - label: Browse the contents
+      url: https://pg36g.vonng.com:443/toc/
+      icon: fa-solid fa-list-ol
+      style: ghost

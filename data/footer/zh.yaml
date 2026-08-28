@@ -1,5 +1,5 @@
 brand:
-  name: PostgreSQL 36 计
+  name: PG 三十六计
   logo: logo.png
   tagline: 从 SQL 到生产
   slogan: PostgreSQL 与 Pigsty 实战
@@ -16,6 +16,7 @@ columns:
       - { label: 按任务查找, url: indexes/tasks/ }
       - { label: 事故安全动作, url: indexes/incidents/ }
       - { label: 技术边界索引, url: indexes/capabilities/ }
+      - { label: 分区能力五触点, url: indexes/partition/ }
   - title: 生态
     links:
       - { label: Pigsty, url: 'https://pgsty.com/', external: true }

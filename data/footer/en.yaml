@@ -1,0 +1,31 @@
+brand:
+  name: PostgreSQL 36 Stratagems
+  logo: logo.png
+  tagline: From SQL to production
+  slogan: A Chinese field guide to PostgreSQL and Pigsty
+columns:
+  - title: Read
+    links:
+      - { label: Chinese reader guide, url: 'https://pg36g.vonng.com:443/guide/', external: true }
+      - { label: Complete contents, url: 'https://pg36g.vonng.com:443/toc/', external: true }
+      - { label: Application engineering, url: 'https://pg36g.vonng.com:443/upper-volume/', external: true }
+      - { label: Operations, url: 'https://pg36g.vonng.com:443/lower-volume/', external: true }
+  - title: Indexes
+    links:
+      - { label: Read by role, url: 'https://pg36g.vonng.com:443/indexes/roles/', external: true }
+      - { label: Find by task, url: 'https://pg36g.vonng.com:443/indexes/tasks/', external: true }
+      - { label: Incident-safe actions, url: 'https://pg36g.vonng.com:443/indexes/incidents/', external: true }
+      - { label: Capability boundaries, url: 'https://pg36g.vonng.com:443/indexes/capabilities/', external: true }
+      - { label: Partitioning touchpoints, url: 'https://pg36g.vonng.com:443/indexes/partition/', external: true }
+  - title: Ecosystem
+    links:
+      - { label: Pigsty, url: 'https://pgsty.com/', external: true }
+      - { label: PostgreSQL, url: 'https://www.postgresql.org/', external: true }
+      - { label: PostgreSQL Extension Directory, url: 'https://ext.pgsty.com/', external: true }
+      - { label: Vonng, url: 'https://vonng.com/', external: true }
+  - title: Project
+    links:
+      - { label: GitHub repository, url: 'https://github.com/Vonng/pg36g', external: true }
+      - { label: Errata and issues, url: 'https://github.com/Vonng/pg36g/issues', external: true }
+      - { label: Version matrix, url: 'https://pg36g.vonng.com:443/appendices/a/', external: true }
+      - { label: Lab environment contract, url: 'https://pg36g.vonng.com:443/appendices/e/', external: true }
