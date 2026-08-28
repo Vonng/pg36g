@@ -1,11 +1,10 @@
 ---
-title: 第 16 章 经天纬地：时序、空间与时空查询
-linkTitle: 16 经天纬地：时序、空间与时空查询
+title: 经天纬地：时序、空间与时空查询
+linkTitle: 经天纬地：时序、空间与时空查询
 weight: 260
 aliases:
 - "/ch16/"
 - "/volume-1/spatiotemporal/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch16
 book_number: 16
 book_part: part-3
-book_status: draft
+book_status: reviewed
 ---
 
 “时间”与“空间”都很容易被压缩成错误的表结构：
@@ -195,7 +194,7 @@ zone_id lookup       -> geofence_version_no_overlap
 - [时空 ADR](/labs/ch16/spatiotemporal-adr.md)
 - [冻结夹具清单](/labs/ch16/fixture-manifest.json)
 - [v1.4 proposal](/labs/ch16/baseline-v1.4-proposal.json)
-- [Pigsty 4.4 声明片段](/labs/ch16/pigsty-declaration.example.yml)
+- [Pigsty 4.5 声明片段](/labs/ch16/pigsty-declaration.example.yml)
 
 冻结输入：
 
@@ -254,7 +253,7 @@ PG36_EVIDENCE_DIR="$PWD/evidence/ch16" \
 12. 在单事务中不用 `CASCADE` 精确复位，确认第 14 章扩展保留，再完整
     重建第二次。
 
-正式 Homebrew PostgreSQL 18.4 双周期证据得到：
+正式 Homebrew PostgreSQL 18.6 双周期证据得到：
 
 ```text
 status=ok
@@ -349,7 +348,7 @@ release_candidate_checksum=13902984b3da92a66638d0d6e2f886d6d8ac5cb20ba89ec08b152
   [`ST_Covers`](https://postgis.net/docs/ST_Covers.html)、
   [`ST_DWithin`](https://postgis.net/docs/ST_DWithin.html)、
   [`ST_Transform`](https://postgis.net/docs/ST_Transform.html)
-- Pigsty 4.4：
+- Pigsty 4.5：
   [扩展概览](https://pigsty.io/docs/pgsql/ext/)、
   [包别名](https://pigsty.io/docs/pgsql/ext/pkg/)、
   [创建扩展](https://pigsty.io/docs/pgsql/ext/create/)、
