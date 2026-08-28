@@ -1,11 +1,10 @@
 ---
-title: 第 19 章 开天辟地：环境规划与部署基线
-linkTitle: 19 开天辟地：环境规划与部署基线
+title: 开天辟地：环境规划与部署基线
+linkTitle: 开天辟地：环境规划与部署基线
 weight: 290
 aliases:
 - "/ch19/"
 - "/volume-2/deployment-baseline/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch19
 book_number: 19
 book_part: part-4
-book_status: draft
+book_status: reviewed
 ---
 
 上卷回答了 PostgreSQL 能做什么；下卷从一个更苛刻的问题开始：
@@ -22,7 +21,7 @@ book_status: draft
 > 初始化与拓扑，是否真的存在？
 
 本章先写需求与资源合同，再冻结 PostgreSQL 初始化选择，最后用 exact Pigsty
-v4.4.0 在四台 Linux VM 上完成 PostgreSQL 18 部署和 L2 沙箱验收。正式
+v4.5.0 在四台 Linux VM 上完成 PostgreSQL 18 部署和 L2 沙箱验收。正式
 结果是“带六项例外的沙箱通过”，不是生产批准。
 
 ## 本章目标
@@ -78,8 +77,8 @@ service requirement
 
 ```text
 target               pg36-l2-vagrant
-Pigsty               v4.4.0 exact tag
-PostgreSQL           18.4 observed
+Pigsty               v4.5.0 exact tag
+PostgreSQL           18.6 observed
 hosts                4 distinct Ubuntu 24.04/aarch64 guests
 service units        pg-meta + pg-test
 pg-test              one primary + two streaming replicas
