@@ -1,11 +1,10 @@
 ---
-title: 第 18 章 万法归宗：PostgreSQL 数据平台与替代边界
-linkTitle: 18 万法归宗：PostgreSQL 数据平台与替代边界
+title: 万法归宗：PostgreSQL 数据平台与替代边界
+linkTitle: 万法归宗：PostgreSQL 数据平台与替代边界
 weight: 280
 aliases:
 - "/ch18/"
 - "/volume-1/data-platform-boundaries/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch18
 book_number: 18
 book_part: part-3
-book_status: draft
+book_status: reviewed
 ---
 
 前 17 章分别回答了许多“PostgreSQL 能不能”的问题：
@@ -65,7 +64,7 @@ evidence            哪些结论已经证明
 - 设计开发、标准 HA、关键 HA 和离线分析四类服务产品；
 - 在 schema、database、instance 和 cluster 隔离之间按信任与故障边界选择；
 - 把连接、存储、临时文件、语句时间和维护窗口变成可执行配额；
-- 说明 Pigsty 4.4 如何映射 PostgreSQL、Patroni、etcd、HAProxy、PgBouncer、
+- 说明 Pigsty 4.5 如何映射 PostgreSQL、Patroni、etcd、HAProxy、PgBouncer、
   pgBackRest 与观测能力；
 - 分清 Pigsty 开箱能力、环境验收和组织流程；
 - 运行一个完全只读的上卷能力审计；
@@ -134,7 +133,7 @@ exit            如何撤掉这个组件
 ```text
 status=architecture-proposal-not-production-approval
 postgresql=18.x target
-validated_fixture=18.4
+validated_fixture=18.6
 pigsty_reference=4.4
 pigsty_l1_validation=not-run
 lower_volume_gates=18 pending
@@ -170,7 +169,7 @@ PostgreSQL 18 的
 
 ## Pigsty 的位置
 
-Pigsty 4.4 的
+Pigsty 4.5 的
 [Architecture](https://pigsty.io/docs/concept/arch/)
 以声明式 inventory 和模块组合交付环境；PGSQL、INFRA、NODE、ETCD 等模块
 把 PostgreSQL 与 HA、接入、备份和观察组件连接起来。
