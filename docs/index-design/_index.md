@@ -1,11 +1,10 @@
 ---
-title: 第 9 章 巧夺天工：索引设计与效果验证
-linkTitle: '09 巧夺天工：索引设计与效果验证'
+title: 巧夺天工：索引设计与效果验证
+linkTitle: 巧夺天工：索引设计与效果验证
 weight: 190
 aliases:
 - "/ch09/"
 - "/volume-1/index-design/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch09
 book_number: 9
 book_part: part-2
-book_status: draft
+book_status: reviewed
 ---
 
 索引不是“给字段加速”的装饰，而是为一组操作符、谓词、排序与返回形状维护的额外数据结构。每增加一个索引，读取路径多一个候选，写入路径也多一份维护、WAL、缓存和生命周期成本。
@@ -57,7 +56,7 @@ query family + representative parameters + SLO
 
 ## 实验边界
 
-实验基线为 PostgreSQL 18.4、Pigsty v4.4.0、Ubuntu 24.04 L1；主体 SQL 保持 PostgreSQL 14–18 可用，PG18 skip scan 单独标注。实验只在 `shop_private` 建七张带 marker 的 `ch09_*` fixture：
+实验基线为 PostgreSQL 18.6、Pigsty v4.5.0、Ubuntu 24.04 L1；主体 SQL 保持 PostgreSQL 14–18 可用，PG18 skip scan 单独标注。实验只在 `shop_private` 建七张带 marker 的 `ch09_*` fixture：
 
 ```text
 orders        200000 rows / placed=5% / customer 42 target=10
@@ -139,7 +138,7 @@ unique probe  10000 rows / 5000 duplicate groups
 
 ## 实测摘要
 
-一次 PostgreSQL 18.4 全量验收得到：
+一次 PostgreSQL 18.6 全量验收得到：
 
 ```text
 order:
