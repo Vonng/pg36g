@@ -1,11 +1,10 @@
 ---
-title: 第 2 章 手到擒来：psql 与可复现工作流
-linkTitle: 02 手到擒来：psql 与可复现工作流
+title: 手到擒来：psql 与可复现工作流
+linkTitle: 手到擒来：psql 与可复现工作流
 weight: 120
 aliases:
 - "/ch02/"
 - "/volume-1/psql-workflow/"
-type: docs
 math: true
 breadcrumbs: true
 comments: false
@@ -13,7 +12,7 @@ book_kind: chapter
 book_id: ch02
 book_number: 2
 book_part: part-1
-book_status: draft
+book_status: reviewed
 ---
 
 会执行一条 SQL，不等于能可靠地完成一次数据库任务。真正可交付的操作必须知道自己连到了哪里，遇错立即停止，留下足够证据，允许安全重跑，并能证明失败没有留下半成品。本章把这些要求压缩成后续 34 章共同使用的最小工作流。
@@ -37,7 +36,7 @@ book_status: draft
 
 本章承接 [1.7 实战](/postgresql-pigsty-map/07/) 创建的 `pg36_shop`、`shop` 模式和三个角色。若环境尚未具备这些对象，先完成 ch01；若对象已经承载其他数据，不要用本章实验覆盖它们。
 
-示例基线是 PostgreSQL 18.4 与 Pigsty v4.4。核心 `psql` 工作流适用于 PostgreSQL 14–18；`COPY ... ON_ERROR`、`REJECT_LIMIT` 等版本敏感能力会单独标出。实验使用 L1 的 Pigsty `default` 服务（默认端口 `5436`）执行管理任务，因为它跟随主库并直连 PostgreSQL；这不是 PostgreSQL 标准端口，也不代表所有平台都必须这样命名。
+示例基线是 PostgreSQL 18.6 与 Pigsty v4.5。核心 `psql` 工作流适用于 PostgreSQL 14–18；`COPY ... ON_ERROR`、`REJECT_LIMIT` 等版本敏感能力会单独标出。实验使用 L1 的 Pigsty `default` 服务（默认端口 `5436`）执行管理任务，因为它跟随主库并直连 PostgreSQL；这不是 PostgreSQL 标准端口，也不代表所有平台都必须这样命名。
 
 本章提供的可下载资产位于：
 
@@ -158,7 +157,7 @@ flowchart LR
 - [PostgreSQL 18：pgbench](https://www.postgresql.org/docs/18/pgbench.html)
 - [PostgreSQL 18：pg_dump](https://www.postgresql.org/docs/18/app-pgdump.html)
 - [PostgreSQL 18：pg_restore](https://www.postgresql.org/docs/18/app-pgrestore.html)
-- [Pigsty v4.4：PostgreSQL 服务与接入](https://pigsty.io/docs/pgsql/service/)
+- [Pigsty v4.5：PostgreSQL 服务与接入](https://pigsty.io/docs/pgsql/service/)
 
 ---
 
