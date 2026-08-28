@@ -5,11 +5,10 @@ weight: 3
 aliases:
 - "/ch0/"
 - "/ch00/"
-type: docs
 breadcrumbs: true
 comments: false
 book_kind: chapter-zero
-book_status: draft
+book_status: reviewed
 ---
 
 > **可跳过说明**：本章只为尚未拥有实验环境的读者准备 Pigsty L1 沙箱，并完成首次
@@ -28,7 +27,7 @@ working PostgreSQL connection
 redacted baseline evidence
 ```
 
-本书采用的复现基线是 Pigsty `v4.4.0`、PostgreSQL `18.4` 与 Ubuntu 24.04 LTS
+本书采用的复现基线是 Pigsty `v4.5.0`、PostgreSQL `18.6` 与 Ubuntu 24.04 LTS
 reference environment。安装时固定 Pigsty release 与 PostgreSQL major，随后记录仓库
 实际提供的 minor/build；不要为了伪造一致性降级已经修复安全问题的 minor release。
 
@@ -38,7 +37,7 @@ reference environment。安装时固定 Pigsty release 与 PostgreSQL major，�
 
 1. 明确目标是可销毁、无生产数据与流量的 L1；
 2. 记录 CPU、内存、磁盘、OS、架构、网络和成本边界；
-3. 从官方来源获取并固定 Pigsty `v4.4.0`；
+3. 从官方来源获取并固定 Pigsty `v4.5.0`；
 4. 在执行前审查生成的 `pigsty.yml`，保护其中的凭据与 CA key；
 5. 完成单节点部署或验证一个等价的已有环境；
 6. 分开 PostgreSQL、PgBouncer、HAProxy service 与 Web UI 入口；
@@ -76,7 +75,7 @@ reference environment。安装时固定 Pigsty release 与 PostgreSQL major，�
 
 ## 当前官方参考
 
-- [Pigsty v4.4 documentation](https://pigsty.io/docs/)
+- [Pigsty v4.5 documentation](https://pigsty.io/docs/)
 - [Single-node setup](https://pigsty.io/docs/setup/)
 - [Production install prerequisites](https://pigsty.io/docs/deploy/install/)
 - [Supported Linux matrix](https://pigsty.io/docs/ref/linux/)
