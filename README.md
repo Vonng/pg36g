@@ -27,7 +27,7 @@ PostgreSQL 为核心知识对象，以 Pigsty 为统一实验载体、观察窗�
 - [下卷导读](https://pg36g.vonng.com/lower-volume/)：运维管理
 - [索引中心](https://pg36g.vonng.com/indexes/)：按角色、任务、事故与能力查找
 
-站点使用 OINK v0.8.0 的 Book shell：顶层“目录”下拉收纳 36 章，“索引”下拉
+站点使用 OINK v1.0.0 的 Book shell：顶层“目录”下拉收纳 36 章，“索引”下拉
 提供角色、任务、能力边界、事故症状、分区触点与完整编号目录。章节 URL 仍保持
 扁平、稳定；“上卷／下卷”是并列的导读页，不形成中间 URL 层级。
 
