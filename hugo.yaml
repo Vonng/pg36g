@@ -20,7 +20,7 @@ module:
     - path: github.com/pgsty/oink
   hugoVersion:
     extended: true
-    min: 0.160.1
+    min: 0.166.0
 
 contentDir: docs
 
