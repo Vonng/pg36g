@@ -347,6 +347,15 @@ Dir.mktmpdir("pg36g-book-check") do |temporary|
       expected_section_target = "#{expected_target}#{section['slug']}/"
       fail_check("missing former nested section alias for #{section['id']}") unless nested_section_alias.file?
       fail_check("former nested section alias for #{section['id']} points to the wrong target") unless nested_section_alias.read.include?(expected_section_target)
+
+      # Source links use browser URL paths, not Hugo content-file references.
+      # Check the rendered destination too: an embedded link resolver can
+      # silently turn ../ into / while both targets still exist.
+      section_page = build_dir.join(chapter["slug"], section["slug"], "index.html")
+      return_link = section_page.read.match(/<a\b[^>]*href="([^"]+)"[^>]*>返回本章目录<\/a>/)
+      fail_check("#{section['id']} lost its rendered chapter return link") unless return_link
+      actual_return, = resolve_link(expected_section_target, return_link[1])
+      fail_check("#{section['id']} chapter return link points to #{actual_return.inspect}, expected #{expected_target}") unless actual_return == expected_target
     end
   end
 
@@ -389,4 +398,5 @@ Dir.mktmpdir("pg36g-book-check") do |temporary|
   puts "PASS: 76 archived source files preserved (Finder metadata excluded)"
   puts "PASS: 302 nested-volume scaffold files preserved"
   puts "PASS: Hugo built successfully; #{checked_links} internal Markdown links resolved"
+  puts "PASS: #{all_section_pages.length} rendered chapter return links resolve to their owning chapters"
 end

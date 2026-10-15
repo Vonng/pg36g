@@ -91,6 +91,10 @@ languages:
 
 markup:
   goldmark:
+    renderHooks:
+      link:
+        # 本书的相对链接使用网页 URL；源码路径解析会把节页的 ../ 错指向首页。
+        useEmbedded: never
     renderer:
       unsafe: true          # OINK 的百分号容器 shortcode 会生成内联 HTML
     extensions:
@@ -173,6 +177,8 @@ params:
     book_draft_banner: false
     pager_types: [book]
     keyboard_nav: true
+    preset: paper
+    preset_menu: [paper, slate, ink, terminal]
     dark_mode: true
     image_zoom: true
     page_context_menu:

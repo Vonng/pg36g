@@ -1,25 +1,33 @@
+HUGO ?= hugo
+OINK_LOCAL ?= $(HOME)/pgsty/oink
+PORT ?= 1313
+
+# Keep local development independent of module workspaces and vendored pins.
+export GOWORK := off
+export HUGO_MODULE_WORKSPACE := off
+PINNED_HUGO = env -u HUGO_MODULE_REPLACEMENTS $(HUGO)
+LOCAL_HUGO = HUGO_MODULE_REPLACEMENTS="github.com/pgsty/oink -> $(abspath $(OINK_LOCAL))" $(HUGO) --ignoreVendorPaths=github.com/pgsty/oink
+
 default: dev
 
 d:dev
-dev:
-	HUGO_MODULE_REPLACEMENTS='github.com/pgsty/oink -> $(HOME)/pgsty/oink' \
-		hugo serve --renderToMemory
+dev: theme-local
+	$(LOCAL_HUGO) serve --renderToMemory --bind 127.0.0.1 --port "$(PORT)" --noBuildLock
 
 serve:
-	hugo serve --environment production --minify --disableFastRender --disableLiveReload
+	$(PINNED_HUGO) serve --environment production --minify --disableFastRender --disableLiveReload
 
 b:build
 build:
-	hugo --gc --minify --cleanDestinationDir --panicOnWarning
+	$(PINNED_HUGO) --gc --minify --cleanDestinationDir --panicOnWarning
 
 check: check-book
 	GOWORK=off go mod verify
-	GOWORK=off hugo --gc --minify --cleanDestinationDir \
+	$(PINNED_HUGO) --gc --minify --cleanDestinationDir \
 		--printPathWarnings --printI18nWarnings --panicOnWarning
 
-check-local: check-book
-	HUGO_MODULE_REPLACEMENTS='github.com/pgsty/oink -> $(HOME)/pgsty/oink' \
-		hugo --gc --minify --cleanDestinationDir \
+check-local: theme-local check-book
+	$(LOCAL_HUGO) --gc --minify --cleanDestinationDir \
 		--printPathWarnings --printI18nWarnings --panicOnWarning
 
 scaffold:
@@ -41,3 +49,9 @@ epub:
 	bin/epub
 
 .PHONY: default doc translate
+
+# Fail explicitly if a local theme was requested but is unavailable.
+theme-local:
+	@test -f "$(OINK_LOCAL)/hugo.yaml" || { echo "Set OINK_LOCAL to an OINK checkout (default: ~/pgsty/oink)." >&2; exit 1; }
+
+.PHONY: theme-local
