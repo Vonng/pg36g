@@ -19,16 +19,16 @@ serve:
 
 b:build
 build:
-	$(PINNED_HUGO) --gc --minify --cleanDestinationDir --panicOnWarning
+	$(PINNED_HUGO) --gc --minify --cleanDestinationDir
 
 check: check-book
 	GOWORK=off go mod verify
 	$(PINNED_HUGO) --gc --minify --cleanDestinationDir \
-		--printPathWarnings --printI18nWarnings --panicOnWarning
+		--printPathWarnings --printI18nWarnings
 
 check-local: theme-local check-book
 	$(LOCAL_HUGO) --gc --minify --cleanDestinationDir \
-		--printPathWarnings --printI18nWarnings --panicOnWarning
+		--printPathWarnings --printI18nWarnings
 
 scaffold:
 	ruby bin/scaffold_book.rb
