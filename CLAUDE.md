@@ -72,7 +72,7 @@ Each chapter directory can contain:
 
 - **Config File**: `hugo.yaml`
 - **Base URL**: https://pg36g.vonng.com/
-- **Theme**: OINK v1.3.2 (pinned as a Go module)
+- **Theme**: OINK v1.4.0 (pinned as a Go module)
 - **Layout contract**: Root resources use `type: book`, `layout: landing`, and cascade `type: book`
 - **Navigation**: `目录` contains all 36 chapters; `索引` contains the curated engineering indexes
 - **Content Directory**: `docs/`
