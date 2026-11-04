@@ -70,6 +70,7 @@ promotion；真正的主机分区又被当成普通进程退出，在旧主仍�
 | 数据面 | 谁可写、WAL 到哪里、哪条 timeline | `pg_is_in_recovery()`、LSN、sender/receiver、control data |
 | 控制面 | 谁持有 leader lock、谁可竞选、自动化是否暂停 | Patroni REST/CLI、DCS revision、动态配置、tags |
 | 服务面 | 客户实际连到哪里、池与代理何时摘挂节点 | HAProxy/PgBouncer health、DNS/VIP、端到端 token |
+{.wide .expand}
 
 恢复路径依次通过四道门：
 

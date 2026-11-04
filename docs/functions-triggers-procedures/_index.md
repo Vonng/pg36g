@@ -91,6 +91,7 @@ PostgreSQL”。函数、触发器和过程都能执行复杂逻辑，但三者�
 | 多行更新写审计 | `AFTER STATEMENT` + transition tables | 三行更新只产生一条 statement audit |
 | 过期五张陈旧订单 | `SECURITY INVOKER` procedure | 顶层 `CALL` 按 `2/2/1` 三批提交 |
 | 邮件、HTTP、消息消费、定时启动 | 不放触发器或过程 | 属于外部系统和平台 |
+{.wide .expand}
 
 夹具刻意让不同机制叠在同一事务里：
 
@@ -184,6 +185,7 @@ SQLSTATE、批次关系和 canonical proposal checksum。
 | `P3616` | 乐观版本不匹配 | command function | 调用方重新读取后决定是否重试 |
 | `P3618` | 支付命令前置条件不成立 | command function | 不插支付、不改订单 |
 | `2D000` | 显式事务块内试图结束事务 | procedure runtime | 该显式事务失败 |
+{.wide .expand}
 
 自定义 `P36xx` 只属于本书实验合同；真实项目必须建立自己的错误注册表，
 避免不同模块复用同一码位。调用方匹配 SQLSTATE，而不是匹配可能被翻译、

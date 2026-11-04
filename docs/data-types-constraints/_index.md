@@ -73,6 +73,7 @@ relation_checksum=cd7daa66543a6b5e0a5d7fc269558a6c
 | 派生事实 | view 中临时相乘 | stored `line_total_minor` | 跨行聚合 |
 | 文本键 | 只做唯一 | ASCII 格式与规范写入 | 全球化身份匹配 |
 | 分区 | 未决定 | ADR 接受“暂不分区” | ch26 量级复查 |
+{.wide .expand}
 
 ```mermaid
 flowchart LR

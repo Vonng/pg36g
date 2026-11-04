@@ -642,6 +642,7 @@ def tasks_index_body(chapters)
     prereq_links = prerequisites.split(",").map { |n| chapter_ref(chapters, n.to_i) }.join("、")
     lines << "| #{task} | #{target_links} | #{prereq_links} |"
   end
+  lines << "{.wide .expand}"
   lines.join("\n")
 end
 
@@ -656,7 +657,8 @@ def incidents_index_body(chapters)
     "| 连接、延迟、CPU、内存、I/O 表象 | 先判流量型还是保留型 | #{chapter_ref(chapters, 34)} | 判型前不做破坏性清理 |",
     "| XID 回卷风险 | 检查 `backend_xmin`、复制槽 `xmin`、`pg_prepared_xacts` | #{chapter_ref(chapters, 28)}、#{chapter_ref(chapters, 34)} | 不用一般摘流代替解除保留 |",
     "| WAL 撑满磁盘 | 检查归档失败、复制槽和未完成备份 | #{chapter_ref(chapters, 21)}、#{chapter_ref(chapters, 34)}、#{chapter_ref(chapters, 35)} | **绝不手工删除 `pg_wal`** |",
-    "| checksum、索引、collation 或逻辑不一致 | 停写、克隆并保存原始证据 | #{chapter_ref(chapters, 35)} | 不在唯一副本上反复试错 |"
+    "| checksum、索引、collation 或逻辑不一致 | 停写、克隆并保存原始证据 | #{chapter_ref(chapters, 35)} | 不在唯一副本上反复试错 |",
+    "{.wide .expand}"
   ].join("\n")
 end
 

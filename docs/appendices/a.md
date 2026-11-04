@@ -23,6 +23,7 @@ book_status: reviewed
 | L1 参考 OS | Ubuntu 24.04.4 LTS | AMD64 与 ARM64 均可；记录实际补丁版本 |
 | L2 正式环境 | Ubuntu 24.04 / aarch64 四 VM | 1×`pg-meta` + 3×`pg-test`；共享 hypervisor |
 | L3 正式环境 | L2 host 上的私有 disposable PG18.6 clone | exact temporary root、Unix socket、无业务路由 |
+{.wide .expand}
 
 L2 的三台 `pg-test` VM 在正式 run 中只有 1 vCPU、约 1.9 GiB RAM，是明确记录的
 sandbox exception；它证明实验在该下限跑通，不构成生产 sizing。精确资源、网络和

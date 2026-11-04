@@ -185,6 +185,7 @@ user latency burn
 | 伴随现象 | 与症状同窗出现 | pool queue、lock wait 同时升高 |
 | 候选机制 | 现象与某机制一致 | 长事务可能阻止 vacuum 推进 |
 | 根因证据 | 机制被复现/独立证实，反例被排除，修复验证闭环 | 释放特定锁后等待消失且合成路径恢复 |
+{.wide .expand}
 
 “两条线一起升高”最多是相关性。要升级为根因，至少需要：
 
@@ -205,6 +206,7 @@ repair verification
 | 入口 | 请求在哪排队、被路由、重试或拒绝 | 应用 edge、HAProxy、PgBouncer |
 | 数据库 | PG 状态能否解释症状 | activity、locks、I/O、WAL、maintenance、queryid |
 | 主机 | 资源或基础设施是否构成约束 | CPU、memory、disk、network、clock |
+{.wide .expand}
 
 从下往上推断很危险：
 
@@ -248,6 +250,7 @@ old or missing restore evidence
 | log | 离散事件、错误上下文、状态迁移 | 完整总体比率、无界扫描 | schema、采样、脱敏、保留 |
 | event | 发布、切换、配置和所有权时间线 | 单独证明因果 | actor、target、result、clock |
 | trace | 单次跨组件路径 | 未采样总体、长期预算 | sample、baggage、PII、correlation |
+{.wide .expand}
 
 四者不是竞争关系：
 
@@ -274,6 +277,7 @@ metric label。
 | 滚动窗口 | `rate(counter[5m])` | 窗口过短、采样不足 |
 | 估算值 | `n_dead_tup` | 当成精确 bloat |
 | 当前进度 | `pg_stat_progress_vacuum` | 没有行不等于从未运行 |
+{.wide .expand}
 
 还要处理采集链延迟：
 
@@ -304,6 +308,7 @@ VMAlert 支持 evaluation delay；正确值取决于实际采集和存储延迟�
 | `PG36ShopCorrectnessMismatch` | page | 不允许平均稀释的正确性 |
 | `PG36ShopCapacityHorizon` | ticket | 经评审预测才进入工作队列 |
 | `PG36MonitoringPathBroken` | page | 观察或通知路径不可证明工作 |
+{.wide .expand}
 
 ### 仍待治理接受的六条
 
@@ -358,6 +363,7 @@ governance_status: proposed-not-accepted
 | current VMAlert alerts | 0 |
 | `pg_up` / `pg_exporter_up` instances | 4 / 4 |
 | `pg36_shop_*` application SLI series | 0 |
+{.wide .expand}
 
 目标身份通过三层交叉确认：
 

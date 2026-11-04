@@ -19,3 +19,4 @@ search_boost: 1.5
 | XID 回卷风险 | 检查 `backend_xmin`、复制槽 `xmin`、`pg_prepared_xacts` | [ch28《VACUUM、冻结与膨胀治理》](/vacuum-freeze-bloat/)、[ch34《过载保护与资源故障判型》](/overload-resource-incidents/) | 不用一般摘流代替解除保留 |
 | WAL 撑满磁盘 | 检查归档失败、复制槽和未完成备份 | [ch21《备份体系与恢复演练》](/backup-recovery/)、[ch34《过载保护与资源故障判型》](/overload-resource-incidents/)、[ch35《数据抢救与工程取证》](/data-rescue-forensics/) | **绝不手工删除 `pg_wal`** |
 | checksum、索引、collation 或逻辑不一致 | 停写、克隆并保存原始证据 | [ch35《数据抢救与工程取证》](/data-rescue-forensics/) | 不在唯一副本上反复试错 |
+{.wide .expand}

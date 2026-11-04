@@ -68,6 +68,7 @@ validate
 | 物理 | checksum、invalid page、I/O error、块读取失败 | 可信 backup、健康副本、存储 snapshot、可读抽取 | 原地改页、删文件、忽略错误继续写 |
 | 派生 | `amcheck`、collation version、错误索引结果 | heap/源表 + 正确规则重建 | 把 REINDEX 当作 heap 已安全 |
 | 语义 | 约束外不变量、ledger/事件/业务对账 | PITR、审计日志、上游事实、补偿 | 用物理工具“修”业务写错 |
+{.wide .expand}
 
 分类可以重叠。一次坏内存写可能同时损坏 heap 和 index；错误 ICU 版本可能让结构在
 不同节点上被不同比较规则解释；应用误写也可能生成完全合法的 page/checksum。遇到

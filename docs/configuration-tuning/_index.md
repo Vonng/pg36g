@@ -126,6 +126,7 @@ seed，A/B 顺序交错。共 10 次 12 秒 measured run、357,685 笔事务：
 |---|---:|---:|---:|---:|---:|
 | `auto` | 2,981.72 | 1.279 ms | 9.217 ms | 13.127 ms | 0 |
 | `force_generic_plan` | 3,051.72 | 1.285 ms | 9.135 ms | 12.933 ms | 0 |
+{.wide .expand}
 
 只看两个 median，candidate 好像快 2.35%。但正确的配对分析是：
 

@@ -40,6 +40,7 @@ number and creation rate of partitions remain bounded?
 | LIST(tenant/region/state) | 少量稳定离散域 | key 增长、skew、default 膨胀 |
 | HASH(key) | 均匀分布/并行维护 | 生命周期语义弱、重分片成本 |
 | multi-level | 同时有生命周期与隔离 | partition 数和运维复杂度乘积 |
+{.wide .expand}
 
 使用 `[start, end)` 边界，显式时区与 catch-all/拒绝策略。parent-level `PRIMARY KEY` /
 `UNIQUE` 必须满足当前 PostgreSQL 对 partition key 的要求；不能假设多个本地索引自动

@@ -160,6 +160,7 @@ break-glass
 | migrate | 否 | 可切换到 owner | 日常服务流量、凭据 |
 | owner | 否 | 拥有应用对象和 policy | 日常 LOGIN |
 | break-glass | 独立 | 紧急高权动作 | 无审批、无时限、无审计 |
+{.wide .expand}
 
 PostgreSQL 16 起，membership 自身有 `ADMIN`、`INHERIT` 与 `SET` 选项。
 本章使用：

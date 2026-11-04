@@ -111,6 +111,7 @@ $$
 | 目标门 | inclusive/exclusive 的可证伪预期是什么 | 至少恢复两个候选 |
 | 数据门 | manifest、不变量与副作用对账是否通过 | 不切流 |
 | 服务门 | 写围栏、路由、观察窗、回退与 owner 是否齐备 | `production gate=pending` |
+{.wide .expand}
 
 严重度不能替代这些门。即便是 SEV1，也不能因为“时间紧”就跳过 timeline 或外部副作用
 判断；即便只错一行，也可能因为已经触发支付而需要跨系统对账。

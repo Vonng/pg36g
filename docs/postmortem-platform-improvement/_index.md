@@ -79,6 +79,7 @@ restore user outcome
 | ch33 | 主库失效 | 围栏、接纳新权威、对账 unknown、修复 lineage | 受控停进程不是硬件/网络分区 |
 | ch34 | flow 与 retention pressure | 先分类，再限流或修复 owner | fixture 阈值不是生产容量线 |
 | ch35 | 物理与派生损坏 | 从可信源恢复或重建 derived state | 单字节/元数据注入不是真实介质故障 |
+{.wide .expand}
 
 它们反复提示 observation contract、生产门禁、业务验收、精确作用域、unknown outcome、
 未知分类停止线和 lineage/authority 七个主题。这里的措辞必须严格：

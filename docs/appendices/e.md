@@ -106,6 +106,7 @@ public IP、egress、object storage/API。价格随 region/日期变化，本书
 | R1 可逆变更 | 改状态但有已验证回退 | fixture DDL、bounded config、canary、精确 cancel | owner、before/after、stop、rollback |
 | R2 受控状态变更/演练 | 有非平凡状态影响，但范围隔离且恢复路径已验证 | 一次性对象删除、隔离 PITR/failover、fault injection | guard、批准、恢复源、停止线、证据 |
 | R3 生产敏感/潜在不可逆 | 触及真实数据/流量、authority/lineage，或恢复昂贵 | 生产 failover/cutover、rewind/reinit、host rebuild、`pg_resetwal` | 原件保留、明确授权、独立复核、业务验收 |
+{.wide .expand}
 
 同一命令没有固定风险等级：在 disposable clone 上恢复一份 candidate 可以是 R2；让它
 接管生产流量、覆盖真实目标或改变唯一权威时就是 R3。
@@ -156,6 +157,7 @@ guard 必须在 mutation 前解析并 fail closed。设置
 | `reset:sql` | 删除/重建本章 owned fixture，恢复数据库对象起点 | drop 未解析 schema/database |
 | `reset:cluster` | 恢复服务、角色、配置、路由与本章 fixture baseline | 删除 managed PGDATA 猜测重建 |
 | `reset:host` | 从 clean OS/storage + pinned inventory 重建不可信宿主机 | 当作一条普通可复制命令 |
+{.wide .expand}
 
 名称是全书实验合同类别，不保证每章存在同名脚本。
 

@@ -25,3 +25,4 @@ search_boost: 1.4
 | 主库或 DCS 故障 | [ch31《事件分级、现场保护与应急决策》](/incident-response/)、[ch33《故障切换与集群重建》](/failover-rebuild/) | [ch20《高可用拓扑与容灾目标》](/high-availability/) |
 | 连接风暴与资源耗尽 | [ch31《事件分级、现场保护与应急决策》](/incident-response/)、[ch34《过载保护与资源故障判型》](/overload-resource-incidents/) | [ch22《服务接入、连接池与路由》](/connection-pooling-routing/)、[ch25《监控体系与可观测诊断》](/observability/)、[ch26《容量规划与压测基线》](/capacity-benchmarking/)、[ch27《参数调优与资源治理》](/configuration-tuning/)、[ch28《VACUUM、冻结与膨胀治理》](/vacuum-freeze-bloat/) |
 | 数据损坏与抢救 | [ch31《事件分级、现场保护与应急决策》](/incident-response/)、[ch35《数据抢救与工程取证》](/data-rescue-forensics/) | [ch21《备份体系与恢复演练》](/backup-recovery/)、[ch28《VACUUM、冻结与膨胀治理》](/vacuum-freeze-bloat/)、[ch30《版本升级与回滚策略》](/version-upgrade/) |
+{.wide .expand}

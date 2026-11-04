@@ -51,6 +51,7 @@ heap 正常但 index 膨胀      -> index diagnosis / reindex
 | 空间与访问 | 空间能否复用，VM/FSM 是否更新 | relation size、FSM、VM、HOT |
 | 事务年龄 | 离回卷保护线还有多远 | `relfrozenxid`、`datfrozenxid`、`relminmxid` |
 | 结构与生命周期 | 是否需要重建或整片退役 | `amcheck`、`pg_index`、partition manifest |
+{.wide .expand}
 
 ## 三个必须分开的结论
 
@@ -111,6 +112,7 @@ VACUUM while old snapshot remains
 | churn 后 | 50,000 | 50,000 | 87,040,000 | 27,877,376 |
 | 旧快照仍在，普通 VACUUM 后 | 50,000 | 50,000 | 87,040,000 | 17,480,000 |
 | 精确释放旧快照并 `VACUUM FREEZE` 后 | 50,000 | 0 | 87,040,000 | 51,920,000 |
+{.wide .expand}
 
 这个结果同时证明两件事：
 

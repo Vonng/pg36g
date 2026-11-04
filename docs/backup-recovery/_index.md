@@ -132,6 +132,7 @@ business loss scenario
 | 引擎层 | 能否恢复到一致状态 | recovery log、timeline、`pg_is_in_recovery()` | 目标数据正确 |
 | 数据层 | 预期事实是否存在/不存在 | token、行数、约束、聚合、对账 | 应用依赖可用 |
 | 服务层 | 应用能否安全接入 | routing、权限、smoke、backlog | 长期 SLO 已满足 |
+{.wide .expand}
 
 本章正式实验走到数据层，并用 rollback-only write probe 证明提升后可写；
 它不切换生产路由，因此没有宣称服务层 cutover 通过。

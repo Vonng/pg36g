@@ -20,6 +20,7 @@ cluster/system identity、用户影响、数据风险和变化速度；证据缺
 | writer 不可达 | 从 user path 到 proxy/DB 分层确认，并保护单 writer authority | endpoint、HAProxy、Patroni/DCS、role/timeline、client unknown | [ch33 failover](/failover-rebuild/) | 未围栏旧主就强制 promotion |
 | DCS 异常 | 暂停扩大 authority 的动作，确认 quorum/failsafe/watchdog 与节点视图 | member health、leader/term/revision、network 分区、DB role | [ch33 DCS](/failover-rebuild/04/) | 删 key、重建 DCS 后宣称 lineage 安全 |
 | replica 停滞 | 保护 primary 与 WAL，识别 receive/replay/network/slot/source | sender/receiver、LSN、timeline、logs、disk、slot | [ch20 HA](/high-availability/)、[ch33](/failover-rebuild/) | 立即 reinit，先抹掉故障证据 |
+{.wide .expand}
 
 ### 误操作的最小记录
 
@@ -58,6 +59,7 @@ user/client
 | CPU 高 | 观察 run queue、query mix、plan、spin/系统进程 | demand、单 query、并行、vacuum、非 DB | 仅凭 load average 重启 |
 | memory/OOM | 限制新工作，保存 kernel/cgroup/PostgreSQL 证据 | resident/cache、per-op memory、并发、OOM victim | drop cache、反复拉起 |
 | I/O 慢 | 降低非关键 I/O，区分 latency/queue/throughput | device/fs、checkpoint、WAL、temp、backup | 同时重启所有组件 |
+{.wide .expand}
 
 ### flow pressure 的首要目标
 
@@ -193,6 +195,7 @@ recovery、replication 或 PITR，且可能把可恢复事故变成不可恢复�
 | `amcheck` 索引异常 | 保留 heap 与索引证据，查同故障域 | index check、heap check、checksum | heap + 正确规则重建 |
 | collation version mismatch | 枚举 exact dependencies，不先消 warning | stored/actual version、provider、amcheck | REINDEX derived objects 后 REFRESH |
 | 合法 page 但业务错误 | 阻止副作用，定义 affected fact/cutoff | audit、ledger、不变量、external | PITR/审计/upstream/补偿 |
+{.wide .expand}
 
 ### 不能互相替代
 
@@ -224,6 +227,7 @@ clone、明确接受损失和专业升级下使用。详见
 | 慢/满/连不上 | 分 flow 与 retention | [ch34](/overload-resource-incidents/) | 统一用 restart/扩连接 |
 | page/index/collation/语义 | 原件 snapshot/hash，clone 分类 | [ch35](/data-rescue-forensics/) | 改唯一副本、删 WAL |
 | 服务已恢复 | 清临时控制、复盘、验证 action | [ch36](/postmortem-platform-improvement/) | 以 ticket/PR 代替效果 |
+{.wide .expand}
 
 ### 首个动作卡
 

@@ -81,6 +81,7 @@ select-only
 | M-c8 | 224.3 MiB | 8 | 2,911.5 | 9.398 ms | 84.0% | 29.1% |
 | L-c1 | 898.6 MiB | 1 | 1,423.6 | 2.259 ms | 46.3% | 16.2% |
 | L-c8 | 898.6 MiB | 8 | 2,774.3 | 10.087 ms | 84.2% | 27.8% |
+{.wide .expand}
 
 从 c1 到 c8：
 
@@ -229,6 +230,7 @@ static/labs/ch26/
 | exercise | 远端隔离、完整矩阵与精确清理 |
 | validate / review | 正向合同、26 个反例、hash、mode、secret 与 claim |
 | public run | 聚合 allowlist；不含 raw evidence |
+{.wide .expand}
 
 ## 参考资料
 

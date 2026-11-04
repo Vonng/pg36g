@@ -56,6 +56,7 @@ book_kind: guide
 | L1 操作系统 | Ubuntu 24.04.4 LTS 参考环境 | 同时允许 Pigsty v4.5 支持的发行版与架构；证据必须记录实际版本、内核和架构 |
 | Patroni、PgBouncer、HAProxy、pgBackRest | 由 Pigsty v4.5 对应发行版仓库提供 | 不假设不同发行版安装出完全相同的小版本；每次实验从实际节点采样 |
 | 实验拓扑 | L1 单节点；L2 一台控制 VM + 三成员数据库；L3 隔离事故克隆 | 正式 sandbox 规格、例外与限制见附录 E |
+{.wide .expand}
 
 PostgreSQL 19 beta 只可用于兼容性观察，不作为生产结论基线。所有容易随版本变化的结论必须标注适用范围。面板讲指标语义，不依赖易漂移的点击路径；Pigsty 结论尽量回到 SQL、配置或原生组件验证。
 
@@ -132,3 +133,4 @@ flowchart LR
 | 主库或 DCS 故障 | ch31、ch33 | ch20 |
 | 连接风暴与资源耗尽 | ch31、ch34 | ch22、ch25–ch28 |
 | 数据损坏与抢救 | ch31、ch35 | ch21、ch28、ch30 |
+{.wide .expand}

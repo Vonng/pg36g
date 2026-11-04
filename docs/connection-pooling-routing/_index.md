@@ -114,6 +114,7 @@ discovery     一个地址、VIP、DNS、多 host 还是驱动拓扑发现
 | 运行 | 当前哪些 backend 合格、池是否排队 | Patroni、HAProxy health、`SHOW POOLS` |
 | SQL | 客户端最终落到什么角色与会话 | recovery/read-only、PID、GUC、token |
 | 故障 | 角色变化时确认/未知结果如何收敛 | client event、timeline、token reconcile |
+{.wide .expand}
 
 任意一层单独通过都不够：
 
@@ -141,6 +142,7 @@ SHOW POOLS 有空位
 | replica | 5434 | 副本优先 PgBouncer :6432 | `/read-only` | 可容忍陈旧的只读 |
 | default | 5436 | 当前主库 PostgreSQL :5432 | `/primary` | 管理、迁移、会话敏感工具 |
 | offline | 5438 | 指定离线副本 PostgreSQL :5432 | `/replica` | 受控 OLAP/ETL |
+{.wide .expand}
 
 `replica` 的 primary 是 backup，`offline` 的普通 replica 也是 backup。
 因此名称表达“选择偏好与降级策略”，不是永恒承诺。客户端仍要用

@@ -75,6 +75,7 @@ retention pressure
 | 可以立即做 | 限流、暂停批处理、精确 cancel、降级 | 留证、隔离增长、恢复消费者、评估精确释放 |
 | 不应盲做 | 临时放大连接/内存，广域 terminate | cancel 普通查询、删 `pg_wal`、随意 drop slot |
 | 成功证据 | 队列下降、拒绝停止、业务探针恢复 | 保留边界推进、归档/消费者恢复、恢复链完整 |
+{.wide .expand}
 
 资源余量也不是一个百分比。至少要同时表达：
 
@@ -145,6 +146,7 @@ RETENTION -> FLOW
 |---|---|---|
 | connection storm | 30 次尝试，21 个会话，9 次拒绝，20 个锁等待 | `RELIEVE_FLOW_PRESSURE`；精确 cancel fixture sessions |
 | WAL retention | 1 个 inactive physical slot，保留 42,611,296 bytes | `PRESERVE_RETENTION_EVIDENCE`；先留证，再 drop exact disposable slot |
+{.wide .expand}
 
 两个 case 完成后：
 

@@ -23,6 +23,7 @@ book_status: reviewed
 | HAProxy | 按 health/selector 将 service port 路由到 backend | 理解 transaction commit 或业务正确性 |
 | pgBackRest | physical backup、WAL archive、restore 工具链 | 自动选择业务正确的 PITR target |
 | monitoring stack | 采集、存储、展示、评估与通知 signals | 自动把 component metric 变成 user SLI |
+{.wide .expand}
 
 ### PostgreSQL
 
@@ -98,6 +99,7 @@ rewind。
 | schema | `shop` | `pg_namespace` / `search_path` |
 | role | `app_rw` | `current_user` / `pg_roles` |
 | service | primary/replica/default/offline | HAProxy config + actual backend |
+{.wide .expand}
 
 ### service endpoint
 
@@ -154,6 +156,7 @@ Pigsty mapping
 | security | role、HBA、TLS、RLS、audit hooks | identity/secrets/network/review | inventory + cert/access templates |
 | observability | stats/views/logs | storage、dashboard、alert/notification | exporters + Victoria/Grafana/Alertmanager |
 | capacity | counters/settings/execution | workload model、hardware/cost/headroom | host/PG monitoring + declarative baseline |
+{.wide .expand}
 
 ### 使用规则
 
@@ -181,6 +184,7 @@ restore drill 与业务 manifest。迁移到 RDS/Operator 后工具不同，责�
 | restore/failover validation | 用户仍需验证 | 用户需设计/执行 | 用户需设计/执行 |
 | business invariant | 用户 | 用户 | 用户 |
 | data classification/SLO | 用户 | 用户 | 用户 |
+{.wide .expand}
 
 “托管”转移部分实施责任，不转移业务正确性、权限配置、查询/模式、RPO/RTO 接受、
 external side effect 与 vendor failure 的验证责任。

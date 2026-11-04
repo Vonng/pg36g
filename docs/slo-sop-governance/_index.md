@@ -285,6 +285,7 @@ $$
 | page | 1 h | 5 min | 14.4x | 1 h 内 2.14% |
 | page | 6 h | 30 min | 6x | 6 h 内 5.36% |
 | ticket | 3 d | 6 h | 1x | 3 d 内 10.71% |
+{.wide .expand}
 
 这是起点，不是常数。实际规则必须按流量、后果和 notification cost 调整。
 原始推导见 Google SRE Workbook 的

@@ -24,6 +24,7 @@ book_status: reviewed
 | 哪个 schema/object | `pg_class` + `pg_namespace`、`regclass` | 名称需 schema-qualified |
 | 对象 owner/ACL | `pg_get_userbyid(relowner)`、`\dp`、`aclexplode` | owner、membership、grant 要合并判断 |
 | extension 已安装 | `pg_extension` | 不等同于 `pg_available_extensions` |
+{.wide .expand}
 
 最小 identity：
 
@@ -63,6 +64,7 @@ SELECT
 | prepared transaction | `pg_prepared_xacts` | `transaction`、`prepared`、`owner`、`database` |
 | 当前 backend XID/XMIN | `pg_stat_activity` | `backend_xid`、`backend_xmin` |
 | 数据库事务计数 | `pg_stat_database` | counter 受 stats reset 影响 |
+{.wide .expand}
 
 等待链骨架：
 
@@ -92,6 +94,7 @@ query text 可能含敏感数据、被截断或因权限不可见。取消/终�
 | `pg_stat_statements` | 聚合 workload | 单次 timeline、未归一化业务语义 |
 | `auto_explain` | 被采样语句计划 | 完整 workload；有 logging 开销 |
 | `pg_stat_io` | backend/object context I/O 计数 | device latency 的全部机理 |
+{.wide .expand}
 
 `ANALYZE` 选项会真的执行语句；对 `INSERT/UPDATE/DELETE/MERGE` 或 volatile function，
 先在可回滚/隔离环境设计，不要对生产写语句直接照抄。正文：
@@ -111,6 +114,7 @@ query text 可能含敏感数据、被截断或因权限不可见。取消/终�
 | archive 是否推进 | `pg_stat_archiver` + repository | counter 与实际可恢复性不同 |
 | WAL 位置差 | `pg_current_wal_lsn()` / replay/receive LSN | byte lag 不是 time/RPO |
 | timeline/system id | control data、Patroni/DCS、backup metadata | 不公开 raw identifier 时保存一致性投影 |
+{.wide .expand}
 
 不要手工删除 `pg_wal`。WAL 撑盘先判 archive、slot、replica、backup/restore owner；见
 [ch34](/overload-resource-incidents/) 与[附录 C](../c/)。
@@ -196,6 +200,7 @@ after_evidence:
 | R1 可逆变更 | 改对象/配置/流量，有验证过的回退 | fixture DDL、reload、bounded cancel、canary | owner、scope、before/after、rollback |
 | R2 受控状态变更/演练 | 有非平凡状态影响，但范围隔离且恢复路径已验证 | 精确 cancel、一次性对象删除、隔离 PITR/failover、byte fault | guard、批准、恢复源、停止线、证据 |
 | R3 生产敏感/潜在不可逆 | 触及真实数据/流量、authority/lineage，或恢复昂贵 | 生产 failover/cutover、rewind/reinit、host rebuild、`pg_resetwal` | 原件保留、明确授权、独立复核、业务验收 |
+{.wide .expand}
 
 风险由**目标与后果**决定，不由命令长短决定。同一 PITR 机制在一次性隔离 candidate
 上可为 R2，切换生产 authority 或覆盖真实目标时应升为 R3。`SELECT` 可调用 volatile/security
@@ -216,6 +221,7 @@ playbook 可能持锁、重写、重启或改变路由。
 | restore/PITR | R2/R3 | source/target/candidate/isolated destination | lineage、business manifest |
 | `pg_rewind`/base backup | R2/R3 | system id/timeline/source direction | streaming lineage |
 | checksum fault injection | R2 | stopped disposable clone | original hash + recovery copy |
+{.wide .expand}
 
 `pg_resetwal`、`zero_damaged_pages`、`ignore_checksum_failure`、手改 relation/WAL 不属于
 普通速查动作；仅在证据 clone、明确损失和专业升级下考虑，见 [ch35](/data-rescue-forensics/)。
