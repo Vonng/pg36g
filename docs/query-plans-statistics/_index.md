@@ -50,7 +50,7 @@ book_status: reviewed
 - 正确使用 `pg_stat_statements` 的归一化聚合视角；
 - 评估 `auto_explain` 的阈值、采样、参数泄露与 per-node timing 成本；
 - 从 Pigsty 时间窗关联 query、database/user/application、wait、plan 与资源；
-- 产出 baseline v0.2 proposal，为 `PREF-PLAN-005` 增加 runtime evidence。
+- 产出 baseline v0.2 proposal，为 `PREF-PLAN-005` 增加 运行证据。
 
 ## 实验边界
 

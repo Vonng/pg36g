@@ -138,7 +138,7 @@ $$
 target             pg36-l2-vagrant/pg-test
 source             pg-test-1, managed primary
 restore host       pg-test-3, live replica remains unchanged
-PostgreSQL         18.6
+PostgreSQL         18.6（正式证据 pitr-run.json 记录 18.4）
 Pig                1.5.1
 pgBackRest         2.59.0
 fixture            5,000 accounts

@@ -92,7 +92,7 @@ process started
 ## 正式实验
 
 本章对 managed `pg-test` 只做 before/after L0 read-only capture。真实 fault 全部在
-`pg-test-3` 的一次性 PostgreSQL 18.6 中：
+`pg-test-3` 的一次性 PostgreSQL 18.4（rescue-run.json 记录值；本书复现基线 18.6）中：
 
 ```text
 /tmp/pg36-ch35-forensics-<run-id>
@@ -141,7 +141,7 @@ business invariants match true
 路由、Patroni/DCS 和 `reset:host` 均未触碰。
 
 验证器构造并拒绝 35 个真实 mutant，包括打开生产/managed 边界、弱化 checksum 阈值、
-blind evidence 泄露答案、原地修复、REFRESH 先于 REINDEX、业务 digest 漂移和谎报
+盲测证据泄露答案、原地修复、REFRESH 先于 REINDEX、业务 digest 漂移和谎报
 清理成功。公开证据见 [`rescue-run.json`](/labs/ch35/rescue-run.json)。
 
 ## 本章边界

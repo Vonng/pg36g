@@ -19,7 +19,9 @@ columns:
       - { label: Partitioning touchpoints, url: 'https://pg36g.vonng.com:443/indexes/partition/', external: true }
   - title: Ecosystem
     links:
-      - { label: Pigsty, url: 'https://pgsty.com/', external: true }
+      - { label: "PG Center", url: "https://pg.center/docs/reference/", external: true }
+      - { label: "PGSQL.CC", url: "https://pgsql.cc/docs/", external: true }
+      - { label: "Pigsty", url: "https://pigsty.io/", external: true }
       - { label: PostgreSQL, url: 'https://www.postgresql.org/', external: true }
       - { label: PostgreSQL Extension Directory, url: 'https://ext.pgsty.com/', external: true }
       - { label: Vonng, url: 'https://vonng.com/', external: true }

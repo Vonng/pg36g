@@ -34,7 +34,7 @@ metadata 和 filesystem/OS。平台结论最终要能回到这些语义验证。
 
 PostgreSQL 数据库服务的参考实现/发行与管理平台。它把多个独立组件通过配置、playbook、
 service 和监控组合起来。`pig` 是相关 CLI/package/operations 工具，其版本号与 Pigsty
-release 不同，例如正式实验观察到 `pig 1.5.1` 与 Pigsty `v4.5.0`。
+release 不同，例如正式实验观察到 `pig 1.5.1`，Pigsty 则为 `v4.4.0`（复现基线 v4.5.0，见附录 A）。
 
 ### Patroni 与 DCS
 
@@ -52,7 +52,7 @@ prepared statement 或 advisory-lock 语义；实际能力还受 PgBouncer/drive
 ### HAProxy
 
 Pigsty service port 用 health endpoint/selector 将流量送到合适 instance/PgBouncer。
-client 连接 HAProxy 的 address 与 PostgreSQL `inet_server_addr()` 返回的 backend
+client 连接 HAProxy 的 address 与 PostgreSQL `inet_server_addr()` 返回的后端
 address 不同，是正常的两层 identity。
 
 ## F.2 实例、database cluster、Pigsty cluster 与服务端点 {#appendix-f-2}
@@ -112,8 +112,8 @@ default service  -> current primary direct PostgreSQL
 offline service  -> offline/analytics-selected member
 ```
 
-具体端口与 selector 以当前 Pigsty config 为准。DNS、VIP、HAProxy node 和 backend 是
-不同层；连接串只显示入口，SQL identity 显示实际 backend。
+具体端口与 selector 以当前 Pigsty config 为准。DNS、VIP、HAProxy node 和 backend（后端）是
+不同层；连接串只显示入口，SQL identity 显示实际后端。
 
 ### system identifier 与 timeline
 

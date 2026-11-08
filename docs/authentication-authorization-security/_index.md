@@ -43,7 +43,7 @@ PostgreSQL role 已创建   != PgBouncer 已交付该身份
 ```
 
 本章先建威胁模型，再沿认证、授权、行级安全、密钥和审计一路向内。最后把
-第 22 章的 transaction pool 纳入模型：同一个 PostgreSQL backend 会先后
+第 22 章的 transaction pool 纳入模型：同一个 PostgreSQL 后端连接会先后
 服务不同客户端，因此 session 级安全上下文不仅会“丢失”，还可能泄漏给下一
 个租户。
 
@@ -81,14 +81,14 @@ PostgreSQL role 已创建   != PgBouncer 已交付该身份
 - [第 6 章 开发规约](/development-standards/) 已处理参数绑定、受控
   `search_path`、`SECURITY DEFINER` 和 secret-free 交付；
 - [第 10 章 并发控制](/concurrency-isolation/) 已建立事务与 session 边界；
-- [第 19 章 部署基线](/deployment-baseline/) 已固定 Pigsty v4.5.0 四机
-  nonproduction sandbox；
+- [第 19 章 部署基线](/deployment-baseline/) 已固定 Pigsty 四机
+  nonproduction sandbox（证据记录 v4.4.0/18.4；复现基线 v4.5.0/18.6）；
 - [第 20 章 高可用](/high-availability/) 已区分 data plane、control plane
   与 break-glass；
 - [第 21 章 备份体系与恢复演练](/backup-recovery/) 已说明备份、WAL、日志同样是敏感
   数据载体；
 - [第 22 章 服务接入](/connection-pooling-routing/) 已证明 transaction
-  pooling 会复用 backend 并保留某些 session 状态。
+  pooling 会复用后端连接并保留某些 session 状态。
 
 后续：
 
@@ -213,8 +213,8 @@ owner             USING + WITH CHECK，且 FORCE RLS
 
 ```text
 target          pg36-l2-vagrant/pg-test
-Pigsty          v4.5.0
-PostgreSQL      18.6
+Pigsty          v4.5.0（正式证据 security-run.json 记录 v4.4.0）
+PostgreSQL      18.6（证据记录 18.4）
 PgBouncer       1.25.2, transaction mode
 database        test
 fixture         schema pg36_ch23, two tenants, four synthetic rows
@@ -274,10 +274,10 @@ query_wait_timeout=15
 ```
 
 客户端 A 用 session 级 `set_config(..., false)` 设置 tenant A；关闭后，客户端 B
-在同一个 backend、没有设置 tenant 的情况下仍读到 tenant A 的两行。这是
+在同一个后端连接、没有设置 tenant 的情况下仍读到 tenant A 的两行。这是
 有意注入的失败，不是支持方式。
 
-刷新 pool 后，四个事务依次在同一个 backend 上得到：
+刷新 pool 后，四个事务依次在同一个后端连接上得到：
 
 ```text
 tenant A local context        A 的 2 行
@@ -286,7 +286,7 @@ tenant B local context        B 的 2 行
 missing context               0 行
 ```
 
-这证明隔离来自事务边界，而不是恰好换了 backend。随后四个 pool 参数精确
+这证明隔离来自事务边界，而不是恰好换了后端连接。随后四个 pool 参数精确
 复位，并对三个节点执行 `RECONNECT test` 清理注入的 session 状态。
 
 TLS 与认证观测：

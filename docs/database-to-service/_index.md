@@ -302,7 +302,7 @@ c85a930af366a9e96be7a0e166d3d0c04faace778208743718af51f633d8044d
 23. pgx query mode 与 PgBouncer prepared-statement 配置按实际版本验证；
 24. Pigsty primary 与 direct service 的职责没有混用；
 25. reset 的 target、token、object marker 和 active-session guard 全部生效；
-26. direct evidence 不被标成 pooler evidence；
+26. 直连证据不被标成池化证据；
 27. v1.0 未满足晋级条件时保持 release candidate；
 28. 参考服务在本章冻结，后续不演变成框架教程。
 

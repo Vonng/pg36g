@@ -90,7 +90,7 @@ workload reuse behavior
 ```text
 database   pg36_maintenance
 role       dbuser_pg36maint
-PostgreSQL 18.6
+PostgreSQL 18.6（正式证据 maintenance-run.json 记录 18.4）
 data       synthetic only
 risk       L2 bounded disposable fixture
 ```
@@ -175,7 +175,7 @@ logical manifest
 1. 从 MVCC 快照解释 `UPDATE`、`DELETE` 为什么留下旧版本；
 2. 区分 tuple visibility、deadness、removability 与 reusable space；
 3. 解释 page pruning、HOT、regular vacuum、aggressive vacuum 的分工；
-4. 用 FSM、VM、relation size 和 physical tuple evidence 分别回答不同问题；
+4. 用 FSM、VM、relation size 和物理元组证据分别回答不同问题；
 5. 正确计算 PostgreSQL 18 的 autovacuum update/delete 与 insert 触发阈值；
 6. 用表级 storage parameter 做定点治理，同时避免把关闭 autovacuum 当调优；
 7. 从 worker、cost delay、memory、I/O 和 workload 联合判断维护竞争；

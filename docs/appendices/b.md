@@ -9,7 +9,7 @@ book_status: reviewed
 ---
 
 本附录用于事故前后的快速定位，不替代正文中的机制、权限与风险判断。所有视图和命令
-按 PostgreSQL 18 / Pigsty v4.5 基线列出；跨版本先查[附录 A](../a/)。
+按 PostgreSQL 18 / Pigsty v4.5.0 基线列出；跨版本先查[附录 A](../a/)。
 
 ## B.1 连接、角色、对象、事务、锁和计划 {#appendix-b-1}
 
@@ -62,7 +62,7 @@ SELECT
 | 谁阻塞 PID | `pg_blocking_pids(pid)` | 结果是 blocker PID 数组 |
 | 持有哪些锁 | `pg_locks` | `locktype`、对象 identity、`mode`、`granted` |
 | prepared transaction | `pg_prepared_xacts` | `transaction`、`prepared`、`owner`、`database` |
-| 当前 backend XID/XMIN | `pg_stat_activity` | `backend_xid`、`backend_xmin` |
+| 当前后端 XID/XMIN | `pg_stat_activity` | `backend_xid`、`backend_xmin` |
 | 数据库事务计数 | `pg_stat_database` | counter 受 stats reset 影响 |
 {.wide .expand}
 
@@ -82,8 +82,8 @@ WHERE a.datname = current_database()
 ORDER BY a.xact_start NULLS LAST, a.pid;
 ```
 
-query text 可能含敏感数据、被截断或因权限不可见。取消/终止 backend 是有副作用动作，
-先绑定 exact PID + backend start + application/user/database + expected/stop。
+query text 可能含敏感数据、被截断或因权限不可见。取消/终止后端进程是有副作用动作，
+先绑定 exact PID + `backend_start` + application/user/database + expected/stop。
 
 ### 计划与语句
 
@@ -93,7 +93,7 @@ query text 可能含敏感数据、被截断或因权限不可见。取消/终�
 | `EXPLAIN (ANALYZE, BUFFERS, WAL, SETTINGS)` | 实际执行与资源投影 | 全部并发/OS/历史上下文 |
 | `pg_stat_statements` | 聚合 workload | 单次 timeline、未归一化业务语义 |
 | `auto_explain` | 被采样语句计划 | 完整 workload；有 logging 开销 |
-| `pg_stat_io` | backend/object context I/O 计数 | device latency 的全部机理 |
+| `pg_stat_io` | 后端类型/object/context I/O 计数 | device latency 的全部机理 |
 {.wide .expand}
 
 `ANALYZE` 选项会真的执行语句；对 `INSERT/UPDATE/DELETE/MERGE` 或 volatile function，
@@ -168,7 +168,7 @@ PostgreSQL：
 | `pg_settings` | value、unit、source、context、pending_restart |
 | `pg_stat_database` | database workload counters |
 | `pg_stat_wal` / `pg_stat_bgwriter` / `pg_stat_checkpointer` | WAL/checkpoint/background write |
-| `pg_stat_io` | backend/object/context I/O |
+| `pg_stat_io` | 后端类型/object/context I/O |
 | `pg_stat_activity` | sessions、transactions、wait |
 | `pg_stat_progress_*` | 部分长任务进度 |
 

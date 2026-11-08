@@ -63,6 +63,6 @@ legacy
   `PG36_RESET_TOKEN=RESET_CH11_RELEASE_LAB` 与
   `PG36_RESET_TARGET=pg36_shop/shop_private/ch11`；
 - reset 在存在 `pg36-ch11-*` worker 或对象 marker 不匹配时拒绝；
-- evidence 保存 manifest、原始 stderr/CSV/JSON、最终校验和 proposal。
+- 证据保存 manifest、原始 stderr/CSV/JSON、最终校验和 proposal。
 
 计时值只记录，不作为跨机器 golden。验收比较的是状态关系与不变量。

@@ -51,5 +51,5 @@ validator 对正式 bundle 构造 36 个 live mutant，包括篡改源事实、�
 - 不连接数据库、SSH、监控、工单或消息系统；
 - 不覆盖第 32～35 章输入；
 - 不发通知、不建工单、不执行 backlog；
-- 不导出 raw evidence、secret 或个人信息；
+- 不导出原始证据、secret 或个人信息；
 - `production_ch36_gate=pending`。

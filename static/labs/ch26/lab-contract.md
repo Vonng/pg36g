@@ -121,7 +121,7 @@ runner 不会：
 
 ## 证据层
 
-私密 evidence 包保留：
+私密证据包保留：
 
 ```text
 preflight-evidence.json
@@ -173,7 +173,7 @@ static/labs/ch26/task.sh verify
 static/labs/ch26/task.sh review
 ```
 
-已有 evidence 可以反复 `verify` 和 `review`，不能覆盖 capture 或 benchmark。
+已有证据可以反复 `verify` 和 `review`，不能覆盖 capture 或 benchmark。
 
 ## 通过标准
 

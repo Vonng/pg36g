@@ -51,7 +51,7 @@ chapter 26 evidence
 | `lint` | L0 | 本地检查合同和 28 个反例 |
 | `capture` | L0 | 只读采集 target、配置与上游证据 |
 | `exercise` | L2 bounded | 创建、装载、压测并清理 disposable fixture |
-| `verify` | L0 | 重算 evidence |
+| `verify` | L0 | 重算证据 |
 | `review` | L0 | 独立检查发布边界、权限与清理 |
 | `all` | L2 bounded | 顺序执行以上动作 |
 
@@ -175,7 +175,7 @@ production_ch27_gate = pending
 
 ## 证据与发布边界
 
-私密 evidence：
+私密证据：
 
 ```text
 preflight-evidence.json

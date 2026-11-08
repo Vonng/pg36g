@@ -72,7 +72,7 @@ book_status: reviewed
 
 #### [ch05 运筹帷幄：查询、事务与锁的核心心智模型](/query-transaction-locks/)
 
-建立执行计划、并发控制和故障诊断共同依赖的原理地图，不在本章穷举后续专题。
+建立执行计划、并发控制和故障诊断共同依赖的原理地图；各专题留给后续章节展开。
 
 - [5.1 SQL 从文本到结果](/query-transaction-locks/01/)
 - [5.2 MVCC 与可见性](/query-transaction-locks/02/)
@@ -83,7 +83,7 @@ book_status: reviewed
 
 #### [ch06 立木取信：开发规约与交付基线](/development-standards/)
 
-不提前宣判“最佳实践”，而是建立“候选规则—证据—适用范围—例外—验证”的规约生成方法，产出 baseline v0.1。
+建立“候选规则—证据—适用范围—例外—验证”的规约生成方法，产出 baseline v0.1。
 
 - [6.1 规约不是口号](/development-standards/01/)
 - [6.2 连接与会话候选规则](/development-standards/02/)
@@ -121,7 +121,7 @@ book_status: reviewed
 
 #### [ch09 巧夺天工：索引设计与效果验证](/index-design/)
 
-从访问模式而不是字段直觉设计索引，并用读取收益、写入代价与维护成本共同验收。
+从访问模式推导索引设计，用读取收益、写入代价与维护成本共同验收。
 
 - [9.1 索引方法与操作符类](/index-design/01/)
 - [9.2 从谓词、连接与排序推导索引](/index-design/02/)
@@ -217,7 +217,7 @@ book_status: reviewed
 
 #### [ch17 合纵连横：分析加速与分布式选型](/analytics-distributed/)
 
-先用证据证明单机边界，再比较单机分析加速与分布式方案，完成最小 PoC；不预演下卷的复制、路由和多集群运维。
+先用证据证明单机边界，再比较单机分析加速与分布式方案，完成最小 PoC；复制、路由与多集群运维留给下卷。
 
 - [17.1 先证明单机边界](/analytics-distributed/01/)
 - [17.2 单机分析能力](/analytics-distributed/02/)

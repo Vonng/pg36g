@@ -9,8 +9,8 @@ book_status: reviewed
 ---
 
 这是“先别把事故变糟”的路由表，不是自动诊断器。任何症状先确认 environment、
-cluster/system identity、用户影响、数据风险和变化速度；证据缺失或冲突时进入
-[ch31 的 `STOP_AND_ESCALATE`](/incident-response/)，不要强行匹配一行。
+cluster/system identity、用户影响、数据风险和变化速度；证据缺失或冲突时按第 31 章停止扩大动作，进入
+[ch35/ch36 的 `STOP_AND_ESCALATE` 状态](/data-rescue-forensics/)，不要强行匹配一行。
 
 ## C.1 误删误改、主节点故障、DCS 故障、复制停滞 {#appendix-c-1}
 
@@ -135,7 +135,7 @@ disk and WAL headroom
 ### 动作边界
 
 - 先阻止新的长事务/无界读取，保护 maintenance lane；
-- exact backend 取消/终止需要业务 owner 和 commit/rollback 影响判断；
+- 精确后端连接的取消/终止需要业务 owner 和 commit/rollback 影响判断；
 - slot 可能代表 DR、CDC 或恢复承诺，不能只因 inactive 删除；
 - prepared transaction 要按业务协议 commit/rollback，不能猜；
 - 提高 freeze 参数或跑更激进 vacuum 前确认 I/O、WAL、lock 与时间余量；
@@ -178,7 +178,7 @@ filesystem
 ### 首个安全动作
 
 1. 停止非关键的大写入、bulk/DDL 与 retry 放大；
-2. 保留管理连接和当前 slot/archive/replication evidence；
+2. 保留管理连接和当前 slot/archive/replication 证据；
 3. 估算 time-to-full，而不是只报百分比；
 4. 确认能否安全扩容/迁移 filesystem；
 5. 修复 exact owned consumer，或在审批后清理；
@@ -211,7 +211,7 @@ service starts
   != recovered data trusted
 ```
 
-抢救先保存 original evidence，再从同一 snapshot 分叉 working clone。危险恢复参数仅在
+抢救先保存原始证据，再从同一 snapshot 分叉 working clone。危险恢复参数仅在
 clone、明确接受损失和专业升级下使用。详见
 [ch35 数据抢救与取证](/data-rescue-forensics/)。
 
@@ -221,7 +221,7 @@ clone、明确接受损失和专业升级下使用。详见
 
 | 入口症状 | 首个安全动作 | 目标章节 | 禁止动作 |
 |---|---|---|---|
-| 影响不明、证据冲突 | 建 identity/impact/evidence，保持可逆 | [ch31](/incident-response/) | 根据第一个告警猜根因 |
+| 影响不明、证据冲突 | 建 identity/impact/证据，保持可逆 | [ch31](/incident-response/) | 根据第一个告警猜根因 |
 | 误写/误删 | 停副作用、保存 audit/WAL/backup | [ch32](/pitr/) | 原库反复试回滚 |
 | primary/DCS/lineage | 保护单 writer authority、先围栏 | [ch33](/failover-rebuild/) | 无 fence 强制切换 |
 | 慢/满/连不上 | 分 flow 与 retention | [ch34](/overload-resource-incidents/) | 统一用 restart/扩连接 |

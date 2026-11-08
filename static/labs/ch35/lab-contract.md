@@ -63,7 +63,7 @@ runner 保留 mutated case，另建 working copy；先 `REINDEX` exact dependent
 - 修改 managed PGDATA、PostgreSQL、Patroni、DCS、服务或路由；
 - 在 running server 上修改 relation file；
 - 在唯一来源上注入故障或反复试错；
-- 删除 `pg_wal`、relation 原始损坏文件或 forensic evidence；
+- 删除 `pg_wal`、relation 原始损坏文件或取证证据；
 - 启用 `ignore_checksum_failure`、`zero_damaged_pages`；
 - 执行 `pg_resetwal`；
 - 执行 managed `reset:host`。
@@ -91,7 +91,7 @@ contract，`managed_reset_host_executed=false`，生产必须另行审批。
 
 ## 结论边界
 
-本实验可证明两类人工构造的 isolated PG18 evidence 可被 blind classifier 区分，并证明
+本实验可证明两类人工构造的隔离 PG18 证据可被 blind classifier 区分，并证明
 从 clean copy 恢复与“REINDEX 后 REFRESH”机制。它不证明真实控制器/内存/文件系统
 故障、真实 ICU 语义升级、生产数据可恢复范围或 Pigsty host rebuild 时长。最终门禁为
 `production_ch35_gate=pending`。

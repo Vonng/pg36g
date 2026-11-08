@@ -169,7 +169,7 @@ production gate             pending
 2. 区分参数、SQL/schema、workload 与 topology 问题；
 3. 为 shared memory、per-operation memory、maintenance 与 OS 留出完整预算；
 4. 解释 `work_mem × 节点 × 并发 × parallel process` 的放大；
-5. 用 WAL、checkpointer、I/O 与 recovery evidence 调整 checkpoint；
+5. 用 WAL、checkpointer、I/O 与恢复证据调整 checkpoint；
 6. 区分 `effective_cache_size` estimate 与真实 cache allocation；
 7. 校准 cost parameter，而不是用 `enable_seqscan=off` 长期逼 planner；
 8. 计算 parallel worker 的 cluster budget 和降级行为；
@@ -279,7 +279,7 @@ static/labs/ch27/
 - 只测试一个参数；
 - 只在 benchmark session 生效；
 - 不使用 `ALTER SYSTEM`、DCS edit、reload/restart；
-- 保留 raw transaction log 与 plan-shape evidence；
+- 保留 raw transaction log 与 plan-shape 证据；
 - 用 28 个对抗变体验证 target、scope、配对、quantile、decision 和 cleanup；
 - 专用 database、role 与远端临时目录全部清理；
 - 不管 candidate 接受或拒绝，production gate 都保持 `pending`。

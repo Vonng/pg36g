@@ -30,5 +30,5 @@
 
 - Reviewer：
 - Approved / Rejected：
-- Decision evidence：
+- 决策证据：
 - Post-review date：

@@ -105,7 +105,7 @@ publication 是某一个数据库中的变更集合；subscription 定义下游�
 ```text
 source       pg-test / pg36_shop_src
 target       pg-meta / pg36_shop_dst
-PostgreSQL   18.6 on both sides
+PostgreSQL   18.4 on both sides（migration-run.json 记录值；本书复现基线 18.6）
 wal_level    logical
 data         synthetic only
 route        private evidence simulation only
@@ -222,7 +222,7 @@ orphan / negative / invalid      0 / 0 / 0
 - [29.4.2 影子读、双读、切流和观察](04/#item-29-4-2)
 - [29.4.3 回退点、前滚点与不可逆动作](04/#item-29-4-3)
 
-把工具动作提升为迁移项目：每一 phase 有 entry condition、exit evidence、owner、timeout
+把工具动作提升为迁移项目：每一 phase 有进入条件、退出证据、owner、timeout
 与 abort path。读路径和写路径分别验证，切换不是单一时刻，而是逐步关闭不确定性的过程。
 
 ### [29.5 异构同步的语义损失](05/)
@@ -276,7 +276,8 @@ orphan / negative / invalid      0 / 0 / 0
 
 ## 版本与证据权威
 
-本章 PostgreSQL 语义以 18 为基线，正式 run 使用 18.6。逻辑复制能力跨版本变化明显：
+本章 PostgreSQL 语义以 18 为基线；正式 run 证据（migration-run.json）记录
+18.4，本书复现基线为 18.6。逻辑复制能力跨版本变化明显：
 row filter、column list、binary、streaming、two-phase、conflict statistics、failover
 slot、generated columns 与 subscription 权限都必须以源、目标**实际 major/minor**
 的官方文档为准。

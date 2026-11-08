@@ -63,7 +63,7 @@ legacy
 - 在 Pigsty 中隔离发布连接，观察锁、WAL、复制、磁盘、连接和延迟；
 - 区分 PostgreSQL 原生证据、Pigsty 平台证据与应用发布证据；
 - 拒绝在旧依赖或观察窗口证据缺失时执行 contract；
-- 为 `SAFE-MIGR-006` 与 `DEFAULT-VERS-010` 产出 v0.6 candidate evidence。
+- 为 `SAFE-MIGR-006` 与 `DEFAULT-VERS-010` 产出 v0.6 候选证据。
 
 ## 实验边界
 
@@ -209,7 +209,7 @@ release:
   business checksum=f8a7bfae59c6d16cd323abecfefe1014
 ```
 
-WAL 字节、filenode OID、PID、毫秒和具体 lock backend 都不是跨环境 golden。稳定结论是 fast/rewrite 的相对关系、锁边、SQLSTATE、单调状态、批次原子性、零遗漏、数据保留和最终兼容边界。
+WAL 字节、filenode OID、PID、毫秒和具体持锁后端都不是跨环境 golden。稳定结论是 fast/rewrite 的相对关系、锁边、SQLSTATE、单调状态、批次原子性、零遗漏、数据保留和最终兼容边界。
 
 ## 章节验收
 

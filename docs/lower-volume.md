@@ -26,7 +26,7 @@ book_status: reviewed
 
 #### [ch19 开天辟地：环境规划与部署基线](/deployment-baseline/)
 
-从工作负载、服务目标和责任边界出发，规划并验收 L2 生产仿真环境，而不是从一份默认配置开始。
+从工作负载、服务目标和责任边界出发，规划并验收 L2 生产仿真环境。
 
 - [19.1 先写服务需求](/deployment-baseline/01/)
 - [19.2 计算、内存、存储与网络](/deployment-baseline/02/)
@@ -38,7 +38,7 @@ book_status: reviewed
 
 #### [ch20 狡兔三窟：高可用拓扑与容灾目标](/high-availability/)
 
-把复制、选主、故障域和业务 RPO/RTO 连接起来，通过一次可重复的切换演练证明高可用，并集中示范架构决策如何落到验收证据。
+把复制、选主、故障域和业务 RPO/RTO 连接起来，用一次可重复的计划切换演练验证复制与切换设计，并集中示范架构决策如何落到验收证据。
 
 - [20.1 从失败模型设计高可用](/high-availability/01/)
 - [20.2 物理流复制](/high-availability/02/)
@@ -98,7 +98,7 @@ book_status: reviewed
 
 #### [ch25 望闻问切：监控体系与可观测诊断](/observability/)
 
-实现 ch24 的观察契约，把指标、日志、SQL 统计和告警连接为可行动的诊断系统，而不是堆叠面板。
+实现 ch24 的观察契约，把指标、日志、SQL 统计和告警连接为可行动的诊断系统。
 
 - [25.1 从问题选择可观测信号](/observability/01/)
 - [25.2 PostgreSQL 核心运行信号](/observability/02/)
@@ -121,7 +121,7 @@ book_status: reviewed
 
 #### [ch27 精益求精：参数调优与资源治理](/configuration-tuning/)
 
-以已证实的瓶颈为起点，理解参数的资源机制、作用域和变更风险；拒绝无上下文的“万能参数模板”。
+以已证实的瓶颈为起点，理解参数的资源机制、作用域和变更风险。
 
 - [27.1 调优是一套实验方法](/configuration-tuning/01/)
 - [27.2 内存预算](/configuration-tuning/02/)

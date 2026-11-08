@@ -63,7 +63,7 @@ relation_checksum=f8a7bfae59c6d16cd323abecfefe1014
 - [状态验收](/labs/ch05/verify.sql)
 - [综合任务入口](/labs/ch05/task.sh)
 
-这些实验不创建 ch05 持久对象，也不提交业务写入，所以没有 reset 动作；这不等于“零代价”。回滚的 `UPDATE` 仍会取得锁、创建 tuple version、产生 WAL 和统计活动，blocking 动作还会取消一个精确识别的实验 backend。只能在已确认可演练的 L1/测试库运行。
+这些实验不创建 ch05 持久对象，也不提交业务写入，所以没有 reset 动作；这不等于“零代价”。回滚的 `UPDATE` 仍会取得锁、创建 tuple version、产生 WAL 和统计活动，blocking 动作还会取消一个精确识别的实验后端。只能在已确认可演练的 L1/测试库运行。
 
 ## 一张贯通全章的图
 
@@ -199,7 +199,7 @@ relation_checksum=f8a7bfae59c6d16cd323abecfefe1014
 12. 能区分长等待与死锁环，知道死锁受害事务需整体重试；
 13. 能准确填出 PostgreSQL 的隔离现象矩阵；
 14. 能分别判断原子 `UPDATE`、应用 read-modify-write、version predicate 和 `FOR UPDATE`；
-15. `all` 前后 checksum 一致，且没有残留 lab backend。
+15. `all` 前后 checksum 一致，且没有残留 lab 后端。
 
 下一章 [ch06《立木取信：开发规约与交付基线》](/development-standards/) 会把 ch01–ch05 已经验证的连接、命名、类型、错误、事务、超时和取证规则收敛为团队可执行的开发基线。
 

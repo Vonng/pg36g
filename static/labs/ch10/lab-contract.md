@@ -2,7 +2,7 @@
 
 ## 教学目标
 
-在两个真实 PostgreSQL backend 之间制造可观察、可复现的交错，并用
+在两个真实 PostgreSQL 后端连接之间制造可观察、可复现的交错，并用
 SQLSTATE、阻塞边和最终数据不变量区分：
 
 1. Read Committed 读—算—写的静默 lost update；
@@ -59,7 +59,7 @@ PID、XID、backend_start、胜负事务、lost-update 最终为 80 还是 90，
 
 ## 生产边界
 
-自动化不在生产执行，不自动终止 backend，不改变全局
+自动化不在生产执行，不自动终止后端连接，不改变全局
 `deadlock_timeout`，不把实验 advisory namespace 当业务协议，也不调用
 任何支付/消息外部系统。生产设计必须补齐：
 

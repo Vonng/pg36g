@@ -348,8 +348,8 @@ governance_status: proposed-not-accepted
 
 | 项目 | 观察值 |
 |---|---:|
-| Pigsty | v4.5.0 |
-| PostgreSQL | 18.6 |
+| Pigsty | v4.5.0（正式证据 observability-run.json 记录 v4.4.0） |
+| PostgreSQL | 18.6（证据记录 18.4） |
 | pg_exporter | v1.4.0 |
 | VictoriaMetrics | v1.148.0 |
 | VictoriaLogs | v1.52.0 |
@@ -386,7 +386,7 @@ schema                 monitor
 rows                   194
 calls                  122,303
 query text exported    false
-stats reset            retained
+stats reset            2026-07-29T18:57:02Z（此后未再 reset）
 ```
 
 归档快照有一个关键反例：

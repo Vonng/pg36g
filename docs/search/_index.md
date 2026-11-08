@@ -281,7 +281,8 @@ release_candidate_checksum=bf92a6ad0f60dc3e125b39dbf67bf4d6c5e50275192bd01a7ca4c
 语料是英语。中文、多语言与混合字段不能照抄 `english`，应重新选择 tokenizer/
 dictionary、语料和指标。
 
-Pigsty 映射按 4.4 文档在 2026-07-29 核验。本地证据路径是直接 PostgreSQL，
+Pigsty 映射按 4.4 文档在 2026-07-29 核验；全书部署基线声明为 Pigsty
+v4.5.0，跨版本结论需按目标版本文档复核。本地证据路径是直接 PostgreSQL，
 没有冒充 Pigsty L1。当前 Pigsty 文档把 `pgvector` 列为默认安装包，把
 `pg_trgm` 列为默认启用扩展；实际环境仍要检查目标版本、镜像/仓库和每个
 主备节点。

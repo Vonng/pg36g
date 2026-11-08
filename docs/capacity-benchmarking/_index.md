@@ -59,8 +59,9 @@ select-only
 
 第 26 章参考运行不是“性能榜单”，而是一组教学用、有界的证据链：
 
-- Pigsty `v4.5.0` 教学沙箱；
-- PostgreSQL `18.6`；
+- Pigsty `v4.5.0` 复现基线（本章正式证据 `capacity-run.json` 记录 v4.4.0/18.4，
+  采集于 2026-07-29；全书版本基线差异见「待核实」说明）；
+- PostgreSQL `18.6`（证据记录 `18.4`）；
 - 独立 `pg-meta-1` load generator：2 vCPU、约 3.8 GiB RAM；
 - `pg-test-1` primary：1 vCPU、约 1.9 GiB RAM；
 - `shared_buffers`：512,753,664 bytes；
@@ -68,7 +69,7 @@ select-only
 - S/M/L 三档数据，1/8 两档 client；
 - 每个 cell 五次重复，共 30 次 measured run；
 - 511,709 笔事务，失败、skipped、deadlock 和超过 250 ms 的事务均为零；
-- raw transaction、OS、SQL snapshot 与 wait evidence 全部留在私密 evidence；
+- raw transaction、OS、SQL snapshot 与 wait 证据全部留在私密证据目录；
 - 专用 database、role 和远端临时目录全部清理。
 
 聚合结果：
@@ -229,7 +230,7 @@ static/labs/ch26/
 | capture | L0 目标、上游与 clean-start gate |
 | exercise | 远端隔离、完整矩阵与精确清理 |
 | validate / review | 正向合同、26 个反例、hash、mode、secret 与 claim |
-| public run | 聚合 allowlist；不含 raw evidence |
+| public run | 聚合 allowlist；不含原始证据 |
 {.wide .expand}
 
 ## 参考资料

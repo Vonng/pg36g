@@ -8,14 +8,14 @@
 | ch02 | service file、会话上下文、脚本证据 | CONN / SECR / SESS / EVID |
 | ch03 | 业务规则、关系边界、确定性 fixture | NAME / KEYS / FIXT |
 | ch04 | 类型、约束、迁移、状态与分区 ADR | CONS / MIGR / TYPE / PART |
-| ch05 | query path、事务失败、retry、lock evidence | QUERY / TXN / RETR / PLAN |
+| ch05 | query path、事务失败、retry、锁证据 | QUERY / TXN / RETR / PLAN |
 
 ## v0.2–v0.6 预留追加区
 
 | 章节 | 必须追加的运行证据 | 可能升级的规则 |
 |---|---|---|
 | ch07 | estimate/actual、statistics、plan settings | PREF-PLAN-005 |
-| ch08 | workload attribution、wait taxonomy、slow-query evidence | DEFAULT-EVID-009 |
+| ch08 | workload attribution、wait taxonomy、慢查询证据 | DEFAULT-EVID-009 |
 | ch09 | index benefit/cost、write amplification、concurrent build | PREF-PLAN-005 |
 | ch10 | lost update、write skew、deadlock、40001 retry | SAFE-RETR-008 |
 | ch11 | expand/contract、lock budget、application compatibility | SAFE-MIGR-006 / DEFAULT-VERS-010 |

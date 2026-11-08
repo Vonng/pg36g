@@ -36,7 +36,7 @@ book_status: reviewed
 完成本章后，读者应当能够：
 
 - 从失败机制出发写规则，而不是从个人偏好出发写口号；
-- 为每条规则补齐 owner、scope、rationale、evidence、exception 和 checks；
+- 为每条规则补齐 `owner`、`scope`、`rationale`、`evidence`、`exception` 和 `checks`；
 - 区分 safety、default 与 preference，知道三类规则采用不同的阻断和例外机制；
 - 把连接目标、凭据、会话参数和 `application_name` 组成可验证的连接合同；
 - 解释 `search_path` 为什么同时是便利机制与信任边界；
@@ -178,11 +178,11 @@ Pigsty 提供可复现的基础设施入口，PostgreSQL catalog 和实验后验
 
 ## 章节验收
 
-1. 能把一条口号改写成有 scope、rationale、evidence、exception、checks 和 owner 的规则；
+1. 能把一条口号改写成有 `scope`、`rationale`、`evidence`、`exception`、`checks` 和 `owner` 的规则；
 2. 能解释 safety/default/preference 的差异，不用大写“必须”冒充风险分级；
 3. baseline guide 与 JSON registry 的 Rule ID 一一对应；
 4. registry 引用的 ch01–ch05 资产都存在，且五章均被实际证据覆盖；
-5. source 与 evidence 中没有明文凭据、credential URI 或 `PGPASSWORD`；
+5. source 与证据中没有明文凭据、credential URI 或 `PGPASSWORD`；
 6. 连接 gate 能确认 database、effective role、primary、模型版本和 session profile；
 7. 错误会话固定以 `P0601` 失败，错误 target 固定以 `P0001` 失败；
 8. 查询 gate 能验证 view shape、显式稳定排序、keyset 两页不重叠以及业务键/幂等键唯一；

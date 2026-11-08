@@ -108,7 +108,8 @@ collation、扩展或业务结果不一致。
 
 ## 写作与验收提示
 
-本章提供一个真实、隔离的 PostgreSQL 17.10→18.6 参考实验。它在 Pigsty
+本章提供一个真实、隔离的 PostgreSQL 17→18 参考实验（正式证据 upgrade-run.json
+记录 17.10→18.4；本书复现基线为 18.6）。它在 Pigsty
 `pg-meta` 主机的随机 `/tmp` 目录中创建两套 Unix-socket-only 临时集群，不接触
 Pigsty 管理的数据目录与服务。正式证据证明：
 

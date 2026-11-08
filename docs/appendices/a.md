@@ -12,22 +12,23 @@ book_status: reviewed
 
 ## A.1 PostgreSQL、Pigsty、OS、Patroni、PgBouncer、备份工具与扩展版本 {#appendix-a-1}
 
-本书复现基线：
+本书复现基线（注意：labs 各 *-run.json 正式证据均采集于 18.4/v4.4.0，早于本基线
+冻结；全书版本差异见全书版本差异说明（附录 A 与各章证据双标注））：
 
 | 层次 | 基线 | 说明 |
 |---|---|---|
-| PostgreSQL 服务端 | 18.6 | 正式实验基线 |
+| PostgreSQL 服务端 | 18.6 | 复现基线；正式证据记录 18.4 |
 | PostgreSQL 兼容阅读范围 | 14–18 | 仅在结论确实成立时采用；差异必须显式说明 |
-| Pigsty | v4.5.0 | 2026-07-10 正式发布版本 |
+| Pigsty | v4.5.0 | 复现基线；正式证据记录 v4.4.0（2026-07-29 采集） |
 | `pig` CLI | 1.5.1 | L2/L3 正式实验观察版本；与 Pigsty release 分开记录 |
 | L1 参考 OS | Ubuntu 24.04.4 LTS | AMD64 与 ARM64 均可；记录实际补丁版本 |
 | L2 正式环境 | Ubuntu 24.04 / aarch64 四 VM | 1×`pg-meta` + 3×`pg-test`；共享 hypervisor |
-| L3 正式环境 | L2 host 上的私有 disposable PG18.6 clone | exact temporary root、Unix socket、无业务路由 |
+| L3 正式环境 | L2 host 上的私有 disposable PG18 clone（证据 18.4；基线 18.6） | exact temporary root、Unix socket、无业务路由 |
 {.wide .expand}
 
 L2 的三台 `pg-test` VM 在正式 run 中只有 1 vCPU、约 1.9 GiB RAM，是明确记录的
 sandbox exception；它证明实验在该下限跑通，不构成生产 sizing。精确资源、网络和
-限制见[附录 E](../e/)与
+限制见 [附录 E](../e/) 与
 [`ch19/requirements.json`](/labs/ch19/requirements.json)。
 
 Patroni、PgBouncer、HAProxy、pgBackRest 与扩展的小版本可能随操作系统仓库和离线包变化，因此不在正文中假定一个虚假的全平台统一值。进入实验节点后采样：

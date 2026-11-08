@@ -247,7 +247,7 @@ SQLSTATE、批次关系和 canonical proposal checksum。
 ## 版本与证据边界
 
 本章使用 PostgreSQL 14–18 共有的核心能力；`anycompatible` 多态类型族从
-14 开始，因此实验下限设为 14。PostgreSQL 18.6 是本次实际验证版本，
+13 开始，本章仍以 14 作为实验下限。PostgreSQL 18.6 是本次实际验证版本，
 不是暗示 14–17 会自动通过所有环境差异。
 
 权威语义以以下文档为准：
@@ -262,7 +262,7 @@ SQLSTATE、批次关系和 canonical proposal checksum。
 - [Pigsty Monitoring System](https://pigsty.io/docs/concept/monitor/)
 
 本章会明确区分“官方定义”“本章设计选择”和“本地实验观察”。只有第三类
-结论能够由当前 evidence 目录证明。
+结论能够由当前证据目录证明。
 
 ---
 

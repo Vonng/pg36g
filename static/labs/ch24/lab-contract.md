@@ -23,10 +23,10 @@ service card
 | 动作 | 风险 | 远端行为 | 本地产物 |
 |---|---:|---|---|
 | `lint` | L0 | 无 | 临时验证报告 |
-| `capture` | L0 | 第 19 章只读 SSH/SQL/REST/TCP 采集 | 私密 evidence |
+| `capture` | L0 | 第 19 章只读 SSH/SQL/REST/TCP 采集 | 私密证据 |
 | `verify` | L0 | 无 | 更新验证报告 |
 | `review` | L0 | 无 | 只读审查 |
-| `all` | L0 | 与 `capture` 相同 | 完整 evidence |
+| `all` | L0 | 与 `capture` 相同 | 完整证据 |
 
 本章没有 reset 或 mutation action。`all` 只表示“采集当前只读门槛并验证所有
 合同”，不表示执行被合同引用的切换、恢复或安全演练。
@@ -51,7 +51,7 @@ inventory 由第 19 章读取。第 24 章只接收脱敏投影与验证结果�
 - 可以证明“治理条目指向了哪次实验”；
 - 不能证明那些实验在今天仍然新鲜；
 - 不能证明沙箱观测是生产 RTO、RPO、容量、可用性或安全批准；
-- 不能把一份 JSON 摘要替代原始私密 evidence。
+- 不能把一份 JSON 摘要替代原始私密证据。
 
 ## 运行
 
@@ -69,7 +69,7 @@ export PG36_EVIDENCE_DIR=/absolute/private/new-empty/ch24-run
 static/labs/ch24/task.sh all
 ```
 
-重验已有 evidence：
+重验已有证据：
 
 ```bash
 export PG36_EVIDENCE_DIR=/absolute/private/existing/ch24-run

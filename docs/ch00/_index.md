@@ -19,17 +19,18 @@ book_status: reviewed
 只建立后续实验共同需要的六项事实：
 
 ```text
-exact Pigsty/PostgreSQL/OS version
-non-production environment authority
-node and service identity
-safe network boundary
-working PostgreSQL connection
-redacted baseline evidence
+确定的 Pigsty/PostgreSQL/OS 版本
+非生产环境的授权确认
+节点与服务身份
+安全的网络边界
+可用的 PostgreSQL 连接
+一份去除敏感信息的基线证据
 ```
 
 本书采用的复现基线是 Pigsty `v4.5.0`、PostgreSQL `18.6` 与 Ubuntu 24.04 LTS
-reference environment。安装时固定 Pigsty release 与 PostgreSQL major，随后记录仓库
-实际提供的 minor/build；不要为了伪造一致性降级已经修复安全问题的 minor release。
+reference environment。安装时固定 Pigsty release 与 PostgreSQL major；minor/build
+以仓库实际提供的为准并如实记录，不要为了和书页一致而降级已修复安全问题的
+minor release。
 
 ## 完成本章的标准
 

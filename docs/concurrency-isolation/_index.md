@@ -189,7 +189,7 @@ final:
 4. optimistic zero-row update 被当冲突，而非成功；
 5. Repeatable Read concurrent row update 以 40001 拒绝；
 6. Repeatable Read write skew 反例被实际重现；
-7. Serializable 的 `SIReadLock` 和 40001 都有 raw evidence；
+7. Serializable 的 `SIReadLock` 和 40001 都有原始证据；
 8. 整事务 retry 有 attempt/time budget、backoff/jitter 与新 snapshot；
 9. row lock mode 与 foreign-key key update 边界正确；
 10. `NOWAIT` 55P03、`SKIP LOCKED` queue-only 边界明确；

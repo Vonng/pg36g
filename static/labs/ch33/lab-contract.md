@@ -12,7 +12,7 @@
 ## 管理集群故障模型
 
 正式动作是 **controlled process fence**，不是主机断电、内核崩溃、磁盘损坏或网络
-黑洞。`systemctl stop patroni` 必须完成后，runner 才接受以下 fence evidence：
+黑洞。`systemctl stop patroni` 必须完成后，runner 才接受以下围栏证据：
 
 ```text
 patroni service active          false
@@ -42,7 +42,7 @@ RPO 报告只说明本次 synthetic token。异步复制、单次短实验和已
 
 本环境只有一个 etcd 成员，真实停止它既不能代表多数派 DCS，也会抹掉要研究的
 quorum 差异；无 watchdog 的共享虚拟机也不适合注入不对称网络分区。因此本章从六个
-blind scenario 中随机抽取一个，只输出 evidence checklist 与 stop line：
+blind scenario 中随机抽取一个，只输出证据 checklist 与 stop line：
 
 - 不停止、重启或改写 etcd；
 - 不删除 leader key、`/config` 或 `/failsafe`；
@@ -85,7 +85,7 @@ PG36_CH33_CONFIRM=FENCE_FAILOVER_REJOIN_REBUILD_CH33
 PG36_CH33_INVENTORY=/absolute/private/inventory.yml
 ```
 
-inventory 必须是 mode 0600，只用于生成临时 libpq service 文件，密码不会写入 evidence。
+inventory 必须是 mode 0600，只用于生成临时 libpq service 文件，密码不会写入证据。
 任一 guard 缺失都在 mutation 前失败。runner 的失败处理只会：
 
 - 若 `pg-test-1` 被本 run 停止，则尝试重新启动；

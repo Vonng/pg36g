@@ -125,7 +125,7 @@ managed pg-test
   Patroni / SQL read-only capture before and after
   no connection storm, slot, cancel, service or route mutation
 
-pg-test-3 disposable PostgreSQL 18.6
+pg-test-3 disposable PostgreSQL 18.6（正式证据 overload-run.json 记录 18.4）
   /tmp/pg36-ch34-overload-<run-id>
   listen_addresses=''
   private Unix socket

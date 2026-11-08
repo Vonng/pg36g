@@ -39,7 +39,7 @@ pg-test-3  10.10.10.13  pg-test replica/offline + disposable drill host
 合同：
 
 ```text
-Pigsty v4.5.0 / PostgreSQL 18
+Pigsty v4.4.0 / PostgreSQL 18.4（formal run 记录值；复现基线 v4.5.0/18.6）
 Ubuntu 24.04 / aarch64 in formal run
 UTC + synchronized clocks
 data_checksums=on / UTF8 / C.UTF-8 / scram-sha-256 / SSL
@@ -77,7 +77,7 @@ private disposable case/working/recovery copies
 第 32～35 章在 L2 host 上使用 exact UUID temporary root、private Unix socket、
 非业务端口/无 TCP listener，并与 Patroni、DCS、HAProxy、PgBouncer、backup repository
 和业务 route 隔离。L3 需要额外磁盘至少容纳 source + cases + working/recovery +
-evidence；运行前按 fixture 实测，而不是假定固定 8 GiB 足够。
+证据；运行前按 fixture 实测，而不是假定固定 8 GiB 足够。
 
 ### 网络
 
@@ -93,7 +93,7 @@ no production route or public exposure
 
 本地成本来自 host RAM/CPU、磁盘、耗电与时间；云端另有 compute、volume/snapshot、
 public IP、egress、object storage/API。价格随 region/日期变化，本书不冻结金额。每个
-环境设置 owner、expiration 与 budget alert，并把保留 evidence 的费用计入。
+环境设置 owner、expiration 与 budget alert，并把保留证据的费用计入。
 
 ## E.2 R0–R3 风险标记 {#appendix-e-2}
 
@@ -208,7 +208,7 @@ validate lineage, backup, monitoring, business
 observe before traffic
 ```
 
-不要复用 suspect PGDATA，不删除唯一 evidence。第 35 章只生成
+不要复用 suspect PGDATA，不删除唯一证据。第 35 章只生成
 [`l3-rebuild-plan.json`](/labs/ch35/l3-rebuild-plan.json)，没有执行 managed
 `reset:host`。
 
@@ -293,7 +293,7 @@ claims_not_made:
 blind exercise 把 hidden truth 与 participant/classifier input 分离；场景 source 在公开
 教材中不是密码学秘密，正式考核由主持人控制访问或生成私有 seed。
 
-### evidence bundle
+### 证据包
 
 ```text
 contract + source manifest
@@ -307,7 +307,7 @@ cleanup
 redacted public summary
 ```
 
-raw logs、PGDATA、query payload、credentials 和个人数据留在受控 evidence store，
+raw logs、PGDATA、query payload、credentials 和个人数据留在受控证据存储，
 仓库只发布去敏 projection。
 
 ---

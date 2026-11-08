@@ -19,7 +19,9 @@ columns:
       - { label: 分区能力五触点, url: indexes/partition/ }
   - title: 生态
     links:
-      - { label: Pigsty, url: 'https://pgsty.com/', external: true }
+      - { label: "PG 中文文档", url: "https://pgsql.cc/docs/", external: true }
+      - { label: "PG 知识图谱", url: "https://pg.center/docs/reference/", external: true }
+      - { label: "Pigsty", url: "https://pigsty.cc/", external: true }
       - { label: PostgreSQL, url: 'https://www.postgresql.org/', external: true }
       - { label: PG 扩展目录, url: 'https://ext.pgsty.com/zh', external: true }
       - { label: 老冯云数, url: 'https://vonng.com/', external: true }

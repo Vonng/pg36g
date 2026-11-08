@@ -424,7 +424,7 @@ production      pending
 - 把 backup exit 0 当恢复证明；
 - 让一人自批自执行；
 - 让 break-glass 跳过目标与证据；
-- 允许 evidence 保存 secret；
+- 允许证据保存 secret；
 - 伪造上游 restore run id；
 - 把一次沙箱切换称为生产证明。
 
@@ -504,8 +504,8 @@ production      pending
 - [ ] 高风险动作能否被同一身份申请、批准和执行？
 - [ ] break-glass 是否仍绑定目标、时限、证据和轮换？
 - [ ] backup success 之外，是否有隔离恢复与应用验收？
-- [ ] evidence 是否能证明 source、target、time、collector 和 hash？
-- [ ] evidence 是否明确不保存 secret 与不必要的个人数据？
+- [ ] 证据是否能证明 source、target、time、collector 和 hash？
+- [ ] 证据是否明确不保存 secret 与不必要的个人数据？
 - [ ] 能否运行反例并看到 validator 真实拒绝？
 - [ ] 是否清楚哪些结论仍然 `production pending`？
 

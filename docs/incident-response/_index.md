@@ -109,7 +109,7 @@ detect symptom
 响应：
 
 ```text
-PostgreSQL                         18.6
+PostgreSQL                         18.6（正式证据 incident-run.json 记录 18.4）
 Patroni topology                   1 primary + 2 replicas
 timeline                           11
 pgBackRest status / backups        0 / 6

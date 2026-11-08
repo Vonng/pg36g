@@ -145,7 +145,8 @@ learner_assessment    = not-assessed
 ## 阅读前后关系
 
 - 前置：[第 31 章 事件分级、现场保护与应急决策](/incident-response/)、
-  [第 32～35 章恢复演练](/pitr/)
+  [第 32 章 PITR](/pitr/)、[第 33 章故障切换](/failover-rebuild/)、
+  [第 34 章过载判型](/overload-resource-incidents/)、[第 35 章数据抢救](/data-rescue-forensics/)
 
 ## 本章目录
 

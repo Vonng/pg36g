@@ -44,4 +44,4 @@
 - sample-derived histogram bounds；
 - plan JSON 的版本新增字段。
 
-动态值保存在 evidence，但不做跨硬件/版本 golden。
+动态值保存在证据中，但不做跨硬件/版本 golden。

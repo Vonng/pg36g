@@ -39,7 +39,7 @@ discovery     一个地址、VIP、DNS、多 host 还是驱动拓扑发现
 
 只要其中一项没有写清，端口号就是一个未经定义的偶然实现。
 
-本章把 PostgreSQL backend、PgBouncer、HAProxy、Patroni 和客户端驱动放进
+本章把 PostgreSQL 后端进程、PgBouncer、HAProxy、Patroni 和客户端驱动放进
 同一条证据链。学习顺序不是先背 `5433/5434/5436/5438`，而是先定义服务
 语义，再计算连接预算，选择池化模式，最后验证 Pigsty 的具体映射与切换行为。
 
@@ -51,7 +51,7 @@ discovery     一个地址、VIP、DNS、多 host 还是驱动拓扑发现
 2. 区分主写、只读、同步读取、离线读取和直连管理端点；
 3. 解释异步副本为什么不能天然提供 read-your-writes；
 4. 用 LSN、sticky-primary 或业务一致性 token 设计读取策略；
-5. 说明一个 PostgreSQL backend 的进程、内存、锁、事务和会话成本；
+5. 说明一个 PostgreSQL 后端进程的内存、锁、事务和会话成本；
 6. 拒绝用调大 `max_connections` 代替容量规划；
 7. 把应用进程数、应用池、PgBouncer pool 与数据库保留槽放进同一预算；
 8. 正确比较 session、transaction 与 statement pooling；
@@ -111,7 +111,7 @@ discovery     一个地址、VIP、DNS、多 host 还是驱动拓扑发现
 |---|---|---|
 | 声明 | 服务本来应当选择什么 | Pigsty inventory/defaults、ADR |
 | 渲染 | 实际代理与池配置是什么 | HAProxy service file、`SHOW CONFIG` |
-| 运行 | 当前哪些 backend 合格、池是否排队 | Patroni、HAProxy health、`SHOW POOLS` |
+| 运行 | 当前哪些后端合格、池是否排队 | Patroni、HAProxy health、`SHOW POOLS` |
 | SQL | 客户端最终落到什么角色与会话 | recovery/read-only、PID、GUC、token |
 | 故障 | 角色变化时确认/未知结果如何收敛 | client event、timeline、token reconcile |
 {.wide .expand}
@@ -156,8 +156,8 @@ SHOW POOLS 有空位
 ```text
 target          pg36-l2-vagrant/pg-test
 entry           10.10.10.11 HAProxy
-Pigsty          v4.5.0
-PostgreSQL      18.6
+Pigsty          v4.5.0（正式证据 connection-run.json 记录 v4.4.0）
+PostgreSQL      18.6（证据记录 18.4）
 PgBouncer       1.25.2, transaction mode
 HAProxy         3.4.2
 fixture         database/user test/test, schema pg36_ch22

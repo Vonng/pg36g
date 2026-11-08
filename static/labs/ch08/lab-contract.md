@@ -4,9 +4,9 @@
 
 从同一个用户现象“请求迟迟不返回”中区分三类根因：
 
-1. **估算/路径问题**：backend 正在执行，参数选择率与计划估算严重偏离；
-2. **锁等待**：backend 为 active，但 `wait_event_type=Lock`，存在可证明 blocker edge；
-3. **客户端慢消费**：backend 为 active，但 `wait_event_type=Client`、
+1. **估算/路径问题**：后端连接正在执行，参数选择率与计划估算严重偏离；
+2. **锁等待**：后端连接为 active，但 `wait_event_type=Lock`，存在可证明 blocker edge；
+3. **客户端慢消费**：后端连接为 active，但 `wait_event_type=Client`、
    `wait_event=ClientWrite`，数据库在等待客户端接收结果。
 
 诊断顺序必须是范围与时间窗 → activity/wait → query family/参数 →
@@ -41,14 +41,14 @@
 
 - 只生成 `generate_series` 派生的大结果，不读业务数据；
 - 通过受控慢 reader 制造 socket backpressure；
-- 必须观察 `Client/ClientWrite` 后取消精确实验 backend；
+- 必须观察 `Client/ClientWrite` 后取消精确实验后端连接；
 - 不能把普通 idle session 的 `ClientRead` 误判为慢客户端。
 
 ## Mystery 模式
 
 - `PG36_CASE_SEED` 经 SHA-256 映射到三种 case；未提供时生成并记录 seed；
 - ground truth 写入 mode 0600 的独立 answer artifact；
-- 诊断器只读取公开 evidence，不读取 answer；
+- 诊断器只读取公开证据，不读取 answer；
 - `reveal` 在诊断完成后比较 classification 与 ground truth；
 - 相同 seed 必须重现相同 case，便于教学复盘；
 - 随机化只隐藏根因，不改变 target、风险或清理权限。
@@ -99,7 +99,7 @@ export PG36_EVIDENCE_DIR="$PWD/evidence/ch08/all-$(date -u +%Y%m%dT%H%M%SZ)"
 - client 只生成派生结果，并以 PID + backend_start + database +
   application identity 精确取消自己的 worker；
 - 本章没有持久 ch08 对象，因此没有删除式 reset；
-- `diagnose/reveal` 可以离线复用同一 evidence 目录，不需要数据库连接。
+- `diagnose/reveal` 可以离线复用同一证据目录，不需要数据库连接。
 
 ## 不在本章自动执行
 
@@ -107,4 +107,4 @@ export PG36_EVIDENCE_DIR="$PWD/evidence/ch08/all-$(date -u +%Y%m%dT%H%M%SZ)"
 - 全局 `pg_stat_statements_reset()`；
 - 在生产启用或调低 `auto_explain` 阈值；
 - 修改 Pigsty/PgBouncer/HAProxy 配置；
-- 清理非本章创建的会话、日志或 evidence。
+- 清理非本章创建的会话、日志或证据。

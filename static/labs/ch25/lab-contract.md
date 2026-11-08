@@ -94,7 +94,7 @@ export PG36_EVIDENCE_DIR=/absolute/private/new-empty/ch25-run
 static/labs/ch25/task.sh all
 ```
 
-重验已有 evidence：
+重验已有证据：
 
 ```bash
 export PG36_EVIDENCE_DIR=/absolute/private/existing/ch25-run

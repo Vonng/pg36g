@@ -95,4 +95,4 @@ export PGSERVICE=pg36-admin
 ./quality-gate.sh all
 ```
 
-`check_baseline.py`只验证 registry 的结构和内部一致性，不宣称自动证明每条规则的业务合理性。安全和正确性仍由自动 gate、runtime evidence 与有 owner 的 review 共同闭合。
+`check_baseline.py` 只验证 registry 的结构和内部一致性，不宣称自动证明每条规则的业务合理性。安全和正确性仍由自动 gate、runtime evidence 与有 owner 的 review 共同闭合。

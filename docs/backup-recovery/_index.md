@@ -87,8 +87,8 @@ production approval               pending
 
 - [第 18 章 PostgreSQL 数据平台与替代边界](/data-platform-boundaries/) 已定义服务目标与
   责任边界；
-- [第 19 章 部署基线](/deployment-baseline/) 保留了 exact Pigsty
-  v4.5.0 四机沙箱；
+- [第 19 章 部署基线](/deployment-baseline/) 保留了 exact Pigsty 四机沙箱
+ （正式证据记录 v4.4.0/18.4；复现基线 v4.5.0/18.6）；
 - [第 20 章 高可用](/high-availability/) 已区分 replica、RPO、timeline
   与客户端完成条件；
 - 读者已掌握 Linux、SQL、事务与基本 PostgreSQL 运维概念。
@@ -141,8 +141,8 @@ business loss scenario
 
 ```text
 target           pg36-l2-vagrant/pg-test
-Pigsty           v4.5.0
-PostgreSQL       18.6
+Pigsty           v4.5.0（正式证据 restore-run.json 记录 v4.4.0）
+PostgreSQL       18.6（证据记录 18.4）
 pgBackRest       2.59.0
 source           pg-test-1, live primary, timeline 7
 repository       S3-compatible MinIO, AES-256-CBC, one sandbox target
@@ -311,8 +311,8 @@ reset:fixture
 - [Pigsty Restore Operations](https://pigsty.io/docs/pgsql/backup/restore/)
 - [Pigsty Backup Repository](https://pigsty.io/docs/pgsql/backup/repository/)
 
-版本相关命令在使用前应回到对应版本文档核对。本章 formal evidence 固定
-在 Pigsty v4.5.0、PostgreSQL 18.6 与 pgBackRest 2.59.0；“当前文档入口”
+版本相关命令在使用前应回到对应版本文档核对。本章正式证据记录在 Pigsty v4.4.0、PostgreSQL 18.4 与 pgBackRest 2.59.0
+（复现基线声明 v4.5.0/18.6，见全书待核实说明）；“当前文档入口”
 不是“历史版本命令完全相同”的承诺。
 
 ## 本章最重要的判断

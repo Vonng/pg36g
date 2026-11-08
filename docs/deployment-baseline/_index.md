@@ -21,7 +21,8 @@ book_status: reviewed
 > 初始化与拓扑，是否真的存在？
 
 本章先写需求与资源合同，再冻结 PostgreSQL 初始化选择，最后用 exact Pigsty
-v4.5.0 在四台 Linux VM 上完成 PostgreSQL 18 部署和 L2 沙箱验收。正式
+v4.4.0（正式证据 deployment-run.json 记录值；复现基线 v4.5.0）在四台 Linux VM 上完成
+PostgreSQL 18（证据 18.4；复现基线 18.6）部署和 L2 沙箱验收。正式
 结果是“带六项例外的沙箱通过”，不是生产批准。
 
 ## 本章目标
@@ -45,7 +46,7 @@ v4.5.0 在四台 Linux VM 上完成 PostgreSQL 18 部署和 L2 沙箱验收。�
 前置：
 
 - [第 18 章 PostgreSQL 数据平台与替代边界](/data-platform-boundaries/) 提供 service catalog、
-  capability placement 与下卷 evidence gate；
+  capability placement 与下卷证据门；
 - 读者应已掌握 Linux 与 SQL；
 - 不要求预先掌握 PostgreSQL HA、Pigsty 或 Ansible internals。
 
